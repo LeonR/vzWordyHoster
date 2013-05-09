@@ -160,10 +160,14 @@ namespace vzWordyHoster
 		void LoadTriviaFileTmiClick(object sender, EventArgs e)
 		{
 			Game thisGame = new Game("TRIVIA");
-			questionsInGame = thisGame.loadQuestionFile("questions.xml");  //TODO: Add a file selector.
+			questionsInGame = thisGame.LoadQuestionFile("questions.xml");  //TODO: Add a file selector.
 			Debug.WriteLine(questionsInGame.ToString() + " questions loaded.");
-			questionTbx.Text = thisGame.thisQuestionText;
+			questionTbx.Text = thisGame.ThisQuestionText;
+			answerTbx.Text = thisGame.ThisAnswerText;
+			optionsDgv.DataSource = thisGame.ThisOptionsTable;
+			qHeaderNumberLbl.Text = "Question " + thisGame.ThisQuestionNumber.ToString();
 		}
+		
 	}// class MainForm
 	
 	
@@ -174,6 +178,8 @@ namespace vzWordyHoster
 		private string questionFile;
 		private Int32 thisQuestionNumber;
 		private IEnumerable<XElement> questions;
+		private XElement thisQuestionElem;
+		private DataTable optionsTable = new DataTable();
 		
 		public string GameType {
             get { return gameType; }
@@ -188,18 +194,65 @@ namespace vzWordyHoster
             get { return thisQuestionNumber; }
 		}
 		
-		public string thisQuestionText {
+		public string ThisQuestionText {
 			get {
-				return questions.ElementAt(thisQuestionNumber - 1).Element("clue").Value;
+				return thisQuestionElem.Element("clue").Value;
 			}
 		}
 		
-		public Game(string passedGameType) {  // Constructor method
-			gameType = passedGameType;
-			
+		public string ThisAnswerText {
+			get {
+				var correctAns = from answeropt in thisQuestionElem.Elements("answer-option")
+					where (string)answeropt.Attribute("correct") == "Y"
+					select answeropt;
+				if(correctAns.Count() > 0) {
+					//TODO: Allow more than one correct option?
+					return correctAns.ElementAt(0).Value;
+				} else {
+					return "No correct option";
+				}
+			}
 		}
 		
-		public Int32 loadQuestionFile(string passedQuestionFile) {
+		
+		private void addOption(Int32 optionNumber, string optionText, string optionTruth) {
+			DataRow row;
+			row = optionsTable.NewRow();
+			row["Number"] = optionNumber;
+			row["Text"] = optionText;
+			row["Correct"] = optionTruth;
+	        optionsTable.Rows.Add(row);
+	        optionsTable.AcceptChanges();
+	        Debug.WriteLine("Option " + optionText + " added.");
+		}
+		
+		public DataTable ThisOptionsTable {
+			get {
+				optionsTable.Clear();
+				string optionTruthMod = "";
+				var optionTexts = from answeropt in thisQuestionElem.Elements("answer-option")
+					select (string)answeropt.Value;
+				var optionTruths = from answeropt in thisQuestionElem.Elements("answer-option")
+					select (string)answeropt.Attribute("correct");
+				for (Int32 optionCounter = 0; optionCounter < optionTexts.Count(); optionCounter++) {
+					if( optionTruths.ElementAt(optionCounter) == null ) {
+						optionTruthMod = "N";
+					} else {
+						optionTruthMod =  optionTruths.ElementAt(optionCounter);
+					}
+					addOption( optionCounter + 1, optionTexts.ElementAt(optionCounter), optionTruthMod );
+				}
+				return optionsTable;
+			}
+		}
+		
+
+		public Game(string passedGameType) {  // Constructor method
+			gameType = passedGameType;
+			buildOptionsTable();
+		}
+		
+		public Int32 LoadQuestionFile(string passedQuestionFile) {
 			Int32 questionsLoaded = 0;
 			questionFile = passedQuestionFile;
 			switch (gameType) {
@@ -222,14 +275,37 @@ namespace vzWordyHoster
 			    Debug.WriteLine(question);
 			}
 			thisQuestionNumber = 1;
+			thisQuestionElem = questions.ElementAt(thisQuestionNumber - 1);
 			return questions.Count();
 		}// loadTriviaFile
 		
-
+		private void buildOptionsTable()
+		{
+		    // Declare DataColumn and DataRow variables.
+		    DataColumn column;
+		    //DataRow row;
 		
+		    // Create "Number" column   
+		    column = new DataColumn();
+		    column.DataType = System.Type.GetType("System.Int32");
+		    column.ColumnName = "Number";
+		    optionsTable.Columns.Add(column);
 		
-		
-		
+		    // Create "Text" column
+		    column = new DataColumn();
+		    column.DataType = Type.GetType("System.String");
+		    column.ColumnName = "Text";
+		    optionsTable.Columns.Add(column);
+		    
+		    // Create "Correct" column
+		    column = new DataColumn();
+		    column.DataType = Type.GetType("System.String");
+		    column.ColumnName = "Correct";
+		    optionsTable.Columns.Add(column);
+	        
+		    
+		}// buildOptionsTable()
+	
 		
 	}// class Game
 	

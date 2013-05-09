@@ -48,6 +48,7 @@ namespace vzWordyHoster
 			this.commsPnl = new System.Windows.Forms.Panel();
 			this.macroLbx = new System.Windows.Forms.ListBox();
 			this.questionPnl = new System.Windows.Forms.Panel();
+			this.optionsDgv = new System.Windows.Forms.DataGridView();
 			this.closeQuestionBtn = new System.Windows.Forms.Button();
 			this.questionReadBtn = new System.Windows.Forms.Button();
 			this.questionForwardBtn = new System.Windows.Forms.Button();
@@ -72,6 +73,7 @@ namespace vzWordyHoster
 			this.leftPnl.SuspendLayout();
 			this.commsPnl.SuspendLayout();
 			this.questionPnl.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.optionsDgv)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.questionTrk)).BeginInit();
 			this.mainMnu.SuspendLayout();
 			this.SuspendLayout();
@@ -82,7 +84,7 @@ namespace vzWordyHoster
 			this.playersPnl.Dock = System.Windows.Forms.DockStyle.Right;
 			this.playersPnl.Location = new System.Drawing.Point(692, 24);
 			this.playersPnl.Name = "playersPnl";
-			this.playersPnl.Size = new System.Drawing.Size(365, 493);
+			this.playersPnl.Size = new System.Drawing.Size(365, 514);
 			this.playersPnl.TabIndex = 0;
 			// 
 			// playersDgv
@@ -106,7 +108,7 @@ namespace vzWordyHoster
 			this.debugPnl.Location = new System.Drawing.Point(392, 24);
 			this.debugPnl.MinimumSize = new System.Drawing.Size(300, 0);
 			this.debugPnl.Name = "debugPnl";
-			this.debugPnl.Size = new System.Drawing.Size(300, 493);
+			this.debugPnl.Size = new System.Drawing.Size(300, 514);
 			this.debugPnl.TabIndex = 1;
 			// 
 			// getAllTextBtn
@@ -122,7 +124,7 @@ namespace vzWordyHoster
 			// allTextTbx
 			// 
 			this.allTextTbx.Dock = System.Windows.Forms.DockStyle.Bottom;
-			this.allTextTbx.Location = new System.Drawing.Point(0, 297);
+			this.allTextTbx.Location = new System.Drawing.Point(0, 318);
 			this.allTextTbx.Multiline = true;
 			this.allTextTbx.Name = "allTextTbx";
 			this.allTextTbx.Size = new System.Drawing.Size(300, 196);
@@ -150,16 +152,16 @@ namespace vzWordyHoster
 			this.leftPnl.Controls.Add(this.questionPnl);
 			this.leftPnl.Location = new System.Drawing.Point(1, 24);
 			this.leftPnl.Name = "leftPnl";
-			this.leftPnl.Size = new System.Drawing.Size(300, 493);
+			this.leftPnl.Size = new System.Drawing.Size(300, 514);
 			this.leftPnl.TabIndex = 2;
 			// 
 			// commsPnl
 			// 
 			this.commsPnl.Controls.Add(this.macroLbx);
 			this.commsPnl.Dock = System.Windows.Forms.DockStyle.Bottom;
-			this.commsPnl.Location = new System.Drawing.Point(0, 369);
+			this.commsPnl.Location = new System.Drawing.Point(0, 422);
 			this.commsPnl.Name = "commsPnl";
-			this.commsPnl.Size = new System.Drawing.Size(300, 124);
+			this.commsPnl.Size = new System.Drawing.Size(300, 92);
 			this.commsPnl.TabIndex = 1;
 			// 
 			// macroLbx
@@ -169,14 +171,15 @@ namespace vzWordyHoster
 									"WTG!",
 									"Jolly well done!",
 									"Hurry up!"});
-			this.macroLbx.Location = new System.Drawing.Point(0, 3);
+			this.macroLbx.Location = new System.Drawing.Point(22, 3);
 			this.macroLbx.Name = "macroLbx";
-			this.macroLbx.Size = new System.Drawing.Size(297, 108);
+			this.macroLbx.Size = new System.Drawing.Size(275, 82);
 			this.macroLbx.TabIndex = 0;
 			this.macroLbx.Click += new System.EventHandler(this.MacroLbxClick);
 			// 
 			// questionPnl
 			// 
+			this.questionPnl.Controls.Add(this.optionsDgv);
 			this.questionPnl.Controls.Add(this.closeQuestionBtn);
 			this.questionPnl.Controls.Add(this.questionReadBtn);
 			this.questionPnl.Controls.Add(this.questionForwardBtn);
@@ -191,12 +194,24 @@ namespace vzWordyHoster
 			this.questionPnl.Dock = System.Windows.Forms.DockStyle.Top;
 			this.questionPnl.Location = new System.Drawing.Point(0, 0);
 			this.questionPnl.Name = "questionPnl";
-			this.questionPnl.Size = new System.Drawing.Size(300, 343);
+			this.questionPnl.Size = new System.Drawing.Size(300, 397);
 			this.questionPnl.TabIndex = 0;
+			// 
+			// optionsDgv
+			// 
+			this.optionsDgv.AllowUserToAddRows = false;
+			this.optionsDgv.AllowUserToDeleteRows = false;
+			this.optionsDgv.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+			this.optionsDgv.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+			this.optionsDgv.Location = new System.Drawing.Point(22, 166);
+			this.optionsDgv.Name = "optionsDgv";
+			this.optionsDgv.ReadOnly = true;
+			this.optionsDgv.Size = new System.Drawing.Size(278, 160);
+			this.optionsDgv.TabIndex = 11;
 			// 
 			// closeQuestionBtn
 			// 
-			this.closeQuestionBtn.Location = new System.Drawing.Point(177, 263);
+			this.closeQuestionBtn.Location = new System.Drawing.Point(180, 368);
 			this.closeQuestionBtn.Name = "closeQuestionBtn";
 			this.closeQuestionBtn.Size = new System.Drawing.Size(120, 23);
 			this.closeQuestionBtn.TabIndex = 10;
@@ -205,7 +220,7 @@ namespace vzWordyHoster
 			// 
 			// questionReadBtn
 			// 
-			this.questionReadBtn.Location = new System.Drawing.Point(12, 263);
+			this.questionReadBtn.Location = new System.Drawing.Point(22, 368);
 			this.questionReadBtn.Name = "questionReadBtn";
 			this.questionReadBtn.Size = new System.Drawing.Size(120, 23);
 			this.questionReadBtn.TabIndex = 9;
@@ -214,7 +229,7 @@ namespace vzWordyHoster
 			// 
 			// questionForwardBtn
 			// 
-			this.questionForwardBtn.Location = new System.Drawing.Point(267, 227);
+			this.questionForwardBtn.Location = new System.Drawing.Point(270, 332);
 			this.questionForwardBtn.Name = "questionForwardBtn";
 			this.questionForwardBtn.Size = new System.Drawing.Size(30, 30);
 			this.questionForwardBtn.TabIndex = 8;
@@ -223,7 +238,7 @@ namespace vzWordyHoster
 			// 
 			// questionBackBtn
 			// 
-			this.questionBackBtn.Location = new System.Drawing.Point(12, 227);
+			this.questionBackBtn.Location = new System.Drawing.Point(22, 332);
 			this.questionBackBtn.Name = "questionBackBtn";
 			this.questionBackBtn.Size = new System.Drawing.Size(30, 30);
 			this.questionBackBtn.TabIndex = 7;
@@ -232,42 +247,44 @@ namespace vzWordyHoster
 			// 
 			// questionTrk
 			// 
-			this.questionTrk.Location = new System.Drawing.Point(48, 227);
+			this.questionTrk.Location = new System.Drawing.Point(51, 332);
 			this.questionTrk.Name = "questionTrk";
 			this.questionTrk.Size = new System.Drawing.Size(213, 45);
 			this.questionTrk.TabIndex = 6;
 			// 
 			// answerTbx
 			// 
-			this.answerTbx.Location = new System.Drawing.Point(12, 161);
+			this.answerTbx.Location = new System.Drawing.Point(22, 100);
 			this.answerTbx.Multiline = true;
 			this.answerTbx.Name = "answerTbx";
-			this.answerTbx.Size = new System.Drawing.Size(285, 60);
+			this.answerTbx.Size = new System.Drawing.Size(278, 60);
 			this.answerTbx.TabIndex = 5;
 			// 
 			// questionTbx
 			// 
-			this.questionTbx.Location = new System.Drawing.Point(12, 57);
+			this.questionTbx.Location = new System.Drawing.Point(22, 31);
 			this.questionTbx.Multiline = true;
 			this.questionTbx.Name = "questionTbx";
-			this.questionTbx.Size = new System.Drawing.Size(285, 60);
+			this.questionTbx.Size = new System.Drawing.Size(278, 60);
 			this.questionTbx.TabIndex = 4;
 			// 
 			// answerLbl
 			// 
-			this.answerLbl.Location = new System.Drawing.Point(3, 135);
+			this.answerLbl.AutoSize = true;
+			this.answerLbl.Location = new System.Drawing.Point(4, 100);
 			this.answerLbl.Name = "answerLbl";
-			this.answerLbl.Size = new System.Drawing.Size(100, 23);
+			this.answerLbl.Size = new System.Drawing.Size(17, 13);
 			this.answerLbl.TabIndex = 3;
-			this.answerLbl.Text = "Answer";
+			this.answerLbl.Text = "A:";
 			// 
 			// questionLbl
 			// 
+			this.questionLbl.AutoSize = true;
 			this.questionLbl.Location = new System.Drawing.Point(4, 31);
 			this.questionLbl.Name = "questionLbl";
-			this.questionLbl.Size = new System.Drawing.Size(100, 23);
+			this.questionLbl.Size = new System.Drawing.Size(18, 13);
 			this.questionLbl.TabIndex = 2;
-			this.questionLbl.Text = "Question";
+			this.questionLbl.Text = "Q:";
 			// 
 			// qHeaderTypeLbl
 			// 
@@ -338,7 +355,7 @@ namespace vzWordyHoster
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(1057, 517);
+			this.ClientSize = new System.Drawing.Size(1057, 538);
 			this.Controls.Add(this.leftPnl);
 			this.Controls.Add(this.debugPnl);
 			this.Controls.Add(this.playersPnl);
@@ -354,12 +371,14 @@ namespace vzWordyHoster
 			this.commsPnl.ResumeLayout(false);
 			this.questionPnl.ResumeLayout(false);
 			this.questionPnl.PerformLayout();
+			((System.ComponentModel.ISupportInitialize)(this.optionsDgv)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.questionTrk)).EndInit();
 			this.mainMnu.ResumeLayout(false);
 			this.mainMnu.PerformLayout();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 		}
+		private System.Windows.Forms.DataGridView optionsDgv;
 		private System.Windows.Forms.ToolStripMenuItem startGameTmi;
 		public System.Windows.Forms.DataGridView playersDgv;
 		private System.Windows.Forms.ListBox macroLbx;

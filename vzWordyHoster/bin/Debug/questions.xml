@@ -2,7 +2,7 @@
 <questions>
 	<question type="multi">
 		<clue>What is the capital of the United Kingdom?</clue>
-		<answer-option correct="true">London</answer-option>
+		<answer-option correct="Y">London</answer-option>
 		<answer-option>Paris</answer-option>		
 		<answer-option>Dunkirk</answer-option>
 		<answer-option>Birmingham</answer-option>
@@ -10,7 +10,7 @@
 	
 	<question type="multi">
 		<clue>What colour are bananas?</clue>
-		<answer-option correct="true">Yellow</answer-option>
+		<answer-option correct="Y">Yellow</answer-option>
 		<answer-option>Green</answer-option>		
 		<answer-option>Red</answer-option>
 		<answer-option>Purple</answer-option>
@@ -18,7 +18,7 @@
 	
 	<question type="multi">
 		<clue>Who was the first female prime minister of the United Kingdom?</clue>
-		<answer-option correct="true">Margaret Thatcher</answer-option>
+		<answer-option correct="Y">Margaret Thatcher</answer-option>
 		<answer-option>Diana Dors</answer-option>		
 		<answer-option>Barbara Hepworth</answer-option>
 		<answer-option>Meryl Streep</answer-option>
