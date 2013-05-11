@@ -238,6 +238,7 @@ namespace vzWordyHoster
 			this.questionReadBtn.TabIndex = 9;
 			this.questionReadBtn.Text = "Read Question";
 			this.questionReadBtn.UseVisualStyleBackColor = true;
+			this.questionReadBtn.Click += new System.EventHandler(this.QuestionReadBtnClick);
 			// 
 			// questionForwardBtn
 			// 
@@ -265,6 +266,7 @@ namespace vzWordyHoster
 			this.questionTrk.Name = "questionTrk";
 			this.questionTrk.Size = new System.Drawing.Size(213, 45);
 			this.questionTrk.TabIndex = 6;
+			this.questionTrk.Scroll += new System.EventHandler(this.QuestionTrkScroll);
 			// 
 			// answerTbx
 			// 
