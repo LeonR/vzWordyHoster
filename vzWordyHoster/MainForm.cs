@@ -28,6 +28,8 @@ namespace vzWordyHoster
 		private Int32 questionsInGame;
 		private Game thisGame;
 		private string thisQuestionNumberDescriptor;
+		private string hostAvatarName;
+		private string initialisationString = "vzWordyHoster initialised!";
 		
 		
 		public MainForm()  // Constructor
@@ -42,8 +44,7 @@ namespace vzWordyHoster
 			}
 
 			waSetup();
-			
-		
+			announceInitialisation();
 		}// MainForm() constructor method
 		
 		
@@ -67,52 +68,9 @@ namespace vzWordyHoster
             {
                 allTextTbx.Text = text;
             }
-        }
+        }		
 		
-		
-		
-		
-		
-		void ProcessBufferTmrTick(object sender, EventArgs e)
-		{
-			processBufferItem();
-		}
-		
-		void GetAllTextBtnClick(object sender, EventArgs e)
-		{
-			waGet();
-		}
-		
-		void MacroLbxClick(object sender, EventArgs e)
-		{
-			waSay( macroLbx.SelectedItem.ToString() );
-		}
-		
-		void DataGridView1CellContentClick(object sender, DataGridViewCellEventArgs e)
-		{
-			
-		}
-		
-		void StartGameToolStripMenuItemClick(object sender, EventArgs e)
-		{
 
-		}
-		
-		void AllTextTbxTextChanged(object sender, EventArgs e)
-		{
-			allTextTbx.SelectionStart = allTextTbx.Text.Length;
-            allTextTbx.ScrollToCaret();
-            allTextTbx.Refresh();
-		}
-		
-		void LoadTriviaFileTmiClick(object sender, EventArgs e)
-		{
-			thisGame = new Game("TRIVIA");
-			questionsInGame = thisGame.LoadQuestionFile("questions.xml");  //TODO: Add a file selector.
-			Debug.WriteLine(questionsInGame.ToString() + " questions loaded.");
-			LoadCurrentQuestion();
-			
-		}
 		
 		private void LoadCurrentQuestion() {
 			thisGame.RefreshQuestion();
@@ -153,6 +111,77 @@ namespace vzWordyHoster
 			}
 		}
 		
+		private void ReadCurrentQuestion() {
+        	if (thisGame != null) {
+	        	waSay(thisQuestionNumberDescriptor);
+				waSay(thisGame.ThisQuestionText);
+	
+				List<string> optionTexts = getCurrentOptionTextsList();
+				foreach (string optionText in optionTexts) {
+					waSay(optionText);
+				}
+				inviteAnswers();
+        	} else {
+        		MessageBox.Show("You need to start a game first.", "vzWordyHoster");
+        	}
+		}
+        
+        private List<string> getCurrentOptionTextsList() {
+        	//string[] optionTexts = new string[3] {"Flopsy", "Mopsy", "Topsy"};
+        	//return optionTexts;
+        	
+        	List<string> optionTexts = new List<string>();
+        	foreach (DataRow row in thisGame.ThisOptionsTable.Rows)
+			{
+        		string optNumber = row.ItemArray.ElementAt(0).ToString();
+        		string optString = row.ItemArray.ElementAt(1).ToString();
+        		optionTexts.Add( optNumber + ". " + optString );
+			}
+        	return optionTexts;
+        }
+        
+        private void inviteAnswers() {
+        	waSay("Please ESP me, " + hostAvatarName + ", the number of your answer.");
+        }
+        
+        private void announceInitialisation() {
+        	waSay(initialisationString);
+        	hostAvatarName = "TODO";
+        }
+		
+		
+		//---------- BEGIN FORM CONTROL EVENTS ----------------------------------------------------------------------------
+		
+		void ProcessBufferTmrTick(object sender, EventArgs e)
+		{
+			processBufferItem();
+		}
+		
+		void GetAllTextBtnClick(object sender, EventArgs e)
+		{
+			waGet();
+		}
+		
+		void MacroLbxClick(object sender, EventArgs e)
+		{
+			waSay( macroLbx.SelectedItem.ToString() );
+		}
+		
+		void AllTextTbxTextChanged(object sender, EventArgs e)
+		{
+			allTextTbx.SelectionStart = allTextTbx.Text.Length;
+            allTextTbx.ScrollToCaret();
+            allTextTbx.Refresh();
+		}
+		
+		void LoadTriviaFileTmiClick(object sender, EventArgs e)
+		{
+			thisGame = new Game("TRIVIA");
+			questionsInGame = thisGame.LoadQuestionFile("questions.xml");  //TODO: Add a file selector.
+			Debug.WriteLine(questionsInGame.ToString() + " questions loaded.");
+			LoadCurrentQuestion();
+			
+		}
 		
 		void QuestionForwardBtnClick(object sender, EventArgs e)
 		{
@@ -178,14 +207,15 @@ namespace vzWordyHoster
 			}
 		}
 		
-		
-		
-		
 		void QuestionReadBtnClick(object sender, EventArgs e)
 		{
-			waSay(thisQuestionNumberDescriptor);
-			waSay(thisGame.ThisQuestionText);
+			ReadCurrentQuestion();
 		}
+		
+		
+		
+		//---------- END FORM CONTROL EVENTS ------------------------------------------------------------------------------
+		
 	}// class MainForm
 	
 	

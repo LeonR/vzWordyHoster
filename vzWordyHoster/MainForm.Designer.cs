@@ -107,7 +107,6 @@ namespace vzWordyHoster
 			this.playersDgv.Name = "playersDgv";
 			this.playersDgv.Size = new System.Drawing.Size(350, 413);
 			this.playersDgv.TabIndex = 0;
-			this.playersDgv.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridView1CellContentClick);
 			// 
 			// debugPnl
 			// 
@@ -351,7 +350,6 @@ namespace vzWordyHoster
 			this.startGameTmi.Name = "startGameTmi";
 			this.startGameTmi.Size = new System.Drawing.Size(160, 22);
 			this.startGameTmi.Text = "Start Game";
-			this.startGameTmi.Click += new System.EventHandler(this.StartGameToolStripMenuItemClick);
 			// 
 			// helpTmi
 			// 
