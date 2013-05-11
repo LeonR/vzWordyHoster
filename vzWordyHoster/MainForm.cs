@@ -24,7 +24,7 @@ namespace vzWordyHoster
 	/// </summary>
 	public partial class MainForm : Form
 	{
-		private DataTable playersTable = new DataTable();
+		
 		private Int32 questionsInGame;
 		private Game thisGame;
 		
@@ -42,13 +42,7 @@ namespace vzWordyHoster
 
 			waSetup();
 			
-			buildPlayersTable();
-			playersDgv.DataSource = playersTable;
-			addPlayer("Joe Dummy");
-			
-			
-
-
+		
 		}// MainForm() constructor method
 		
 		
@@ -103,54 +97,6 @@ namespace vzWordyHoster
 
 		}
 		
-		private void buildPlayersTable()
-		{
-		    // Declare DataColumn and DataRow variables.
-		    DataColumn column;
-		    //DataRow row;
-		
-		    // Create "Player" column   
-		    column = new DataColumn();
-		    column.DataType = System.Type.GetType("System.String");
-		    column.ColumnName = "Player";
-		    playersTable.Columns.Add(column);
-		
-		    // Create "Score" column
-		    column = new DataColumn();
-		    column.DataType = Type.GetType("System.Int32");
-		    column.ColumnName = "Score";
-		    playersTable.Columns.Add(column);
-		    
-		    // Create "LastAnswer" column
-		    column = new DataColumn();
-		    column.DataType = Type.GetType("System.String");
-		    column.ColumnName = "LastAnswer";
-		    playersTable.Columns.Add(column);
-		    
-		    // Create "Marking" column
-		    column = new DataColumn();
-		    column.DataType = Type.GetType("System.String");
-		    column.ColumnName = "Marking";
-		    playersTable.Columns.Add(column);
-	        
-		    
-		}// buildPlayersTable()
-		
-		
-		private void addPlayer(string playerName) {
-			DataRow row;
-			row = playersTable.NewRow();
-	        row["Player"] = playerName;
-	        playersTable.Rows.Add(row);
-	        playersTable.AcceptChanges();
-	        Debug.WriteLine("Player " + playerName + " added.");
-
-		}
-		
-		
-		
-		
-		
 		void AllTextTbxTextChanged(object sender, EventArgs e)
 		{
 			allTextTbx.SelectionStart = allTextTbx.Text.Length;
@@ -195,6 +141,16 @@ namespace vzWordyHoster
 		{
 			GetPreviousQuestion();
 		}
+		
+		void GetPlayersBtnClick(object sender, EventArgs e)
+		{
+			if (thisGame != null) {
+				playersDgv.DataSource = thisGame.PlayersTable;
+			} else {
+				MessageBox.Show("You need to start a game before attempting to get players.", "vzWordyHoster");
+			}
+		}
+		
 	}// class MainForm
 	
 	
@@ -255,6 +211,12 @@ namespace vzWordyHoster
 			}
 		}
 		
+		public DataTable PlayersTable {
+			get {
+				return playersTable;
+			}
+		}
+		
 
 		public Int32 LoadQuestionFile(string passedQuestionFile) {
 			Int32 questionsLoaded = 0;
@@ -273,6 +235,8 @@ namespace vzWordyHoster
 		public Game(string passedGameType) {  // Constructor method
 			gameType = passedGameType;
 			buildOptionsTable();
+			buildPlayersTable();
+			addPlayer("Joe Dummy");
 		}
 		
 		// ----- End public interface -----
@@ -286,6 +250,7 @@ namespace vzWordyHoster
 		private IEnumerable<XElement> questions;
 		private XElement thisQuestionElem;
 		private DataTable thisOptionsTable = new DataTable();
+		private DataTable playersTable = new DataTable();
 		
 		private void loadAllQuestionDetailsPrivately() {
 			thisQuestionElem = questions.ElementAt(thisQuestionNumber - 1);
@@ -374,6 +339,48 @@ namespace vzWordyHoster
 	        
 		    
 		}// buildOptionsTable()
+		
+		
+		private void buildPlayersTable()
+		{
+		    // Declare DataColumn and DataRow variables.
+		    DataColumn column;
+		    //DataRow row;
+		
+		    // Create "Player" column   
+		    column = new DataColumn();
+		    column.DataType = System.Type.GetType("System.String");
+		    column.ColumnName = "Player";
+		    playersTable.Columns.Add(column);
+		
+		    // Create "Score" column
+		    column = new DataColumn();
+		    column.DataType = Type.GetType("System.Int32");
+		    column.ColumnName = "Score";
+		    playersTable.Columns.Add(column);
+		    
+		    // Create "LastAnswer" column
+		    column = new DataColumn();
+		    column.DataType = Type.GetType("System.String");
+		    column.ColumnName = "LastAnswer";
+		    playersTable.Columns.Add(column);
+		    
+		    // Create "Marking" column
+		    column = new DataColumn();
+		    column.DataType = Type.GetType("System.String");
+		    column.ColumnName = "Marking";
+		    playersTable.Columns.Add(column);
+	     
+		}// buildPlayersTable()
+		
+		private void addPlayer(string playerName) {
+			DataRow row;
+			row = playersTable.NewRow();
+	        row["Player"] = playerName;
+	        playersTable.Rows.Add(row);
+	        playersTable.AcceptChanges();
+	        Debug.WriteLine("Player " + playerName + " added.");
+		}
 	
 		
 	}// class Game

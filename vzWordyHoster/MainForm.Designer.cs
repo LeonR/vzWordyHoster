@@ -38,6 +38,7 @@ namespace vzWordyHoster
 		{
 			this.components = new System.ComponentModel.Container();
 			this.playersPnl = new System.Windows.Forms.Panel();
+			this.getPlayersBtn = new System.Windows.Forms.Button();
 			this.playersDgv = new System.Windows.Forms.DataGridView();
 			this.debugPnl = new System.Windows.Forms.Panel();
 			this.getAllTextBtn = new System.Windows.Forms.Button();
@@ -80,12 +81,23 @@ namespace vzWordyHoster
 			// 
 			// playersPnl
 			// 
+			this.playersPnl.Controls.Add(this.getPlayersBtn);
 			this.playersPnl.Controls.Add(this.playersDgv);
 			this.playersPnl.Dock = System.Windows.Forms.DockStyle.Right;
 			this.playersPnl.Location = new System.Drawing.Point(692, 24);
 			this.playersPnl.Name = "playersPnl";
 			this.playersPnl.Size = new System.Drawing.Size(365, 514);
 			this.playersPnl.TabIndex = 0;
+			// 
+			// getPlayersBtn
+			// 
+			this.getPlayersBtn.Location = new System.Drawing.Point(7, 420);
+			this.getPlayersBtn.Name = "getPlayersBtn";
+			this.getPlayersBtn.Size = new System.Drawing.Size(89, 23);
+			this.getPlayersBtn.TabIndex = 1;
+			this.getPlayersBtn.Text = "getPlayersBtn";
+			this.getPlayersBtn.UseVisualStyleBackColor = true;
+			this.getPlayersBtn.Click += new System.EventHandler(this.GetPlayersBtnClick);
 			// 
 			// playersDgv
 			// 
@@ -380,6 +392,7 @@ namespace vzWordyHoster
 			this.ResumeLayout(false);
 			this.PerformLayout();
 		}
+		private System.Windows.Forms.Button getPlayersBtn;
 		private System.Windows.Forms.DataGridView optionsDgv;
 		private System.Windows.Forms.ToolStripMenuItem startGameTmi;
 		public System.Windows.Forms.DataGridView playersDgv;
