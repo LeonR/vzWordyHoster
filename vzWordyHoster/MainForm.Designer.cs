@@ -89,7 +89,7 @@ namespace vzWordyHoster
 			// 
 			// playersDgv
 			// 
-			this.playersDgv.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
+			this.playersDgv.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
 			this.playersDgv.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
 			this.playersDgv.Location = new System.Drawing.Point(6, 0);
 			this.playersDgv.Name = "playersDgv";
@@ -235,6 +235,7 @@ namespace vzWordyHoster
 			this.questionForwardBtn.TabIndex = 8;
 			this.questionForwardBtn.Text = ">";
 			this.questionForwardBtn.UseVisualStyleBackColor = true;
+			this.questionForwardBtn.Click += new System.EventHandler(this.QuestionForwardBtnClick);
 			// 
 			// questionBackBtn
 			// 
@@ -244,6 +245,7 @@ namespace vzWordyHoster
 			this.questionBackBtn.TabIndex = 7;
 			this.questionBackBtn.Text = "<";
 			this.questionBackBtn.UseVisualStyleBackColor = true;
+			this.questionBackBtn.Click += new System.EventHandler(this.QuestionBackBtnClick);
 			// 
 			// questionTrk
 			// 

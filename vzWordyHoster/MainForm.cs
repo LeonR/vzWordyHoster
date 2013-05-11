@@ -26,6 +26,7 @@ namespace vzWordyHoster
 	{
 		private DataTable playersTable = new DataTable();
 		private Int32 questionsInGame;
+		private Game thisGame;
 		
 		
 		public MainForm()  // Constructor
@@ -159,99 +160,102 @@ namespace vzWordyHoster
 		
 		void LoadTriviaFileTmiClick(object sender, EventArgs e)
 		{
-			Game thisGame = new Game("TRIVIA");
+			thisGame = new Game("TRIVIA");
 			questionsInGame = thisGame.LoadQuestionFile("questions.xml");  //TODO: Add a file selector.
 			Debug.WriteLine(questionsInGame.ToString() + " questions loaded.");
+			LoadCurrentQuestion();
+			
+		}
+		
+		private void LoadCurrentQuestion() {
+			thisGame.RefreshQuestion();
 			questionTbx.Text = thisGame.ThisQuestionText;
 			answerTbx.Text = thisGame.ThisAnswerText;
 			optionsDgv.DataSource = thisGame.ThisOptionsTable;
 			qHeaderNumberLbl.Text = "Question " + thisGame.ThisQuestionNumber.ToString();
 		}
 		
+		private void GetNextQuestion() {
+			thisGame.NextQuestion();
+			LoadCurrentQuestion();
+		}
+		
+		private void GetPreviousQuestion() {
+			thisGame.PreviousQuestion();
+			LoadCurrentQuestion();
+		}
+		
+		
+		void QuestionForwardBtnClick(object sender, EventArgs e)
+		{
+			GetNextQuestion();
+		}
+		
+		void QuestionBackBtnClick(object sender, EventArgs e)
+		{
+			GetPreviousQuestion();
+		}
 	}// class MainForm
 	
 	
 	public class Game {
 
-		//private MainForm myMainForm = new MainForm();
-		private string gameType;
-		private string questionFile;
-		private Int32 thisQuestionNumber;
-		private IEnumerable<XElement> questions;
-		private XElement thisQuestionElem;
-		private DataTable optionsTable = new DataTable();
-		
+		// ----- Begin public interface -----
 		public string GameType {
             get { return gameType; }
             set { gameType = value; }
 		}
 		
 		public string QuestionFile {
-            get { return questionFile; }
+            get { 
+				return questionFile;
+			}
 		}
 		
 		public Int32 ThisQuestionNumber {
-            get { return thisQuestionNumber; }
+            get {
+				return thisQuestionNumber;
+			}
 		}
 		
 		public string ThisQuestionText {
 			get {
-				return thisQuestionElem.Element("clue").Value;
+				//loadAllQuestionDetailsPrivately();
+				return thisQuestionText;
 			}
 		}
 		
 		public string ThisAnswerText {
 			get {
-				var correctAns = from answeropt in thisQuestionElem.Elements("answer-option")
-					where (string)answeropt.Attribute("correct") == "Y"
-					select answeropt;
-				if(correctAns.Count() > 0) {
-					//TODO: Allow more than one correct option?
-					return correctAns.ElementAt(0).Value;
-				} else {
-					return "No correct option";
-				}
+				return thisAnswerText;
 			}
 		}
 		
+		public void RefreshQuestion() {
+			loadAllQuestionDetailsPrivately();
+		}
 		
-		private void addOption(Int32 optionNumber, string optionText, string optionTruth) {
-			DataRow row;
-			row = optionsTable.NewRow();
-			row["Number"] = optionNumber;
-			row["Text"] = optionText;
-			row["Correct"] = optionTruth;
-	        optionsTable.Rows.Add(row);
-	        optionsTable.AcceptChanges();
-	        Debug.WriteLine("Option " + optionText + " added.");
+		public void NextQuestion() {
+			if(thisQuestionNumber + 1 <= numQuestions) {
+				thisQuestionNumber++;
+				loadAllQuestionDetailsPrivately();
+			}
+		}
+		
+		public void PreviousQuestion() {
+			if(thisQuestionNumber - 1 >= 1) {
+				thisQuestionNumber--;
+				loadAllQuestionDetailsPrivately();
+			}
 		}
 		
 		public DataTable ThisOptionsTable {
 			get {
-				optionsTable.Clear();
-				string optionTruthMod = "";
-				var optionTexts = from answeropt in thisQuestionElem.Elements("answer-option")
-					select (string)answeropt.Value;
-				var optionTruths = from answeropt in thisQuestionElem.Elements("answer-option")
-					select (string)answeropt.Attribute("correct");
-				for (Int32 optionCounter = 0; optionCounter < optionTexts.Count(); optionCounter++) {
-					if( optionTruths.ElementAt(optionCounter) == null ) {
-						optionTruthMod = "N";
-					} else {
-						optionTruthMod =  optionTruths.ElementAt(optionCounter);
-					}
-					addOption( optionCounter + 1, optionTexts.ElementAt(optionCounter), optionTruthMod );
-				}
-				return optionsTable;
+				return thisOptionsTable;
 			}
 		}
 		
 
-		public Game(string passedGameType) {  // Constructor method
-			gameType = passedGameType;
-			buildOptionsTable();
-		}
-		
 		public Int32 LoadQuestionFile(string passedQuestionFile) {
 			Int32 questionsLoaded = 0;
 			questionFile = passedQuestionFile;
@@ -266,6 +270,71 @@ namespace vzWordyHoster
 			return questionsLoaded;
 		}// loadQuestionFile
 		
+		public Game(string passedGameType) {  // Constructor method
+			gameType = passedGameType;
+			buildOptionsTable();
+		}
+		
+		// ----- End public interface -----
+
+		private string gameType;
+		private string questionFile;
+		private Int32 thisQuestionNumber;
+		private Int32 numQuestions;
+		private string thisQuestionText;
+		private string thisAnswerText;
+		private IEnumerable<XElement> questions;
+		private XElement thisQuestionElem;
+		private DataTable thisOptionsTable = new DataTable();
+		
+		private void loadAllQuestionDetailsPrivately() {
+			thisQuestionElem = questions.ElementAt(thisQuestionNumber - 1);
+			// Load thisQuestionText:
+			thisQuestionText = thisQuestionElem.Element("clue").Value;
+			
+			// Load thisAnswerText:
+			var correctAns = from answeropt in thisQuestionElem.Elements("answer-option")
+				where (string)answeropt.Attribute("correct") == "Y"
+				select answeropt;
+			if(correctAns.Count() > 0) {
+				//TODO: Allow more than one correct option?
+				thisAnswerText = correctAns.ElementAt(0).Value;
+			} else {
+				thisAnswerText = "No correct option";
+			}
+			
+			// Load thisOptionsTable:
+			thisOptionsTable.Clear();
+			string optionTruthMod = "";
+			var optionTexts = from answeropt in thisQuestionElem.Elements("answer-option")
+				select (string)answeropt.Value;
+			var optionTruths = from answeropt in thisQuestionElem.Elements("answer-option")
+				select (string)answeropt.Attribute("correct");
+			for (Int32 optionCounter = 0; optionCounter < optionTexts.Count(); optionCounter++) {
+				if( optionTruths.ElementAt(optionCounter) == null ) {
+					optionTruthMod = "N";
+				} else {
+					optionTruthMod =  optionTruths.ElementAt(optionCounter);
+				}
+				addOption( optionCounter + 1, optionTexts.ElementAt(optionCounter), optionTruthMod );
+				thisOptionsTable.AcceptChanges();
+			}// for
+			
+		}// loadAllQuestionDetailsPrivately
+		
+		
+		private void addOption(Int32 optionNumber, string optionText, string optionTruth) {
+			DataRow row;
+			row = thisOptionsTable.NewRow();
+			row["Number"] = optionNumber;
+			row["Text"] = optionText;
+			row["Correct"] = optionTruth;
+	        thisOptionsTable.Rows.Add(row);
+	        thisOptionsTable.AcceptChanges();
+	        Debug.WriteLine("Option " + optionText + " added.");
+		}
+		
+
 		private Int32 loadTriviaFile() {
 			Debug.WriteLine("About to load file " + questionFile);
 			XDocument xdocument = XDocument.Load("questions.xml");
@@ -274,9 +343,9 @@ namespace vzWordyHoster
 			{
 			    Debug.WriteLine(question);
 			}
+			numQuestions = questions.Count();
 			thisQuestionNumber = 1;
-			thisQuestionElem = questions.ElementAt(thisQuestionNumber - 1);
-			return questions.Count();
+			return numQuestions;
 		}// loadTriviaFile
 		
 		private void buildOptionsTable()
@@ -289,19 +358,19 @@ namespace vzWordyHoster
 		    column = new DataColumn();
 		    column.DataType = System.Type.GetType("System.Int32");
 		    column.ColumnName = "Number";
-		    optionsTable.Columns.Add(column);
+		    thisOptionsTable.Columns.Add(column);
 		
 		    // Create "Text" column
 		    column = new DataColumn();
 		    column.DataType = Type.GetType("System.String");
 		    column.ColumnName = "Text";
-		    optionsTable.Columns.Add(column);
+		    thisOptionsTable.Columns.Add(column);
 		    
 		    // Create "Correct" column
 		    column = new DataColumn();
 		    column.DataType = Type.GetType("System.String");
 		    column.ColumnName = "Correct";
-		    optionsTable.Columns.Add(column);
+		    thisOptionsTable.Columns.Add(column);
 	        
 		    
 		}// buildOptionsTable()
