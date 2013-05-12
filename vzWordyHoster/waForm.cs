@@ -21,7 +21,7 @@ namespace vzWordyHoster
     public partial class MainForm : Form
     {
     	private static readonly string APP_NAME = "vzWordyHoster";
-    	private static readonly bool DEBUG_ON = false;
+    	private static readonly bool DEBUG_ON = true;
     	
     	// ----------------------------------------------
     	// ----- BEGIN STANDARD WADAPI WRAPPER CODE -----
@@ -48,7 +48,7 @@ namespace vzWordyHoster
         public static extern Boolean DapiSend(String sAppName, String sAvatar, Int32 nDataLen, String sData);
 
         private static String ack;
-        private static String allText;
+        private static String allText = "";
         private static long bufferItemId;
         private static readonly int EVENT_PROCESS_DELAY = 100;
         
@@ -70,11 +70,12 @@ namespace vzWordyHoster
         public static void ProcessReceiveData(String sAvatar, Int32 nDataLen, String sData)
         {
             // Do nothing! I don't believe that this will ever be used in my intended application.
+            Debug.WriteLine("Data received: " + sData);
         }
 
         public static void ProcessGetAllText(String sTextData)
         {
-            String sDapiText = sTextData;
+            String sDapiText = sTextData;  //TODO Get rid of this line
             allText = sTextData;
         }
 
@@ -97,7 +98,7 @@ namespace vzWordyHoster
             try
             {
                 var myReturn = DapiGetAllText(APP_NAME);
-                UpdateTextInTextBox(allText);
+                PerformThreadSafePostGetAllTextProcessing(allText);
                 if (DEBUG_ON) {
                 	Debug.WriteLine(string.Format("DapiGetAllText [{0}]", DateTime.Now.ToString("hh:mm:ss.fff tt")));
                 }
@@ -115,7 +116,7 @@ namespace vzWordyHoster
             }
         }
         
-                private BackgroundWorker CreateWorker()
+		private BackgroundWorker CreateWorker()
         {
             BackgroundWorker _workerActivity = null;
             _workerActivity = new BackgroundWorker();
@@ -134,25 +135,31 @@ namespace vzWordyHoster
                 return;
             }
 
-            if (request.ReqType == ActionRequestType.ACTION_SAY || request.ReqType == ActionRequestType.ACTION_THINK || request.ReqType == ActionRequestType.ACTION_ESP) 
+            if (request.ReqType == ActionRequestType.ACTION_SAY || request.ReqType == ActionRequestType.ACTION_THINK || request.ReqType == ActionRequestType.ACTION_ESP || request.ReqType == ActionRequestType.ACTION_GETALLTEXT) 
             {
                 _commsInProgress = false;
 				if ((commsBufferTable != null) && (commsBufferTable.Rows != null)) {
-					commsBufferTable.Rows.RemoveAt(0);
+                	// ack values: 0 = acknowledged; -1 = client not present/other error; 13 = cannot say because avatar is ghosted.
+                	//             10 occurs when hoster app is started before VZ client. DDE not initiated?
+                	// TODO: Try doing a new DDE init if ack 10 is received.
+                	if (ack == "0") {
+	                	if(DEBUG_ON) {
+	                		Debug.WriteLine("Removing buffer line |" + commsBufferTable.Rows[0][1] + "|" + commsBufferTable.Rows[0][2] + "| because ack is " + ack.ToString() );
+	                	}
+	                	commsBufferTable.Rows.RemoveAt(0);
+                	} else {
+                		if(DEBUG_ON) {
+	                		Debug.WriteLine("Not removing buffer line |" + commsBufferTable.Rows[0][1] + "|" + commsBufferTable.Rows[0][2] + "| because ack is " + ack.ToString() );
+	                	}
+                	}
                 }        
-            }
-            else if(request.ReqType == ActionRequestType.ACTION_GETALLTEXT){
-            	// Just the same as above. Leaving this here for the time being in case handling might need to change.
-            	_commsInProgress = false;
-				if ((commsBufferTable != null) && (commsBufferTable.Rows != null)) {
-					commsBufferTable.Rows.RemoveAt(0);
-                }
             }
 
             if (DEBUG_ON) {
-            	Debug.WriteLine(string.Format("Operation {0} Completed [{1}]  Text[{2}]", request.ReqType, DateTime.Now.ToString("hh:mm:ss.fff tt"), e.Result as string));
+            	Debug.WriteLine(string.Format("Operation {0} completed [{1}]  Text[{2}]", request.ReqType, DateTime.Now.ToString("hh:mm:ss.fff tt"), e.Result as string));
+            	Debug.WriteLine("--------------------------------------------------------------------------------");
             }
-        }
+        }// WorkerSay_RunWorkerCompleted
 
         void WorkerSay_DoWork(object sender, DoWorkEventArgs e)
         {
@@ -357,7 +364,23 @@ namespace vzWordyHoster
 	        row["type"] = commsType;
 	        row["text"] = utterance;
 	        row["recipient"] = recipient;
-	        commsBufferTable.Rows.Add(row);
+	        
+	        
+	        if (commsBufferDgv.InvokeRequired)
+            {
+                Invoke((MethodInvoker)delegate
+                {
+                    commsBufferTable.Rows.Add(row);
+                });
+            }
+            else
+            {
+               commsBufferTable.Rows.Add(row);
+            }
+	        
+	       
+	        //commsBufferTable.Rows.Add(row);
+	        
 		}// addCommsBufferItem
         
         

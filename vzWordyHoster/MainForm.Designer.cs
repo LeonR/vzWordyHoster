@@ -38,9 +38,15 @@ namespace vzWordyHoster
 		{
 			this.components = new System.ComponentModel.Container();
 			this.playersPnl = new System.Windows.Forms.Panel();
+			this.markAnswersBtn = new System.Windows.Forms.Button();
+			this.getHostBtn = new System.Windows.Forms.Button();
 			this.getPlayersBtn = new System.Windows.Forms.Button();
 			this.playersDgv = new System.Windows.Forms.DataGridView();
 			this.debugPnl = new System.Windows.Forms.Panel();
+			this.dummyAnswerTbx = new System.Windows.Forms.TextBox();
+			this.harryBtn = new System.Windows.Forms.Button();
+			this.dickBtn = new System.Windows.Forms.Button();
+			this.tomBtn = new System.Windows.Forms.Button();
 			this.getAllTextBtn = new System.Windows.Forms.Button();
 			this.allTextTbx = new System.Windows.Forms.TextBox();
 			this.commsBufferDgv = new System.Windows.Forms.DataGridView();
@@ -81,6 +87,8 @@ namespace vzWordyHoster
 			// 
 			// playersPnl
 			// 
+			this.playersPnl.Controls.Add(this.markAnswersBtn);
+			this.playersPnl.Controls.Add(this.getHostBtn);
 			this.playersPnl.Controls.Add(this.getPlayersBtn);
 			this.playersPnl.Controls.Add(this.playersDgv);
 			this.playersPnl.Dock = System.Windows.Forms.DockStyle.Right;
@@ -89,11 +97,31 @@ namespace vzWordyHoster
 			this.playersPnl.Size = new System.Drawing.Size(365, 514);
 			this.playersPnl.TabIndex = 0;
 			// 
+			// markAnswersBtn
+			// 
+			this.markAnswersBtn.Location = new System.Drawing.Point(7, 480);
+			this.markAnswersBtn.Name = "markAnswersBtn";
+			this.markAnswersBtn.Size = new System.Drawing.Size(100, 23);
+			this.markAnswersBtn.TabIndex = 3;
+			this.markAnswersBtn.Text = "markAnswersBtn";
+			this.markAnswersBtn.UseVisualStyleBackColor = true;
+			this.markAnswersBtn.Click += new System.EventHandler(this.MarkAnswersBtnClick);
+			// 
+			// getHostBtn
+			// 
+			this.getHostBtn.Location = new System.Drawing.Point(7, 450);
+			this.getHostBtn.Name = "getHostBtn";
+			this.getHostBtn.Size = new System.Drawing.Size(100, 23);
+			this.getHostBtn.TabIndex = 2;
+			this.getHostBtn.Text = "getHostBtn";
+			this.getHostBtn.UseVisualStyleBackColor = true;
+			this.getHostBtn.Click += new System.EventHandler(this.GetHostBtnClick);
+			// 
 			// getPlayersBtn
 			// 
 			this.getPlayersBtn.Location = new System.Drawing.Point(7, 420);
 			this.getPlayersBtn.Name = "getPlayersBtn";
-			this.getPlayersBtn.Size = new System.Drawing.Size(89, 23);
+			this.getPlayersBtn.Size = new System.Drawing.Size(100, 23);
 			this.getPlayersBtn.TabIndex = 1;
 			this.getPlayersBtn.Text = "getPlayersBtn";
 			this.getPlayersBtn.UseVisualStyleBackColor = true;
@@ -112,6 +140,10 @@ namespace vzWordyHoster
 			// 
 			this.debugPnl.AutoSize = true;
 			this.debugPnl.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+			this.debugPnl.Controls.Add(this.dummyAnswerTbx);
+			this.debugPnl.Controls.Add(this.harryBtn);
+			this.debugPnl.Controls.Add(this.dickBtn);
+			this.debugPnl.Controls.Add(this.tomBtn);
 			this.debugPnl.Controls.Add(this.getAllTextBtn);
 			this.debugPnl.Controls.Add(this.allTextTbx);
 			this.debugPnl.Controls.Add(this.commsBufferDgv);
@@ -122,9 +154,47 @@ namespace vzWordyHoster
 			this.debugPnl.Size = new System.Drawing.Size(300, 514);
 			this.debugPnl.TabIndex = 1;
 			// 
+			// dummyAnswerTbx
+			// 
+			this.dummyAnswerTbx.Location = new System.Drawing.Point(4, 276);
+			this.dummyAnswerTbx.Name = "dummyAnswerTbx";
+			this.dummyAnswerTbx.Size = new System.Drawing.Size(74, 20);
+			this.dummyAnswerTbx.TabIndex = 8;
+			this.dummyAnswerTbx.Text = "1";
+			// 
+			// harryBtn
+			// 
+			this.harryBtn.Location = new System.Drawing.Point(84, 292);
+			this.harryBtn.Name = "harryBtn";
+			this.harryBtn.Size = new System.Drawing.Size(75, 23);
+			this.harryBtn.TabIndex = 7;
+			this.harryBtn.Text = "harryBtn";
+			this.harryBtn.UseVisualStyleBackColor = true;
+			this.harryBtn.Click += new System.EventHandler(this.HarryBtnClick);
+			// 
+			// dickBtn
+			// 
+			this.dickBtn.Location = new System.Drawing.Point(84, 269);
+			this.dickBtn.Name = "dickBtn";
+			this.dickBtn.Size = new System.Drawing.Size(75, 23);
+			this.dickBtn.TabIndex = 6;
+			this.dickBtn.Text = "dickBtn";
+			this.dickBtn.UseVisualStyleBackColor = true;
+			this.dickBtn.Click += new System.EventHandler(this.DickBtnClick);
+			// 
+			// tomBtn
+			// 
+			this.tomBtn.Location = new System.Drawing.Point(84, 246);
+			this.tomBtn.Name = "tomBtn";
+			this.tomBtn.Size = new System.Drawing.Size(75, 23);
+			this.tomBtn.TabIndex = 5;
+			this.tomBtn.Text = "tomBtn";
+			this.tomBtn.UseVisualStyleBackColor = true;
+			this.tomBtn.Click += new System.EventHandler(this.TomBtnClick);
+			// 
 			// getAllTextBtn
 			// 
-			this.getAllTextBtn.Location = new System.Drawing.Point(3, 268);
+			this.getAllTextBtn.Location = new System.Drawing.Point(3, 246);
 			this.getAllTextBtn.Name = "getAllTextBtn";
 			this.getAllTextBtn.Size = new System.Drawing.Size(75, 23);
 			this.getAllTextBtn.TabIndex = 2;
@@ -228,6 +298,7 @@ namespace vzWordyHoster
 			this.closeQuestionBtn.TabIndex = 10;
 			this.closeQuestionBtn.Text = "Close Question";
 			this.closeQuestionBtn.UseVisualStyleBackColor = true;
+			this.closeQuestionBtn.Click += new System.EventHandler(this.CloseQuestionBtnClick);
 			// 
 			// questionReadBtn
 			// 
@@ -392,6 +463,12 @@ namespace vzWordyHoster
 			this.ResumeLayout(false);
 			this.PerformLayout();
 		}
+		private System.Windows.Forms.Button dickBtn;
+		private System.Windows.Forms.Button harryBtn;
+		private System.Windows.Forms.TextBox dummyAnswerTbx;
+		private System.Windows.Forms.Button tomBtn;
+		private System.Windows.Forms.Button markAnswersBtn;
+		private System.Windows.Forms.Button getHostBtn;
 		private System.Windows.Forms.Button getPlayersBtn;
 		private System.Windows.Forms.DataGridView optionsDgv;
 		private System.Windows.Forms.ToolStripMenuItem startGameTmi;

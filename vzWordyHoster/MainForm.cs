@@ -15,6 +15,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
+using System.Timers;
 
 
 namespace vzWordyHoster
@@ -31,6 +32,13 @@ namespace vzWordyHoster
 		private string hostAvatarName;
 		private string initialisationString = "vzWordyHoster initialised!";
 		
+		private System.Timers.Timer postInitTmr = new System.Timers.Timer();
+		private System.Timers.Timer questionMarkerTmr = new System.Timers.Timer();
+		
+		private DataTable playersTableLocal = new DataTable();
+		
+		private bool awaitingMarking = false;
+		
 		
 		public MainForm()  // Constructor
 		{
@@ -44,6 +52,10 @@ namespace vzWordyHoster
 			}
 
 			waSetup();
+			
+			postInitTmr.Enabled = false;
+			questionMarkerTmr.Enabled = false;
+			
 			announceInitialisation();
 		}// MainForm() constructor method
 		
@@ -54,8 +66,8 @@ namespace vzWordyHoster
         }
 		
 		
-		//Thread safe update of allTextTbx
-        private void UpdateTextInTextBox(string text)
+        private void PerformThreadSafePostGetAllTextProcessing(string text)
+        // Was UpdateTextInTextBox ("Thread safe update of allTextTbx")
         {
             if (allTextTbx.InvokeRequired)
             {
@@ -68,11 +80,14 @@ namespace vzWordyHoster
             {
                 allTextTbx.Text = text;
             }
-        }		
+        }//PerformThreadSafePostGetAllTextProcessing		
 		
 
 		
 		private void LoadCurrentQuestion() {
+        	if(hostAvatarName == "") {
+        		announceInitialisation();
+        	}
 			thisGame.RefreshQuestion();
 			questionTbx.Text = thisGame.ThisQuestionText;
 			answerTbx.Text = thisGame.ThisAnswerNumber.ToString() + " [" + thisGame.ThisAnswerText + "]";
@@ -112,6 +127,9 @@ namespace vzWordyHoster
 		}
 		
 		private void ReadCurrentQuestion() {
+        	if(hostAvatarName == "") {
+        		announceInitialisation();
+        	}
         	if (thisGame != null) {
 	        	waSay(thisQuestionNumberDescriptor);
 				waSay(thisGame.ThisQuestionText);
@@ -125,6 +143,17 @@ namespace vzWordyHoster
         		MessageBox.Show("You need to start a game first.", "vzWordyHoster");
         	}
 		}
+        
+        private void CloseCurrentQuestion() {
+        	if (thisGame != null) {
+        		waSay("Closed!");
+        		thisGame.CloseQuestion();
+        		getESPsAndMarkThem();
+        		UpdatePlayersGrid();
+        	} else {
+        		MessageBox.Show("You need to start a game first.", "vzWordyHoster");
+        	}
+        }
         
         private List<string> getCurrentOptionTextsList() {
         	//string[] optionTexts = new string[3] {"Flopsy", "Mopsy", "Topsy"};
@@ -146,8 +175,63 @@ namespace vzWordyHoster
         
         private void announceInitialisation() {
         	waSay(initialisationString);
-        	hostAvatarName = "TODO";
+        	waGet();
+        	
+			// Set up a timer, which, when elapsed, will call getHostName().
+			// The timer allows waGet() to finish processing.
+        	// postInitTmr has been declared at the class level so that its state can be changed in its event handler.
+			postInitTmr.Interval = 1000; // Interval in milliseconds
+			postInitTmr.AutoReset = true; // If false, stops it from repeating
+			postInitTmr.Elapsed += new ElapsedEventHandler(postInitTmrElapsed);
+			postInitTmr.Enabled = true;
+			postInitTmr.Start();
         }
+        
+		void postInitTmrElapsed(object sender, ElapsedEventArgs e)
+		{
+			// Only attempt to grab the host if the comms buffer is quiet, meaning that waGet() has finished processing.
+			if(commsBufferTable.Rows.Count == 0) {
+				postInitTmr.AutoReset = false;
+				postInitTmr.Enabled = false;
+				getHostName();
+			}
+		}
+        
+        private void getHostName() {
+        	hostAvatarName = Game.GetHostNameByInitString(allText, initialisationString);
+        	if(hostAvatarName != "") {
+				Debug.WriteLine("I think the host is: " + hostAvatarName);
+				waSay("Your host is " + hostAvatarName + ".");
+        	}
+        }
+		
+		private void getESPsAndMarkThem() {
+			
+			//waGet();  // TODO: Uncomment this! Commented out for debugging purposes only
+			
+			// Set up a timer, which, when elapsed, will call ...().
+			// The timer allows waGet() to finish processing.
+        	// The timer has been declared at the class level so that its state can be changed in its event handler.
+        	//questionMarkerTmr.BeginInit();
+        	//questionMarkerTmr.Enabled = true;
+        	questionMarkerTmr.Interval = 1000; // Interval in milliseconds
+			questionMarkerTmr.AutoReset = true; // If false, stops it from repeating
+			questionMarkerTmr.Elapsed += new ElapsedEventHandler(questionMarkerTmrElapsed);
+			awaitingMarking = true;
+			questionMarkerTmr.Start();
+		}
+		
+		void questionMarkerTmrElapsed(object sender, ElapsedEventArgs e)
+		{
+			Debug.WriteLine("questionMarkerTmr: TICK!");
+			// Only attempt to grab the host if the comms buffer is quiet, meaning that waGet() has finished processing.
+			if ( (commsBufferTable.Rows.Count == 0) && (awaitingMarking == true) ) {
+				awaitingMarking = false;
+				questionMarkerTmr.Stop();
+				Debug.WriteLine("About to call MarkAnswers...");
+				thisGame.MarkAnswers(allText, thisGame.ThisQuestionText, hostAvatarName);
+			}
+		}
 		
 		
 		//---------- BEGIN FORM CONTROL EVENTS ----------------------------------------------------------------------------
@@ -176,6 +260,9 @@ namespace vzWordyHoster
 		
 		void LoadTriviaFileTmiClick(object sender, EventArgs e)
 		{
+			if(hostAvatarName == "") {
+        		announceInitialisation();
+        	}
 			thisGame = new Game("TRIVIA");
 			questionsInGame = thisGame.LoadQuestionFile("questions.xml");  //TODO: Add a file selector.
 			Debug.WriteLine(questionsInGame.ToString() + " questions loaded.");
@@ -201,10 +288,15 @@ namespace vzWordyHoster
 		void GetPlayersBtnClick(object sender, EventArgs e)
 		{
 			if (thisGame != null) {
-				playersDgv.DataSource = thisGame.PlayersTable;
+				UpdatePlayersGrid();
 			} else {
 				MessageBox.Show("You need to start a game before attempting to get players.", "vzWordyHoster");
 			}
+		}
+		
+		void UpdatePlayersGrid() {
+			playersTableLocal = thisGame.PlayersTable.Copy();  // We make a local copy to avoid threading issues that arise when using the table in class Game.
+			playersDgv.DataSource = playersTableLocal;
 		}
 		
 		void QuestionReadBtnClick(object sender, EventArgs e)
@@ -212,10 +304,42 @@ namespace vzWordyHoster
 			ReadCurrentQuestion();
 		}
 		
+		void GetHostBtnClick(object sender, EventArgs e)
+		{
+			getHostName();
+		}
 		
+		void MarkAnswersBtnClick(object sender, EventArgs e)
+		{
+			getESPsAndMarkThem();
+		}
+		
+		void TomBtnClick(object sender, EventArgs e)
+		{
+			allText += Environment.NewLine + "ESP from Tom: " + dummyAnswerTbx.Text;
+			allTextTbx.Text = allText;			
+		}
+		
+		void DickBtnClick(object sender, EventArgs e)
+		{
+			allText += Environment.NewLine + "ESP from Dick: " + dummyAnswerTbx.Text;
+			allTextTbx.Text = allText;
+		}
+		
+		void HarryBtnClick(object sender, EventArgs e)
+		{
+			allText += Environment.NewLine + "ESP from Harry: " + dummyAnswerTbx.Text;
+			allTextTbx.Text = allText;
+		}
+		
+		void CloseQuestionBtnClick(object sender, EventArgs e)
+		{
+			CloseCurrentQuestion();
+		}
 		
 		//---------- END FORM CONTROL EVENTS ------------------------------------------------------------------------------
 		
+
 	}// class MainForm
 	
 	
