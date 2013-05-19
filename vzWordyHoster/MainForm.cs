@@ -59,6 +59,8 @@ namespace vzWordyHoster
 			waSetup();
 			
 			postInitTmr.Enabled = false;
+			questionReadBtn.Enabled = false;
+			closeQuestionBtn.Enabled = false;
 			
 			announceInitialisation();
 		}// MainForm() constructor method
@@ -94,6 +96,7 @@ namespace vzWordyHoster
         	}
 			thisGame.RefreshQuestion();
 			questionTbx.Text = thisGame.ThisQuestionText;
+			qHeaderTypeLbl.Text = "Type: " + FirstLetterToUpper(thisGame.ThisQuestionType);
 			answerTbx.Text = thisGame.ThisAnswerNumber.ToString() + " [" + thisGame.ThisAnswerText + "]";
 			UpdateOptionsGrid();
 			thisQuestionNumberDescriptor = "Question " + thisGame.ThisQuestionNumber.ToString() + " of " + questionsInGame.ToString();
@@ -101,11 +104,15 @@ namespace vzWordyHoster
 			questionTrk.Minimum = 1;
 			questionTrk.Maximum = questionsInGame;
 			questionTrk.Value = thisGame.ThisQuestionNumber;
-			closeQuestionBtn.Enabled = true;
+			closeQuestionBtn.Enabled = false;
 			questionReadBtn.Enabled = true;
 			thisQuestionHasAlreadyBeenRead = false;
+			questionReadBtn.Text = "Read Question";
 			thisQuestionTimerWarnings.Clear();
 			thisQuestionTimerWarnings.AddRange(questionTimerWarningsAt);
+			questionPgb.Minimum = 0;
+			questionPgb.Maximum = secondsPerQuestion;
+			questionPgb.Value = secondsPerQuestion;
 		}
 		
 		private void GetNextQuestion() {
@@ -132,6 +139,7 @@ namespace vzWordyHoster
 				LoadCurrentQuestion();
 			} else {
 				MessageBox.Show("You need to start a game first.", "vzWordyHoster");
+				questionTrk.Value = 0;
 			}
 		}
 		
@@ -164,8 +172,13 @@ namespace vzWordyHoster
 					autoGetTmr.Enabled = true;  // Start getting chat/ESP text automatically
 					questionTmr.Enabled = true; // Start the question duration timer
 					thisQuestionSecondsElapsed = 0;
+					questionBackBtn.Enabled = false;
+					questionForwardBtn.Enabled = false;
+					questionTrk.Enabled = false;
+					closeQuestionBtn.Enabled = true;
 				}
 				thisQuestionHasAlreadyBeenRead = true;
+				questionReadBtn.Text = "Repeat Question";
         	} else {
         		MessageBox.Show("You need to start a game first.", "vzWordyHoster");
         	}
@@ -186,6 +199,10 @@ namespace vzWordyHoster
         		questionReadBtn.Enabled = false;
         		autoGetTmr.Enabled = false;
         		questionTmr.Enabled = false;
+        		questionBackBtn.Enabled = true;
+				questionForwardBtn.Enabled = true;
+				questionTrk.Enabled = true;
+				questionPgb.Value = 0;
         		thisGame.CloseQuestion();  // The position of this is crucial: it must be called before getESPsAndMarkThem(), or points will be doubled.
         		waSay(closureMessage);
         		getESPsAndMarkThem();
@@ -263,6 +280,18 @@ namespace vzWordyHoster
 			waGet();  // Comment out this line if you want to do a waGet() manually, then add stuff to the comms buffer for results debugging with dummy players.
 			addCommsBufferItem("MARK", "", "");
 			addCommsBufferItem("UPDATEPLAYERS", "", "");
+		}	
+
+		public string FirstLetterToUpper(string str) {
+		    if (str != null) {
+				if(str.Length > 1) {
+		            return char.ToUpper(str[0]) + str.Substring(1);
+				}
+				else {
+		        	return str.ToUpper();
+				}
+		    }
+		    return str;
 		}		
 		
 		//---------- BEGIN FORM CONTROL EVENTS ----------------------------------------------------------------------------
@@ -399,9 +428,33 @@ namespace vzWordyHoster
 				thisQuestionTimerWarnings.RemoveAt(0);
 			}
 			
+			if (secondsRemaining >= 0) {
+				questionPgb.Value = secondsRemaining;
+			}
+			
 			if ( thisQuestionSecondsElapsed >= secondsPerQuestion ) {
 				CloseCurrentQuestion();
 			}
+		}
+		
+		private void readScores() {
+			UpdatePlayersGrid();
+			// Iterate through playersTableLocal.
+			if (playersTableLocal.Rows.Count > 0) {
+				waSay("The scores are:");
+				DataRow playerRow;
+				for (Int32 playerCounter = 0; playerCounter < playersTableLocal.Rows.Count; playerCounter++) {
+					playerRow = playersTableLocal.Rows[playerCounter];
+					waSay( playerRow["Player"].ToString() + ": " + playerRow["Score"].ToString() );
+				}
+			} else {
+				waSay("There are no players yet!");
+			}
+		}
+		
+		void ReadScoresBtnClick(object sender, EventArgs e)
+		{
+			readScores();	
 		}
 	}// class MainForm
 	

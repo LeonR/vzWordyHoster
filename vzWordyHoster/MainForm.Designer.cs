@@ -38,8 +38,7 @@ namespace vzWordyHoster
 		{
 			this.components = new System.ComponentModel.Container();
 			this.playersPnl = new System.Windows.Forms.Panel();
-			this.markAnswersBtn = new System.Windows.Forms.Button();
-			this.getPlayersBtn = new System.Windows.Forms.Button();
+			this.readScoresBtn = new System.Windows.Forms.Button();
 			this.playersDgv = new System.Windows.Forms.DataGridView();
 			this.debugPnl = new System.Windows.Forms.Panel();
 			this.dummyAnswerTbx = new System.Windows.Forms.TextBox();
@@ -54,6 +53,7 @@ namespace vzWordyHoster
 			this.commsPnl = new System.Windows.Forms.Panel();
 			this.macroLbx = new System.Windows.Forms.ListBox();
 			this.questionPnl = new System.Windows.Forms.Panel();
+			this.questionPgb = new System.Windows.Forms.ProgressBar();
 			this.optionsDgv = new System.Windows.Forms.DataGridView();
 			this.closeQuestionBtn = new System.Windows.Forms.Button();
 			this.questionReadBtn = new System.Windows.Forms.Button();
@@ -88,8 +88,7 @@ namespace vzWordyHoster
 			// 
 			// playersPnl
 			// 
-			this.playersPnl.Controls.Add(this.markAnswersBtn);
-			this.playersPnl.Controls.Add(this.getPlayersBtn);
+			this.playersPnl.Controls.Add(this.readScoresBtn);
 			this.playersPnl.Controls.Add(this.playersDgv);
 			this.playersPnl.Dock = System.Windows.Forms.DockStyle.Right;
 			this.playersPnl.Location = new System.Drawing.Point(692, 24);
@@ -97,25 +96,15 @@ namespace vzWordyHoster
 			this.playersPnl.Size = new System.Drawing.Size(365, 514);
 			this.playersPnl.TabIndex = 0;
 			// 
-			// markAnswersBtn
+			// readScoresBtn
 			// 
-			this.markAnswersBtn.Location = new System.Drawing.Point(6, 449);
-			this.markAnswersBtn.Name = "markAnswersBtn";
-			this.markAnswersBtn.Size = new System.Drawing.Size(100, 23);
-			this.markAnswersBtn.TabIndex = 3;
-			this.markAnswersBtn.Text = "Mark Answers";
-			this.markAnswersBtn.UseVisualStyleBackColor = true;
-			this.markAnswersBtn.Click += new System.EventHandler(this.MarkAnswersBtnClick);
-			// 
-			// getPlayersBtn
-			// 
-			this.getPlayersBtn.Location = new System.Drawing.Point(6, 420);
-			this.getPlayersBtn.Name = "getPlayersBtn";
-			this.getPlayersBtn.Size = new System.Drawing.Size(100, 23);
-			this.getPlayersBtn.TabIndex = 1;
-			this.getPlayersBtn.Text = "Get Players";
-			this.getPlayersBtn.UseVisualStyleBackColor = true;
-			this.getPlayersBtn.Click += new System.EventHandler(this.GetPlayersBtnClick);
+			this.readScoresBtn.Location = new System.Drawing.Point(6, 419);
+			this.readScoresBtn.Name = "readScoresBtn";
+			this.readScoresBtn.Size = new System.Drawing.Size(99, 23);
+			this.readScoresBtn.TabIndex = 4;
+			this.readScoresBtn.Text = "Read Scores";
+			this.readScoresBtn.UseVisualStyleBackColor = true;
+			this.readScoresBtn.Click += new System.EventHandler(this.ReadScoresBtnClick);
 			// 
 			// playersDgv
 			// 
@@ -244,12 +233,13 @@ namespace vzWordyHoster
 									"Hurry up!"});
 			this.macroLbx.Location = new System.Drawing.Point(22, 3);
 			this.macroLbx.Name = "macroLbx";
-			this.macroLbx.Size = new System.Drawing.Size(275, 82);
+			this.macroLbx.Size = new System.Drawing.Size(278, 82);
 			this.macroLbx.TabIndex = 0;
 			this.macroLbx.Click += new System.EventHandler(this.MacroLbxClick);
 			// 
 			// questionPnl
 			// 
+			this.questionPnl.Controls.Add(this.questionPgb);
 			this.questionPnl.Controls.Add(this.optionsDgv);
 			this.questionPnl.Controls.Add(this.closeQuestionBtn);
 			this.questionPnl.Controls.Add(this.questionReadBtn);
@@ -265,8 +255,16 @@ namespace vzWordyHoster
 			this.questionPnl.Dock = System.Windows.Forms.DockStyle.Top;
 			this.questionPnl.Location = new System.Drawing.Point(0, 0);
 			this.questionPnl.Name = "questionPnl";
-			this.questionPnl.Size = new System.Drawing.Size(300, 397);
+			this.questionPnl.Size = new System.Drawing.Size(300, 419);
 			this.questionPnl.TabIndex = 0;
+			// 
+			// questionPgb
+			// 
+			this.questionPgb.Location = new System.Drawing.Point(22, 397);
+			this.questionPgb.Name = "questionPgb";
+			this.questionPgb.Size = new System.Drawing.Size(278, 19);
+			this.questionPgb.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
+			this.questionPgb.TabIndex = 12;
 			// 
 			// optionsDgv
 			// 
@@ -324,7 +322,7 @@ namespace vzWordyHoster
 			// 
 			this.questionTrk.Location = new System.Drawing.Point(51, 332);
 			this.questionTrk.Name = "questionTrk";
-			this.questionTrk.Size = new System.Drawing.Size(213, 45);
+			this.questionTrk.Size = new System.Drawing.Size(223, 45);
 			this.questionTrk.TabIndex = 6;
 			this.questionTrk.Scroll += new System.EventHandler(this.QuestionTrkScroll);
 			// 
@@ -370,6 +368,7 @@ namespace vzWordyHoster
 			this.qHeaderTypeLbl.Size = new System.Drawing.Size(100, 23);
 			this.qHeaderTypeLbl.TabIndex = 1;
 			this.qHeaderTypeLbl.Text = "qHeaderTypeLbl";
+			this.qHeaderTypeLbl.TextAlign = System.Drawing.ContentAlignment.TopRight;
 			// 
 			// qHeaderNumberLbl
 			// 
@@ -463,14 +462,14 @@ namespace vzWordyHoster
 			this.ResumeLayout(false);
 			this.PerformLayout();
 		}
+		private System.Windows.Forms.ProgressBar questionPgb;
+		private System.Windows.Forms.Button readScoresBtn;
 		private System.Windows.Forms.Timer questionTmr;
 		private System.Windows.Forms.Timer autoGetTmr;
 		private System.Windows.Forms.Button dickBtn;
 		private System.Windows.Forms.Button harryBtn;
 		private System.Windows.Forms.TextBox dummyAnswerTbx;
 		private System.Windows.Forms.Button tomBtn;
-		private System.Windows.Forms.Button markAnswersBtn;
-		private System.Windows.Forms.Button getPlayersBtn;
 		private System.Windows.Forms.DataGridView optionsDgv;
 		private System.Windows.Forms.ToolStripMenuItem startGameTmi;
 		public System.Windows.Forms.DataGridView playersDgv;

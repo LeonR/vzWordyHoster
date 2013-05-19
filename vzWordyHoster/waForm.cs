@@ -277,6 +277,7 @@ namespace vzWordyHoster
         				commsBufferTable.Rows.RemoveAt(0);
         				if (thisGame != null) {
         					readClosedRoundScores();
+        					GetNextQuestion();
 						} else {
 							Debug.Print("You need to start a game before attempting to get players.");
 						}

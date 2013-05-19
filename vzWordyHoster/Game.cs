@@ -45,8 +45,13 @@ namespace vzWordyHoster
 		
 		public string ThisQuestionText {
 			get {
-				//loadAllQuestionDetailsPrivately();
 				return thisQuestionText;
+			}
+		}
+		
+		public string ThisQuestionType {
+			get {
+				return thisQuestionType;
 			}
 		}
 		
@@ -357,6 +362,7 @@ namespace vzWordyHoster
 		private Int32 thisQuestionNumber;
 		private Int32 numQuestions;
 		private string thisQuestionText;
+		private string thisQuestionType;
 		private string thisAnswerText;
 		private Int32 thisAnswerOptionNum;
 		private IEnumerable<XElement> questions;
@@ -452,6 +458,7 @@ namespace vzWordyHoster
 			thisQuestionElem = questions.ElementAt(thisQuestionNumber - 1);
 			// Load thisQuestionText:
 			thisQuestionText = thisQuestionElem.Element("clue").Value;
+			thisQuestionType = thisQuestionElem.Attribute("type").Value;
 			
 			// Load thisAnswerText:
 			var correctAns = from answeropt in thisQuestionElem.Elements("answer-option")
