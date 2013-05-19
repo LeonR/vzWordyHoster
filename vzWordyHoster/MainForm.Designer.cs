@@ -39,7 +39,6 @@ namespace vzWordyHoster
 			this.components = new System.ComponentModel.Container();
 			this.playersPnl = new System.Windows.Forms.Panel();
 			this.markAnswersBtn = new System.Windows.Forms.Button();
-			this.getHostBtn = new System.Windows.Forms.Button();
 			this.getPlayersBtn = new System.Windows.Forms.Button();
 			this.playersDgv = new System.Windows.Forms.DataGridView();
 			this.debugPnl = new System.Windows.Forms.Panel();
@@ -73,6 +72,8 @@ namespace vzWordyHoster
 			this.startGameTmi = new System.Windows.Forms.ToolStripMenuItem();
 			this.helpTmi = new System.Windows.Forms.ToolStripMenuItem();
 			this.aboutTmi = new System.Windows.Forms.ToolStripMenuItem();
+			this.autoGetTmr = new System.Windows.Forms.Timer(this.components);
+			this.questionTmr = new System.Windows.Forms.Timer(this.components);
 			this.playersPnl.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.playersDgv)).BeginInit();
 			this.debugPnl.SuspendLayout();
@@ -88,7 +89,6 @@ namespace vzWordyHoster
 			// playersPnl
 			// 
 			this.playersPnl.Controls.Add(this.markAnswersBtn);
-			this.playersPnl.Controls.Add(this.getHostBtn);
 			this.playersPnl.Controls.Add(this.getPlayersBtn);
 			this.playersPnl.Controls.Add(this.playersDgv);
 			this.playersPnl.Dock = System.Windows.Forms.DockStyle.Right;
@@ -99,31 +99,21 @@ namespace vzWordyHoster
 			// 
 			// markAnswersBtn
 			// 
-			this.markAnswersBtn.Location = new System.Drawing.Point(7, 480);
+			this.markAnswersBtn.Location = new System.Drawing.Point(6, 449);
 			this.markAnswersBtn.Name = "markAnswersBtn";
 			this.markAnswersBtn.Size = new System.Drawing.Size(100, 23);
 			this.markAnswersBtn.TabIndex = 3;
-			this.markAnswersBtn.Text = "markAnswersBtn";
+			this.markAnswersBtn.Text = "Mark Answers";
 			this.markAnswersBtn.UseVisualStyleBackColor = true;
 			this.markAnswersBtn.Click += new System.EventHandler(this.MarkAnswersBtnClick);
 			// 
-			// getHostBtn
-			// 
-			this.getHostBtn.Location = new System.Drawing.Point(7, 450);
-			this.getHostBtn.Name = "getHostBtn";
-			this.getHostBtn.Size = new System.Drawing.Size(100, 23);
-			this.getHostBtn.TabIndex = 2;
-			this.getHostBtn.Text = "getHostBtn";
-			this.getHostBtn.UseVisualStyleBackColor = true;
-			this.getHostBtn.Click += new System.EventHandler(this.GetHostBtnClick);
-			// 
 			// getPlayersBtn
 			// 
-			this.getPlayersBtn.Location = new System.Drawing.Point(7, 420);
+			this.getPlayersBtn.Location = new System.Drawing.Point(6, 420);
 			this.getPlayersBtn.Name = "getPlayersBtn";
 			this.getPlayersBtn.Size = new System.Drawing.Size(100, 23);
 			this.getPlayersBtn.TabIndex = 1;
-			this.getPlayersBtn.Text = "getPlayersBtn";
+			this.getPlayersBtn.Text = "Get Players";
 			this.getPlayersBtn.UseVisualStyleBackColor = true;
 			this.getPlayersBtn.Click += new System.EventHandler(this.GetPlayersBtnClick);
 			// 
@@ -224,7 +214,7 @@ namespace vzWordyHoster
 			// processBufferTmr
 			// 
 			this.processBufferTmr.Enabled = true;
-			this.processBufferTmr.Interval = 500;
+			this.processBufferTmr.Interval = 200;
 			this.processBufferTmr.Tick += new System.EventHandler(this.ProcessBufferTmrTick);
 			// 
 			// leftPnl
@@ -436,6 +426,16 @@ namespace vzWordyHoster
 			this.aboutTmi.Size = new System.Drawing.Size(116, 22);
 			this.aboutTmi.Text = "About...";
 			// 
+			// autoGetTmr
+			// 
+			this.autoGetTmr.Interval = 5000;
+			this.autoGetTmr.Tick += new System.EventHandler(this.AutoGetTmrTick);
+			// 
+			// questionTmr
+			// 
+			this.questionTmr.Interval = 1000;
+			this.questionTmr.Tick += new System.EventHandler(this.QuestionTmrTick);
+			// 
 			// MainForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -463,12 +463,13 @@ namespace vzWordyHoster
 			this.ResumeLayout(false);
 			this.PerformLayout();
 		}
+		private System.Windows.Forms.Timer questionTmr;
+		private System.Windows.Forms.Timer autoGetTmr;
 		private System.Windows.Forms.Button dickBtn;
 		private System.Windows.Forms.Button harryBtn;
 		private System.Windows.Forms.TextBox dummyAnswerTbx;
 		private System.Windows.Forms.Button tomBtn;
 		private System.Windows.Forms.Button markAnswersBtn;
-		private System.Windows.Forms.Button getHostBtn;
 		private System.Windows.Forms.Button getPlayersBtn;
 		private System.Windows.Forms.DataGridView optionsDgv;
 		private System.Windows.Forms.ToolStripMenuItem startGameTmi;

@@ -22,6 +22,8 @@ using System.Configuration;
 namespace vzWordyHoster
 {
 	public class Game {
+		
+		public static readonly bool DEBUG_ON = true;
 
 		// ----- Begin public interface -----
 		public string GameType {
@@ -57,6 +59,12 @@ namespace vzWordyHoster
 		public Int32 ThisAnswerNumber {
 			get {
 				return thisAnswerOptionNum;
+			}
+		}
+		
+		public List<string> LatestWinnersList {
+			get {
+				return latestWinnersList;
 			}
 		}
 		
@@ -144,9 +152,14 @@ namespace vzWordyHoster
 			return hostName;
 		}
 		
-		public void MarkAnswers(string allText, string sinceHostUtterance, string hostName) {
+		public void MarkAnswers(string allText, string sinceHostUtterance, string closeMessage, string hostName) {
+			
 			string startFromMessage = hostName + ": " + sinceHostUtterance;
-			bool marking = false;
+			
+			//Do some cleanup from any previous round:
+			mostRecentESPsThisRoundTable.Clear();
+			bool foundQuestionLine = false;
+			
 			DataRow playerRow;
 			//Clear previous "last answer" values in playersTable before starting this new marking session.
 			if (playersTable.Rows.Count > 0) {
@@ -156,34 +169,84 @@ namespace vzWordyHoster
 					playerRow["Marking"] = 0;
 				}
 				playersTable.AcceptChanges();
-				//playersTableAcceptChangesThreadSafe();
+			}
+			
+			//Clear out the latest winners info if we're about to build it again:
+			if(currentQuestionClosed) {
+				//latestWinnersText = "";
+				latestWinnersList.Clear();
 			}
 			
 			// Now iterate through all of the messages received since the host uttered the question.
 			// If the message is an ESP, add/update the player's row in mostRecentESPsThisRoundTable.
 			string[] messagesArray = allText.Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
-			for (Int32 messageCounter = 0; messageCounter < messagesArray.Count(); messageCounter++) {
+			
+			// Work BACK through the messages until we find the most recent reading of the current question (not a repeat)
+			// and the most recent closure line:
+			foundQuestionLine = false;
+			Int32 questionUtterancePosition = -1;
+			for (Int32 messageCounter = messagesArray.Count() - 1; messageCounter >= 0; messageCounter--) {
 				string thisLine = messagesArray.ElementAt(messageCounter);
-				Debug.WriteLine(thisLine);
-				if(thisLine == startFromMessage) {
-					Debug.WriteLine("Found a match!");
-					marking = true;
+				if (DEBUG_ON) {
+					Debug.WriteLine("Line " + messageCounter.ToString() + ": " + thisLine);
 				}
-				if( (marking) && (thisLine.Length >= 8) && (thisLine.Substring(0, 8) == "ESP from") ) {  // This is an ESP
-					Int32 colonPos = thisLine.IndexOf(":");
-					if( (colonPos > -1) && (thisLine.Length >= 10) ) {
-						string ESPer = thisLine.Substring(9, colonPos - 9);
-						Debug.WriteLine("I think the ESPer's name is '" + ESPer + "'.");
-						Int32 ESPPreambleLen = 8 + ESPer.Length + 3;  // "ESP from " + ESPer + message
-						string ESPText = thisLine.Substring(ESPPreambleLen, thisLine.Length - ESPPreambleLen);
-						Debug.WriteLine("I think the ESP text is '" + ESPText + "'.");
-						addRecentESP(ESPer, ESPText);
+				// Turn on foundQuestionLine flag if appropriate:
+				if ( (foundQuestionLine == false) && (thisLine == startFromMessage) ) {
+					foundQuestionLine = true;
+					questionUtterancePosition = messageCounter;
+					if(DEBUG_ON) {
+						Debug.WriteLine("Setting foundQuestionLine flag to TRUE");
+						Debug.WriteLine("Question found at line " + questionUtterancePosition.ToString() );
 					}
 				}
 			}
 			
-			Debug.WriteLine("Recent ESPs table before marking:");
-			DumpDataTable(mostRecentESPsThisRoundTable);
+			if ( (foundQuestionLine) && (questionUtterancePosition > -1) ) {
+				// Copy all the messages from messagesArray, from the question utterance pos onwards, into relevantMessagesArray:
+				Int32 itemsToCopy = messagesArray.Count() - questionUtterancePosition;
+				//Int32 itemsToCopy = (closureMessagePosition - questionUtterancePosition) + 1 ;
+				string[] relevantMessagesArray = new string[itemsToCopy];
+				Array.Copy(messagesArray, questionUtterancePosition, relevantMessagesArray, 0, itemsToCopy);
+			
+				// Original forward-direction message iteration starts here:
+				bool stillMarking = true;
+				for (Int32 messageCounter = 0; (messageCounter < relevantMessagesArray.Count() ) && stillMarking; messageCounter++) {
+					string thisLine = relevantMessagesArray.ElementAt(messageCounter);
+					if(DEBUG_ON) {
+						Debug.WriteLine("thisLine: " + thisLine);
+					}
+					
+					// Process ESPed answers:
+					if( (thisLine.Length >= 8) && (thisLine.Substring(0, 8) == "ESP from") ) {  // This is an ESP
+						Int32 colonPos = thisLine.IndexOf(":");
+						if( (colonPos > -1) && (thisLine.Length >= 10) ) {
+							string ESPer = thisLine.Substring(9, colonPos - 9);
+							if(DEBUG_ON) {
+								Debug.WriteLine("I think the ESPer's name is '" + ESPer + "'.");
+							}
+							Int32 ESPPreambleLen = 8 + ESPer.Length + 3;  // "ESP from " + ESPer + message
+							string ESPText = thisLine.Substring(ESPPreambleLen, thisLine.Length - ESPPreambleLen);
+							if(DEBUG_ON) {
+								Debug.WriteLine("I think the ESP text is '" + ESPText + "'.");
+							}
+							addRecentESP(ESPer, ESPText);
+						}
+					}// if( (thisLine.Length >= 8) && (thisLine.Substring(0, 8) == "ESP from") )
+					else if (thisLine == hostName + ": " + closeMessage) {
+						stillMarking = false;
+					}
+				}// iteration through relevantMessagesArray
+			}// if ( (foundQuestionLine) && (foundClosureLine) && (questionUtterancePosition > -1) )
+			else {
+				Debug.WriteLine("Could not find question in messagesArray");
+				Debug.WriteLine("foundQuestionLine: " + foundQuestionLine.ToString() );
+				Debug.WriteLine("questionUtterancePosition: " + questionUtterancePosition.ToString() );
+			}
+			
+			if(DEBUG_ON) {
+				Debug.WriteLine("Recent ESPs table before marking:");
+				DumpDataTable(mostRecentESPsThisRoundTable);
+			}
 			
 			// Now work through mostRecentESPsThisRoundTable and award points:
 			awarded1st = false;
@@ -232,32 +295,48 @@ namespace vzWordyHoster
 							}
 
 							playerRow["Score"] = existingScoreInt + newPointsInt;
-							Debug.WriteLine("Added " + newPointsInt.ToString() + " points to existing player " + player + "'s score.");
+							if(DEBUG_ON) {
+								Debug.WriteLine("Added " + newPointsInt.ToString() + " points to existing player " + player + "'s score.");
+							}
 						}
 						playersTable.AcceptChanges();
-					} else {  // The ESPer doesn't already exist in playersTable
+					} else {  // The ESPer doesn't already exist in playersTable, so add them:
 						playerRow = playersTable.NewRow();
 						playerRow["Player"]     = player;
 						playerRow["LastAnswer"] = espRow["LastAnswer"];
 						playerRow["Marking"]    = espRow["Marking"];
 						if (currentQuestionClosed) {
 							playerRow["Score"] = espRow["Marking"];
-							Debug.WriteLine("Added " + espRow["Marking"].ToString() + " points to new player " + player + "'s score.");
+							if(DEBUG_ON) {
+								Debug.WriteLine("Added " + espRow["Marking"].ToString() + " points to new player " + player + "'s score.");
+							}
 						}
 						playersTable.Rows.Add(playerRow);
 				        playersTable.AcceptChanges();
+					}
+					
+					// If the current question has just been closed, and the player scored any points,
+					// add a string to latestWinnersList, for the purpose of points announcement:
+					if (currentQuestionClosed && espRow["Marking"].ToString() != "0") {
+						latestWinnersList.Add( player + ": " + espRow["Marking"].ToString() );
 					}
 		
 				}// for...
 				mostRecentESPsThisRoundTable.AcceptChanges();
 				
-				Debug.WriteLine("Recent ESPs table after marking:");
-				DumpDataTable(mostRecentESPsThisRoundTable);
+				if(DEBUG_ON) {
+					Debug.WriteLine("Recent ESPs table after marking:");
+					DumpDataTable(mostRecentESPsThisRoundTable);
+				}
 			} else {
-				Debug.WriteLine("mostRecentESPsThisRoundTable is empty");
+				if(DEBUG_ON) {
+					Debug.WriteLine("mostRecentESPsThisRoundTable is empty");
+				}
 			}
 			
-			Debug.WriteLine("Marking session is complete.");
+			if(DEBUG_ON) {
+				Debug.WriteLine("Marking session is complete.");
+			}
 
 			
 		}// public void MarkAnswers
@@ -285,30 +364,13 @@ namespace vzWordyHoster
 		private DataTable thisOptionsTable = new DataTable();
 		private DataTable playersTable = new DataTable();
 		private DataTable mostRecentESPsThisRoundTable = new DataTable();
-		
-		private bool currentQuestionClosed = false;
-		
-		//public MainForm myMainForm = new MainForm();
+		private List<string> latestWinnersList = new List<string>();
+		//private string latestWinnersText;
 		
 		
-		/*
-		private void playersTableAcceptChangesThreadSafe() {
-			if (myMainForm.playersDgv.InvokeRequired)
-            {
-                
-				myMainForm.playersDgv.Invoke((MethodInvoker)delegate
-                {
-                    playersTable.AcceptChanges();;
-                });
-            }
-            else
-            {
-                playersTable.AcceptChanges();;
-            }
+		//List<string> optionTexts = new List<string>();
 		
-		}
-		*/
-		
+		private bool currentQuestionClosed = false;		
 		
 		private Int32 getNextMark() {
 			if (!awarded1st) {
@@ -350,7 +412,9 @@ namespace vzWordyHoster
 				row = mostRecentESPsThisRoundTable.Rows.Find(player);
 				row.Delete();
 				mostRecentESPsThisRoundTable.AcceptChanges();
-				Debug.WriteLine("Deleted old ESP from player " + player);
+				if(DEBUG_ON) {
+					Debug.WriteLine("Deleted old ESP from player " + player);
+				}
 			}
 			
 			// Now add the new ESP to the bottom of the table:                                          
@@ -360,7 +424,9 @@ namespace vzWordyHoster
 			row["Marking"] = 0;
 			mostRecentESPsThisRoundTable.Rows.Add(row);
 	        mostRecentESPsThisRoundTable.AcceptChanges();
-	        Debug.WriteLine("Added recent ESP: " + player + " : " + lastAnswer);
+	        if(DEBUG_ON) {
+	        	Debug.WriteLine("Added recent ESP: " + player + " : " + lastAnswer);
+	        }
 			
 		}// addRecentESP
 		
@@ -370,9 +436,7 @@ namespace vzWordyHoster
 			string[] messagesArray = allText.Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
 			string matchingLine = "";
 			foreach (string message in messagesArray) {
-				//Debug.WriteLine("message is: " + message);
 				if( message.Contains(matchText) ) {
-					//Debug.WriteLine("matchText found!");
 					matchingLine = message;
 				}
 			}
@@ -384,6 +448,7 @@ namespace vzWordyHoster
 		}
 		
 		private void loadAllQuestionDetailsPrivately() {
+			
 			thisQuestionElem = questions.ElementAt(thisQuestionNumber - 1);
 			// Load thisQuestionText:
 			thisQuestionText = thisQuestionElem.Element("clue").Value;
@@ -416,6 +481,7 @@ namespace vzWordyHoster
 				thisOptionsTable.AcceptChanges();
 			}// for
 			
+			
 		}// loadAllQuestionDetailsPrivately
 		
 		
@@ -430,17 +496,22 @@ namespace vzWordyHoster
 			}
 	        thisOptionsTable.Rows.Add(row);
 	        thisOptionsTable.AcceptChanges();
-	        Debug.WriteLine("Option " + optionText + " added.");
+	        if (DEBUG_ON) {
+	        	Debug.WriteLine("Option " + optionText + " added.");
+	        }
 		}
 		
 
 		private Int32 loadTriviaFile() {
-			Debug.WriteLine("About to load file " + questionFile);
+			if(DEBUG_ON) {
+				Debug.WriteLine("About to load file " + questionFile);
+			}
 			XDocument xdocument = XDocument.Load("questions.xml");
 			questions = xdocument.Root.Elements();  // Root is the single top-level element, i.e. <questions>
-			foreach (var question in questions)
-			{
-			    Debug.WriteLine(question);
+			if(DEBUG_ON) {
+				foreach (var question in questions)	{
+				    Debug.WriteLine(question);
+				}
 			}
 			numQuestions = questions.Count();
 			thisQuestionNumber = 1;
@@ -542,7 +613,9 @@ namespace vzWordyHoster
 	        row["Player"] = playerName;
 	        playersTable.Rows.Add(row);
 	        playersTable.AcceptChanges();
-	        Debug.WriteLine("Player " + playerName + " added.");
+	        if(DEBUG_ON) {
+	        	Debug.WriteLine("Player " + playerName + " added.");
+	        }
 		}
 	
 		

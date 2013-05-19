@@ -14,14 +14,14 @@ namespace vzWordyHoster
     /// <summary>
     /// Description of MainForm.
     /// </summary>
-    /// 
-
+    ///
 
 
     public partial class MainForm : Form
     {
     	private static readonly string APP_NAME = "vzWordyHoster";
-    	private static readonly bool DEBUG_ON = true;
+    	public static readonly bool DEBUG_ON = false;    
+    	
     	
     	// ----------------------------------------------
     	// ----- BEGIN STANDARD WADAPI WRAPPER CODE -----
@@ -256,6 +256,30 @@ namespace vzWordyHoster
         				break;
         			case "GETALLTEXT":
 	                    this.InitialiseOperation(new ActionRequest(ActionRequestType.ACTION_GETALLTEXT){});       
+        				break;
+        			case "MARK":
+        				commsBufferTable.Rows.RemoveAt(0);
+        				if (thisGame != null) {
+							thisGame.MarkAnswers(allText, thisGame.ThisQuestionText, closureMessage, hostAvatarName);
+						} else {
+							Debug.Print("You need to start a game before attempting to get players.");
+						}
+        				break;
+        			case "UPDATEPLAYERS":
+        				commsBufferTable.Rows.RemoveAt(0);
+        				if (thisGame != null) {
+							UpdatePlayersGrid();
+						} else {
+							Debug.Print("You need to start a game before attempting to get players.");
+						}
+        				break;
+        			case "CLOSE":
+        				commsBufferTable.Rows.RemoveAt(0);
+        				if (thisGame != null) {
+        					readClosedRoundScores();
+						} else {
+							Debug.Print("You need to start a game before attempting to get players.");
+						}
         				break;
         			default:
         				if (DEBUG_ON) {
