@@ -78,13 +78,15 @@ namespace vzWordyHoster
 		}
 		
 		public void RefreshQuestion() {
-			loadAllQuestionDetailsPrivately();
+			//Debug.WriteLine("RefreshQuestion called");
+			loadQuestionDetailsPrivately();
 		}
 		
 		public void NextQuestion() {
+			//Debug.WriteLine("NextQuestion called");
 			if(thisQuestionNumber + 1 <= numQuestions) {
 				thisQuestionNumber++;
-				loadAllQuestionDetailsPrivately();
+				loadQuestionDetailsPrivately();
 				currentQuestionClosed = false;
 			}
 		}
@@ -92,7 +94,7 @@ namespace vzWordyHoster
 		public void PreviousQuestion() {
 			if(thisQuestionNumber - 1 >= 1) {
 				thisQuestionNumber--;
-				loadAllQuestionDetailsPrivately();
+				loadQuestionDetailsPrivately();
 				currentQuestionClosed = false;
 			}
 		}
@@ -100,7 +102,7 @@ namespace vzWordyHoster
 		public void GoToQuestion(Int32 requestedQuestionNumber) {
 			if( (requestedQuestionNumber >= 1) && (requestedQuestionNumber <= numQuestions) ) {
 				thisQuestionNumber = requestedQuestionNumber;
-				loadAllQuestionDetailsPrivately();
+				loadQuestionDetailsPrivately();
 			}
 		}
 		
@@ -128,7 +130,8 @@ namespace vzWordyHoster
 			questionFile = passedQuestionFile;
 			switch (gameType) {
 				case "TRIVIA":
-					questionsLoaded = loadTriviaFile();
+				case "DEVILSDICT":
+					questionsLoaded = loadFiniteQuestionFile();
 					break;
 				default:
 					questionsLoaded = 0;
@@ -142,7 +145,6 @@ namespace vzWordyHoster
 			buildOptionsTable();
 			buildPlayersTable();
 			buildMostRecentESPsThisRoundTable();
-			//addPlayer("Joe Dummy");
 		}
 		
 		public static string GetHostNameByInitString(string allText, string initString) {
@@ -263,7 +265,21 @@ namespace vzWordyHoster
 					espRow = mostRecentESPsThisRoundTable.Rows[recentESPCounter];
 					// Award marks:
 					Int32 marksToAward;
-					if ( espRow["LastAnswer"].ToString() == thisAnswerOptionNum.ToString() ) {
+					string expectedAnswerString;
+					switch (gameType) {
+						case "TRIVIA":
+							expectedAnswerString = thisAnswerOptionNum.ToString();
+							break;
+						case "DEVILSDICT":
+							expectedAnswerString = thisAnswerText;
+							break;
+						default:
+							expectedAnswerString = "xyzzyxyzzy";
+							Debug.WriteLine("Unknown gameType '" + gameType + "' in MarkAnswers()");
+							break;
+					}// switch (gameType)
+					
+					if ( espRow["LastAnswer"].ToString().ToLower() == expectedAnswerString.ToLower() ) {
 						// Current answer is correct:
 						marksToAward = getNextMark();
 						espRow["Marking"] = marksToAward;
@@ -453,7 +469,22 @@ namespace vzWordyHoster
 			}
 		}
 		
-		private void loadAllQuestionDetailsPrivately() {
+		private void loadQuestionDetailsPrivately() {
+			//Debug.WriteLine("loadQuestionDetailsPrivately called");
+			switch (gameType) {
+				case "TRIVIA":
+					loadTriviaQuestionDetailsPrivately();
+					break;
+				case "DEVILSDICT":
+					loadDevilsDictQuestionDetailsPrivately();
+					break;
+				default:
+					break;
+			}
+		}
+		
+		private void loadTriviaQuestionDetailsPrivately() {
+			//Debug.WriteLine("loadTriviaQuestionDetailsPrivately called");
 			
 			thisQuestionElem = questions.ElementAt(thisQuestionNumber - 1);
 			// Load thisQuestionText:
@@ -487,9 +518,21 @@ namespace vzWordyHoster
 				addOption( optionCounter + 1, optionTexts.ElementAt(optionCounter), optionTruthMod );
 				thisOptionsTable.AcceptChanges();
 			}// for
+				
+		}// loadTriviaQuestionDetailsPrivately
+		
+		private void loadDevilsDictQuestionDetailsPrivately() {
 			
+			thisQuestionElem = questions.ElementAt(thisQuestionNumber - 1);
+			// Load thisQuestionText:
+			thisQuestionText = thisQuestionElem.Element("def").Value;
+			Debug.WriteLine("thisQuestionText: " + thisQuestionText);
 			
-		}// loadAllQuestionDetailsPrivately
+			// Load thisAnswerText:
+			thisAnswerText = thisQuestionElem.Element("hw").Value;
+			Debug.WriteLine("thisAnswerText: " + thisAnswerText);
+				
+		}// loadDevilsDictQuestionDetailsPrivately
 		
 		
 		private void addOption(Int32 optionNumber, string optionText, string optionTruth) {
@@ -509,21 +552,29 @@ namespace vzWordyHoster
 		}
 		
 
-		private Int32 loadTriviaFile() {
+		private Int32 loadFiniteQuestionFile() {
 			if(DEBUG_ON) {
 				Debug.WriteLine("About to load file " + questionFile);
 			}
-			XDocument xdocument = XDocument.Load("questions.xml");
-			questions = xdocument.Root.Elements();  // Root is the single top-level element, i.e. <questions>
-			if(DEBUG_ON) {
-				foreach (var question in questions)	{
-				    Debug.WriteLine(question);
+			try {
+				XDocument xdocument = XDocument.Load(questionFile);
+				questions = xdocument.Root.Elements();  // Root is the single top-level element, i.e. <questions>
+				if(DEBUG_ON) {
+					foreach (var question in questions)	{
+				    	Debug.WriteLine(question);
+					}
 				}
+				numQuestions = questions.Count();
+				thisQuestionNumber = 1;
+			} catch (XmlException myException) {
+				MessageBox.Show( myException.ToString() );
+				throw;
 			}
-			numQuestions = questions.Count();
-			thisQuestionNumber = 1;
+			
+			
 			return numQuestions;
-		}// loadTriviaFile
+		}// loadFiniteQuestionFile
+
 		
 		private void buildOptionsTable()
 		{

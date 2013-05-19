@@ -68,12 +68,20 @@ namespace vzWordyHoster
 			this.qHeaderNumberLbl = new System.Windows.Forms.Label();
 			this.mainMnu = new System.Windows.Forms.MenuStrip();
 			this.fileTmi = new System.Windows.Forms.ToolStripMenuItem();
-			this.LoadTriviaFileTmi = new System.Windows.Forms.ToolStripMenuItem();
-			this.startGameTmi = new System.Windows.Forms.ToolStripMenuItem();
+			this.triviaTmi = new System.Windows.Forms.ToolStripMenuItem();
+			this.triviaFiniteTmi = new System.Windows.Forms.ToolStripMenuItem();
+			this.triviaInfiniteTmi = new System.Windows.Forms.ToolStripMenuItem();
+			this.devilsDictTmi = new System.Windows.Forms.ToolStripMenuItem();
+			this.devilsDictFiniteTmi = new System.Windows.Forms.ToolStripMenuItem();
+			this.devilsDictInfiniteTmi = new System.Windows.Forms.ToolStripMenuItem();
+			this.scrambleTmi = new System.Windows.Forms.ToolStripMenuItem();
+			this.scrambleFiniteTmi = new System.Windows.Forms.ToolStripMenuItem();
+			this.scrambleInfiniteTmi = new System.Windows.Forms.ToolStripMenuItem();
 			this.helpTmi = new System.Windows.Forms.ToolStripMenuItem();
 			this.aboutTmi = new System.Windows.Forms.ToolStripMenuItem();
 			this.autoGetTmr = new System.Windows.Forms.Timer(this.components);
 			this.questionTmr = new System.Windows.Forms.Timer(this.components);
+			this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
 			this.playersPnl.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.playersDgv)).BeginInit();
 			this.debugPnl.SuspendLayout();
@@ -265,6 +273,7 @@ namespace vzWordyHoster
 			this.questionPgb.Size = new System.Drawing.Size(278, 19);
 			this.questionPgb.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
 			this.questionPgb.TabIndex = 12;
+			this.questionPgb.MouseClick += new System.Windows.Forms.MouseEventHandler(this.QuestionPgbMouseClick);
 			// 
 			// optionsDgv
 			// 
@@ -362,19 +371,22 @@ namespace vzWordyHoster
 			// 
 			// qHeaderTypeLbl
 			// 
-			this.qHeaderTypeLbl.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.qHeaderTypeLbl.Location = new System.Drawing.Point(197, 4);
+			this.qHeaderTypeLbl.Anchor = System.Windows.Forms.AnchorStyles.Right;
+			this.qHeaderTypeLbl.AutoSize = true;
+			this.qHeaderTypeLbl.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
+			this.qHeaderTypeLbl.Location = new System.Drawing.Point(211, 4);
 			this.qHeaderTypeLbl.Name = "qHeaderTypeLbl";
-			this.qHeaderTypeLbl.Size = new System.Drawing.Size(100, 23);
+			this.qHeaderTypeLbl.Size = new System.Drawing.Size(86, 13);
 			this.qHeaderTypeLbl.TabIndex = 1;
 			this.qHeaderTypeLbl.Text = "qHeaderTypeLbl";
 			this.qHeaderTypeLbl.TextAlign = System.Drawing.ContentAlignment.TopRight;
 			// 
 			// qHeaderNumberLbl
 			// 
+			this.qHeaderNumberLbl.AutoSize = true;
 			this.qHeaderNumberLbl.Location = new System.Drawing.Point(4, 4);
 			this.qHeaderNumberLbl.Name = "qHeaderNumberLbl";
-			this.qHeaderNumberLbl.Size = new System.Drawing.Size(100, 23);
+			this.qHeaderNumberLbl.Size = new System.Drawing.Size(99, 13);
 			this.qHeaderNumberLbl.TabIndex = 0;
 			this.qHeaderNumberLbl.Text = "qHeaderNumberLbl";
 			// 
@@ -392,24 +404,77 @@ namespace vzWordyHoster
 			// fileTmi
 			// 
 			this.fileTmi.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-									this.LoadTriviaFileTmi,
-									this.startGameTmi});
+									this.triviaTmi,
+									this.devilsDictTmi,
+									this.scrambleTmi});
 			this.fileTmi.Name = "fileTmi";
 			this.fileTmi.Size = new System.Drawing.Size(37, 20);
 			this.fileTmi.Text = "File";
 			// 
-			// LoadTriviaFileTmi
+			// triviaTmi
 			// 
-			this.LoadTriviaFileTmi.Name = "LoadTriviaFileTmi";
-			this.LoadTriviaFileTmi.Size = new System.Drawing.Size(160, 22);
-			this.LoadTriviaFileTmi.Text = "Load Trivia file...";
-			this.LoadTriviaFileTmi.Click += new System.EventHandler(this.LoadTriviaFileTmiClick);
+			this.triviaTmi.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+									this.triviaFiniteTmi,
+									this.triviaInfiniteTmi});
+			this.triviaTmi.Name = "triviaTmi";
+			this.triviaTmi.Size = new System.Drawing.Size(174, 22);
+			this.triviaTmi.Text = "Trivia...";
 			// 
-			// startGameTmi
+			// triviaFiniteTmi
 			// 
-			this.startGameTmi.Name = "startGameTmi";
-			this.startGameTmi.Size = new System.Drawing.Size(160, 22);
-			this.startGameTmi.Text = "Start Game";
+			this.triviaFiniteTmi.Name = "triviaFiniteTmi";
+			this.triviaFiniteTmi.Size = new System.Drawing.Size(120, 22);
+			this.triviaFiniteTmi.Text = "Finite...";
+			this.triviaFiniteTmi.Click += new System.EventHandler(this.TriviaFiniteTmiClick);
+			// 
+			// triviaInfiniteTmi
+			// 
+			this.triviaInfiniteTmi.Name = "triviaInfiniteTmi";
+			this.triviaInfiniteTmi.Size = new System.Drawing.Size(120, 22);
+			this.triviaInfiniteTmi.Text = "Infinite...";
+			// 
+			// devilsDictTmi
+			// 
+			this.devilsDictTmi.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+									this.devilsDictFiniteTmi,
+									this.devilsDictInfiniteTmi});
+			this.devilsDictTmi.Name = "devilsDictTmi";
+			this.devilsDictTmi.Size = new System.Drawing.Size(174, 22);
+			this.devilsDictTmi.Text = "Devil\'s Dictionary...";
+			// 
+			// devilsDictFiniteTmi
+			// 
+			this.devilsDictFiniteTmi.Name = "devilsDictFiniteTmi";
+			this.devilsDictFiniteTmi.Size = new System.Drawing.Size(152, 22);
+			this.devilsDictFiniteTmi.Text = "Finite...";
+			this.devilsDictFiniteTmi.Click += new System.EventHandler(this.DevilsDictFiniteTmiClick);
+			// 
+			// devilsDictInfiniteTmi
+			// 
+			this.devilsDictInfiniteTmi.Name = "devilsDictInfiniteTmi";
+			this.devilsDictInfiniteTmi.Size = new System.Drawing.Size(152, 22);
+			this.devilsDictInfiniteTmi.Text = "Infinite...";
+			// 
+			// scrambleTmi
+			// 
+			this.scrambleTmi.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+									this.scrambleFiniteTmi,
+									this.scrambleInfiniteTmi});
+			this.scrambleTmi.Name = "scrambleTmi";
+			this.scrambleTmi.Size = new System.Drawing.Size(174, 22);
+			this.scrambleTmi.Text = "Word Scramble...";
+			// 
+			// scrambleFiniteTmi
+			// 
+			this.scrambleFiniteTmi.Name = "scrambleFiniteTmi";
+			this.scrambleFiniteTmi.Size = new System.Drawing.Size(120, 22);
+			this.scrambleFiniteTmi.Text = "Finite...";
+			// 
+			// scrambleInfiniteTmi
+			// 
+			this.scrambleInfiniteTmi.Name = "scrambleInfiniteTmi";
+			this.scrambleInfiniteTmi.Size = new System.Drawing.Size(120, 22);
+			this.scrambleInfiniteTmi.Text = "Infinite...";
 			// 
 			// helpTmi
 			// 
@@ -424,6 +489,7 @@ namespace vzWordyHoster
 			this.aboutTmi.Name = "aboutTmi";
 			this.aboutTmi.Size = new System.Drawing.Size(116, 22);
 			this.aboutTmi.Text = "About...";
+			this.aboutTmi.Click += new System.EventHandler(this.AboutTmiClick);
 			// 
 			// autoGetTmr
 			// 
@@ -434,6 +500,10 @@ namespace vzWordyHoster
 			// 
 			this.questionTmr.Interval = 1000;
 			this.questionTmr.Tick += new System.EventHandler(this.QuestionTmrTick);
+			// 
+			// openFileDialog1
+			// 
+			this.openFileDialog1.FileName = "openFileDialog1";
 			// 
 			// MainForm
 			// 
@@ -462,6 +532,16 @@ namespace vzWordyHoster
 			this.ResumeLayout(false);
 			this.PerformLayout();
 		}
+		private System.Windows.Forms.OpenFileDialog openFileDialog1;
+		private System.Windows.Forms.ToolStripMenuItem scrambleInfiniteTmi;
+		private System.Windows.Forms.ToolStripMenuItem scrambleFiniteTmi;
+		private System.Windows.Forms.ToolStripMenuItem scrambleTmi;
+		private System.Windows.Forms.ToolStripMenuItem devilsDictInfiniteTmi;
+		private System.Windows.Forms.ToolStripMenuItem devilsDictFiniteTmi;
+		private System.Windows.Forms.ToolStripMenuItem devilsDictTmi;
+		private System.Windows.Forms.ToolStripMenuItem triviaInfiniteTmi;
+		private System.Windows.Forms.ToolStripMenuItem triviaFiniteTmi;
+		private System.Windows.Forms.ToolStripMenuItem triviaTmi;
 		private System.Windows.Forms.ProgressBar questionPgb;
 		private System.Windows.Forms.Button readScoresBtn;
 		private System.Windows.Forms.Timer questionTmr;
@@ -471,7 +551,6 @@ namespace vzWordyHoster
 		private System.Windows.Forms.TextBox dummyAnswerTbx;
 		private System.Windows.Forms.Button tomBtn;
 		private System.Windows.Forms.DataGridView optionsDgv;
-		private System.Windows.Forms.ToolStripMenuItem startGameTmi;
 		public System.Windows.Forms.DataGridView playersDgv;
 		private System.Windows.Forms.ListBox macroLbx;
 		private System.Windows.Forms.Button questionBackBtn;
@@ -481,7 +560,6 @@ namespace vzWordyHoster
 		private System.Windows.Forms.TrackBar questionTrk;
 		private System.Windows.Forms.ToolStripMenuItem aboutTmi;
 		private System.Windows.Forms.ToolStripMenuItem helpTmi;
-		private System.Windows.Forms.ToolStripMenuItem LoadTriviaFileTmi;
 		private System.Windows.Forms.ToolStripMenuItem fileTmi;
 		private System.Windows.Forms.MenuStrip mainMnu;
 		private System.Windows.Forms.Label qHeaderNumberLbl;

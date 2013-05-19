@@ -23,6 +23,10 @@ namespace vzWordyHoster
 	/// <summary>
 	/// Description of MainForm.
 	/// </summary>
+	/// 
+	
+	//TODO: Add in Devil's Dictionary incremental clue functionality.
+	
 	public partial class MainForm : Form
 	{
 		
@@ -30,10 +34,11 @@ namespace vzWordyHoster
 		private Game thisGame;
 		private string thisQuestionNumberDescriptor;
 		private string hostAvatarName;
+		private string appName = "vzWordyHoster";
 		private string initialisationString = "vzWordyHoster initialised!";
 		private string closureMessage = "Closed!";
 		private Int32 secondsPerQuestion = 60;
-		private readonly List<Int32> questionTimerWarningsAt = new List<Int32> {10, 20, 30, 40, 50, 55, 56, 57, 58, 59}; // Never changes.
+		private readonly List<Int32> questionTimerWarningsAt = new List<Int32> {30, 40, 50, 55, 56, 57, 58, 59}; // Never changes.
 		private List<Int32> thisQuestionTimerWarnings = new List<Int32>(); // Is reset for each question, and gets first element popped after each warning.
 
 		private Int32 thisQuestionSecondsElapsed;
@@ -50,19 +55,41 @@ namespace vzWordyHoster
 			// The InitializeComponent() call is required for Windows Forms designer support.
 			InitializeComponent();
 			
+			// Enable/disable debug-related controls:
 			debugPnl.Enabled = DEBUG_ON;
 			debugPnl.Visible = DEBUG_ON;
 			if (!DEBUG_ON) {
 				this.Width = leftPnl.Width + playersPnl.Width + 30;
 			}
-
-			waSetup();
 			
-			postInitTmr.Enabled = false;
+			// Enable/disable standard controls:
 			questionReadBtn.Enabled = false;
 			closeQuestionBtn.Enabled = false;
+			qHeaderNumberLbl.Text = "";
+			qHeaderTypeLbl.Text = "";
 			
+			// Enable/disable menu items:
+			triviaInfiniteTmi.Enabled = false;
+			triviaInfiniteTmi.Visible = false;
+			
+			devilsDictInfiniteTmi.Enabled = false;
+			devilsDictInfiniteTmi.Visible = false;
+			
+			scrambleTmi.Enabled = false;
+			scrambleTmi.Visible = false;
+			
+			scrambleFiniteTmi.Enabled = false;
+			scrambleFiniteTmi.Visible = false;
+			
+			scrambleInfiniteTmi.Enabled = false;
+			scrambleInfiniteTmi.Visible = false;
+			
+			// Enable/disable timers:
+			postInitTmr.Enabled = false;
+
+			waSetup();
 			announceInitialisation();
+			
 		}// MainForm() constructor method
 		
 		
@@ -91,14 +118,27 @@ namespace vzWordyHoster
 
 		
 		private void LoadCurrentQuestion() {
+        	//Debug.WriteLine("LoadCurrentQuestion called");
         	if(hostAvatarName == "") {
         		announceInitialisation();
         	}
-			thisGame.RefreshQuestion();
+			//thisGame.RefreshQuestion();
 			questionTbx.Text = thisGame.ThisQuestionText;
 			qHeaderTypeLbl.Text = "Type: " + FirstLetterToUpper(thisGame.ThisQuestionType);
-			answerTbx.Text = thisGame.ThisAnswerNumber.ToString() + " [" + thisGame.ThisAnswerText + "]";
-			UpdateOptionsGrid();
+			
+			switch (thisGame.GameType) {
+				case "TRIVIA":
+					answerTbx.Text = thisGame.ThisAnswerNumber.ToString() + " [" + thisGame.ThisAnswerText + "]";
+					UpdateOptionsGrid();
+					break;
+				case "DEVILSDICT":
+					answerTbx.Text = thisGame.ThisAnswerText;
+					break;
+				default:
+					answerTbx.Text = "Unknown game type '" + thisGame.GameType + "' in LoadCurrentQuestion()";
+					break;
+			}// switch (thisGame.GameType)
+
 			thisQuestionNumberDescriptor = "Question " + thisGame.ThisQuestionNumber.ToString() + " of " + questionsInGame.ToString();
 			qHeaderNumberLbl.Text = thisQuestionNumberDescriptor;
 			questionTrk.Minimum = 1;
@@ -116,6 +156,7 @@ namespace vzWordyHoster
 		}
 		
 		private void GetNextQuestion() {
+        	//Debug.WriteLine("GetNextQuestion called");
 			if (thisGame != null) {
 				thisGame.NextQuestion();
 				LoadCurrentQuestion();
@@ -213,7 +254,22 @@ namespace vzWordyHoster
         }
         
         private void readClosedRoundScores() {
-        	waSay("The answer was: " + thisGame.ThisAnswerNumber.ToString() + ". " + thisGame.ThisAnswerText);
+        	switch (thisGame.GameType) {
+				case "TRIVIA":
+					waSay("The answer was: " + thisGame.ThisAnswerNumber.ToString() + ". " + thisGame.ThisAnswerText);
+					break;
+				case "DEVILSDICT":
+					waSay("The answer was: " + thisGame.ThisAnswerText);
+					break;
+				default:
+					answerTbx.Text = "Unknown game type '" + thisGame.GameType + "' in readClosedRoundScores()";
+					break;
+			}// switch (thisGame.GameType)
+        	
+        	
+        	
+        	
+        	
         	if (thisGame.LatestWinnersList.Count > 0) {
 	        	waSay("The following players scored points:");
 	        	foreach (string winnerText in thisGame.LatestWinnersList) // Loop through List with foreach
@@ -238,7 +294,17 @@ namespace vzWordyHoster
         }
         
         private void inviteAnswers() {
-        	waSay("Please ESP me, " + hostAvatarName + ", the number of your answer.");
+        	switch (thisGame.GameType) {
+				case "TRIVIA":
+					waSay("Please ESP me, " + hostAvatarName + ", the number of your answer.");
+					break;
+				case "DEVILSDICT":
+					waSay("Please ESP me, " + hostAvatarName + ", your answer.");
+					break;
+				default:
+					answerTbx.Text = "Unknown game type '" + thisGame.GameType + "' in inviteAnswers()";
+					break;
+			}// switch (thisGame.GameType)
         }
         
         private void announceInitialisation() {
@@ -292,7 +358,63 @@ namespace vzWordyHoster
 				}
 		    }
 		    return str;
-		}		
+		}
+
+		public void loadTriviaFinite() {
+			if(hostAvatarName == "") {
+        		announceInitialisation();
+        	}
+			DialogResult fdResult = openFileDialog1.ShowDialog(); // Show the dialog.
+		    if (fdResult == DialogResult.OK) {
+				thisGame = new Game("TRIVIA");
+				MainForm.ActiveForm.Text = appName + " :: Trivia :: Finite";
+				string fdFileName = openFileDialog1.FileName;
+				questionsInGame = thisGame.LoadQuestionFile(fdFileName);
+				if(DEBUG_ON) {
+					Debug.WriteLine(questionsInGame.ToString() + " questions loaded.");
+				}
+				thisGame.RefreshQuestion();
+				LoadCurrentQuestion();
+				
+			} else {
+				MessageBox.Show("There was a problem loading the file.");
+			}
+		}// loadTriviaFinite
+		
+		public void loadDevilsDictFinite() {
+			if(hostAvatarName == "") {
+        		announceInitialisation();
+        	}
+			DialogResult fdResult = openFileDialog1.ShowDialog(); // Show the dialog.
+		    if (fdResult == DialogResult.OK) {
+				thisGame = new Game("DEVILSDICT");
+				MainForm.ActiveForm.Text = appName + " :: Devil's Dictionary :: Finite";
+				string fdFileName = openFileDialog1.FileName;
+				questionsInGame = thisGame.LoadQuestionFile(fdFileName);
+				if(DEBUG_ON) {
+					Debug.WriteLine(questionsInGame.ToString() + " questions loaded.");
+				}
+				thisGame.RefreshQuestion();
+				LoadCurrentQuestion();
+			} else {
+				MessageBox.Show("There was a problem loading the file.");
+			}
+		}// loadTriviaFinite
+		
+		private void readScores() {
+			UpdatePlayersGrid();
+			// Iterate through playersTableLocal.
+			if (playersTableLocal.Rows.Count > 0) {
+				waSay("The scores are:");
+				DataRow playerRow;
+				for (Int32 playerCounter = 0; playerCounter < playersTableLocal.Rows.Count; playerCounter++) {
+					playerRow = playersTableLocal.Rows[playerCounter];
+					waSay( playerRow["Player"].ToString() + ": " + playerRow["Score"].ToString() );
+				}
+			} else {
+				waSay("There are no players yet!");
+			}
+		}
 		
 		//---------- BEGIN FORM CONTROL EVENTS ----------------------------------------------------------------------------
 		
@@ -320,25 +442,19 @@ namespace vzWordyHoster
 		
 		void LoadTriviaFileTmiClick(object sender, EventArgs e)
 		{
-			if(hostAvatarName == "") {
-        		announceInitialisation();
-        	}
-			thisGame = new Game("TRIVIA");
-			questionsInGame = thisGame.LoadQuestionFile("questions.xml");  //TODO: Add a file selector.
-			if(DEBUG_ON) {
-				Debug.WriteLine(questionsInGame.ToString() + " questions loaded.");
-			}
-			LoadCurrentQuestion();
+			
 			
 		}
 		
 		void QuestionForwardBtnClick(object sender, EventArgs e)
 		{
+			//Debug.WriteLine("QuestionForwardBtnClick called");
 			GetNextQuestion();
 		}
 		
 		void QuestionBackBtnClick(object sender, EventArgs e)
 		{
+			
 			GetPreviousQuestion();
 		}
 		
@@ -352,13 +468,17 @@ namespace vzWordyHoster
 			if (thisGame != null) {
 				UpdatePlayersGrid();
 			} else {
-				MessageBox.Show("You need to start a game before attempting to get players.", "vzWordyHoster");
+				MessageBox.Show("You need to start a game first.", "vzWordyHoster");
 			}
 		}
 		
 		void UpdatePlayersGrid() {
-			playersTableLocal = thisGame.PlayersTable.Copy();  // We make a local copy to avoid threading issues that arise when using the table in class Game.
-			playersDgv.DataSource = playersTableLocal;
+			if (thisGame != null) {
+				playersTableLocal = thisGame.PlayersTable.Copy();  // We make a local copy to avoid threading issues that arise when using the table in class Game.
+				playersDgv.DataSource = playersTableLocal;
+			} else {
+				MessageBox.Show("You need to start a game first.", "vzWordyHoster");
+			}
 		}
 		
 		void UpdateOptionsGrid() {
@@ -404,9 +524,16 @@ namespace vzWordyHoster
 			CloseCurrentQuestion();
 		}
 		
-		//---------- END FORM CONTROL EVENTS ------------------------------------------------------------------------------
+		void ReadScoresBtnClick(object sender, EventArgs e)
+		{
+			readScores();	
+		}
 		
-
+		void AboutTmiClick(object sender, EventArgs e)
+		{
+			AboutForm myAboutForm = new AboutForm();
+            myAboutForm.ShowDialog();
+		}
 		
 		void AutoGetTmrTick(object sender, EventArgs e)
 		{
@@ -437,25 +564,37 @@ namespace vzWordyHoster
 			}
 		}
 		
-		private void readScores() {
-			UpdatePlayersGrid();
-			// Iterate through playersTableLocal.
-			if (playersTableLocal.Rows.Count > 0) {
-				waSay("The scores are:");
-				DataRow playerRow;
-				for (Int32 playerCounter = 0; playerCounter < playersTableLocal.Rows.Count; playerCounter++) {
-					playerRow = playersTableLocal.Rows[playerCounter];
-					waSay( playerRow["Player"].ToString() + ": " + playerRow["Score"].ToString() );
-				}
-			} else {
-				waSay("There are no players yet!");
+		void QuestionPgbMouseClick(object sender, MouseEventArgs e)
+		{
+			if (questionTmr.Enabled) {
+				questionTmr.Enabled = false;
+				questionPgb.Style = ProgressBarStyle.Marquee;
+				qHeaderNumberLbl.Text = thisQuestionNumberDescriptor + " [PAUSED]";
+			} else if ( (questionTmr.Enabled == false) && thisQuestionHasAlreadyBeenRead ) {
+				questionTmr.Enabled = true;
+				questionPgb.Style = ProgressBarStyle.Continuous;
+				qHeaderNumberLbl.Text = thisQuestionNumberDescriptor;
+				qHeaderNumberLbl.Refresh();
 			}
 		}
 		
-		void ReadScoresBtnClick(object sender, EventArgs e)
+		
+		void TriviaFiniteTmiClick(object sender, EventArgs e)
 		{
-			readScores();	
+			loadTriviaFinite();
+			
 		}
+		
+		void DevilsDictFiniteTmiClick(object sender, EventArgs e)
+		{
+			loadDevilsDictFinite();
+		}
+		
+		//---------- END FORM CONTROL EVENTS ------------------------------------------------------------------------------
+		
+
+		
+		
 	}// class MainForm
 	
 	
