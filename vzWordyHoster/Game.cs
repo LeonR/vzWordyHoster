@@ -19,11 +19,41 @@ using System.Xml.Linq;
 using System.Timers;
 using System.Configuration;
 
+
 namespace vzWordyHoster
 {
 	public class Game {
 		
 		public static readonly bool DEBUG_ON = true;
+		//public Random rnd = new Random();
+		
+		public Game() {  // Constructor method
+			//gameType = passedGameType;
+			
+			buildPlayersTable();
+			buildMostRecentESPsThisRoundTable();
+			
+		}
+		
+		public DataTable ThisOptionsTable {
+			get {
+				return thisOptionsTable;
+			}
+		}
+		
+		
+		public Int32 GetRandomNumber(Int32 maxNumber) {
+			// From http://blog.codeeffects.com/Article/Generate-Random-Numbers-And-Strings-C-Sharp
+			// Returns a integer between 1 and (maxNumber - 1).
+			if(maxNumber < 1)
+				throw new System.Exception("The maxNumber value should be greater than 1");
+			byte[] b = new byte[4];
+			new System.Security.Cryptography.RNGCryptoServiceProvider().GetBytes(b);
+			int seed = (b[0] & 0x7f) << 24 | b[1] << 16 | b[2] << 8 | b[3];
+			System.Random r = new System.Random(seed);
+			return r.Next(1, maxNumber);
+		}
+		
 
 		// ----- Begin public interface -----
 		public string GameType {
@@ -40,6 +70,12 @@ namespace vzWordyHoster
 		public Int32 ThisQuestionNumber {
             get {
 				return thisQuestionNumber;
+			}
+		}
+		
+		public Int32 CharsRevealed {
+			get {
+				return charsRevealed;
 			}
 		}
 		
@@ -61,11 +97,18 @@ namespace vzWordyHoster
 			}
 		}
 		
+		public string ThisMaskedWord {
+			get {
+				return thisMaskedWord;
+			}
+		}
+		
 		public Int32 ThisAnswerNumber {
 			get {
 				return thisAnswerOptionNum;
 			}
 		}
+		
 		
 		public List<string> LatestWinnersList {
 			get {
@@ -76,6 +119,43 @@ namespace vzWordyHoster
 		public void CloseQuestion() {
 			currentQuestionClosed = true;
 		}
+		
+		
+		
+		
+		public DataTable PlayersTable {
+			get {
+				return playersTable;
+			}
+		}
+		
+		public DataTable RecentESPsTable {
+			get {
+				return mostRecentESPsThisRoundTable;
+			}
+		}
+		
+		public List<Int32> getWarningsFromAnswerLength() {
+			List<Int32> tempList = new List<Int32>();
+			if (thisAnswerText.Length > 0) {
+				for (Int32 charCounter = 1; charCounter < thisAnswerText.Length; charCounter++) {
+					tempList.Add(charCounter * 10);
+				}
+			}
+			return tempList;			
+		}
+		
+		
+		public void UnmaskAnother() {
+			if ( thisAnswerText.Length > charsRevealed ) {
+				thisMaskedWord = unmaskOneMoreChar(thisAnswerText, thisMask, '*', thisMaskedWord);
+				charsRevealed++;
+			}
+
+			thisOptionsTable.Rows[0][0] = charsRevealed;
+			thisOptionsTable.Rows[0][1] = thisMaskedWord;	
+		}// UnmaskAnother
+
 		
 		public void RefreshQuestion() {
 			//Debug.WriteLine("RefreshQuestion called");
@@ -106,24 +186,6 @@ namespace vzWordyHoster
 			}
 		}
 		
-		public DataTable ThisOptionsTable {
-			get {
-				return thisOptionsTable;
-			}
-		}
-		
-		public DataTable PlayersTable {
-			get {
-				return playersTable;
-			}
-		}
-		
-		public DataTable RecentESPsTable {
-			get {
-				return mostRecentESPsThisRoundTable;
-			}
-		}
-		
 
 		public Int32 LoadQuestionFile(string passedQuestionFile) {
 			Int32 questionsLoaded = 0;
@@ -139,13 +201,7 @@ namespace vzWordyHoster
 			}// switch (gameType)
 			return questionsLoaded;
 		}// loadQuestionFile
-		
-		public Game(string passedGameType) {  // Constructor method
-			gameType = passedGameType;
-			buildOptionsTable();
-			buildPlayersTable();
-			buildMostRecentESPsThisRoundTable();
-		}
+
 		
 		public static string GetHostNameByInitString(string allText, string initString) {
 			string initLine = FindFirstLineInMessagesContaining(allText, initString);
@@ -364,37 +420,48 @@ namespace vzWordyHoster
 		
 		// ----- End public interface -----
 
-		private readonly Int32 marksFor1st = 4;
-		private readonly Int32 marksFor2nd = 3;
-		private readonly Int32 marksFor3rd = 2;
-		private readonly Int32 marksForOthers = 1;
+		protected readonly Int32 marksFor1st = 4;
+		protected readonly Int32 marksFor2nd = 3;
+		protected readonly Int32 marksFor3rd = 2;
+		protected readonly Int32 marksForOthers = 1;
 		
-		private bool awarded1st = false;
-		private bool awarded2nd = false;
-		private bool awarded3rd = false;
+		protected bool awarded1st = false;
+		protected bool awarded2nd = false;
+		protected bool awarded3rd = false;
 		
-		private string gameType;
-		private string questionFile;
-		private Int32 thisQuestionNumber;
-		private Int32 numQuestions;
-		private string thisQuestionText;
-		private string thisQuestionType;
-		private string thisAnswerText;
-		private Int32 thisAnswerOptionNum;
-		private IEnumerable<XElement> questions;
-		private XElement thisQuestionElem;
-		private DataTable thisOptionsTable = new DataTable();
-		private DataTable playersTable = new DataTable();
-		private DataTable mostRecentESPsThisRoundTable = new DataTable();
-		private List<string> latestWinnersList = new List<string>();
+		protected string gameType;
+		protected string questionFile;
+		protected Int32 thisQuestionNumber;
+		protected Int32 numQuestions;
+		protected string thisQuestionText;
+		protected string thisQuestionType;
+		protected string thisAnswerText;
+		protected Int32 thisAnswerOptionNum;
+		protected IEnumerable<XElement> questions;
+		protected XElement thisQuestionElem;
+		protected Int32 charsRevealed;
+		protected string thisMaskedWord;
+		protected string thisMask;
+		
+		protected DataTable playersTable = new DataTable();
+		
+		protected DataTable thisOptionsTable = new DataTable();
+		
+		protected DataTable mostRecentESPsThisRoundTable = new DataTable();
+		protected List<string> latestWinnersList = new List<string>();
 		//private string latestWinnersText;
 		
 		
 		//List<string> optionTexts = new List<string>();
 		
-		private bool currentQuestionClosed = false;		
+		protected bool currentQuestionClosed = false;	
+
+		protected virtual void loadQuestionDetailsPrivately() {	
+		// See inheritors
+			Debug.WriteLine("Entered loadQuestionDetailsPrivately in Game");
+		}
 		
-		private Int32 getNextMark() {
+		protected Int32 getNextMark() {
 			if (!awarded1st) {
 				awarded1st = true;
 				return marksFor1st;
@@ -409,7 +476,7 @@ namespace vzWordyHoster
 			}
 		}
 		
-		private void DumpDataTable(DataTable table)
+		protected void DumpDataTable(DataTable table)
 		// From http://dotnet.dzone.com/news/dumping-datatable-debug-window then modified by LR
 		{
 		    foreach (DataRow row in table.Rows)
@@ -424,7 +491,7 @@ namespace vzWordyHoster
 		    }
 		}
 		
-		private void addRecentESP(string player, string lastAnswer) {
+		protected void addRecentESP(string player, string lastAnswer) {
 			
 			DataRow row;
 			
@@ -454,7 +521,7 @@ namespace vzWordyHoster
 		
 		
 		
-		private static string FindFirstLineInMessagesContaining(string allText, string matchText) {
+		protected static string FindFirstLineInMessagesContaining(string allText, string matchText) {
 			string[] messagesArray = allText.Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
 			string matchingLine = "";
 			foreach (string message in messagesArray) {
@@ -469,21 +536,181 @@ namespace vzWordyHoster
 			}
 		}
 		
-		private void loadQuestionDetailsPrivately() {
-			//Debug.WriteLine("loadQuestionDetailsPrivately called");
-			switch (gameType) {
-				case "TRIVIA":
-					loadTriviaQuestionDetailsPrivately();
-					break;
-				case "DEVILSDICT":
-					loadDevilsDictQuestionDetailsPrivately();
-					break;
-				default:
-					break;
-			}
-		}
 		
-		private void loadTriviaQuestionDetailsPrivately() {
+		protected string unmaskOneMoreChar(string plainText, string mask, char maskingChar, string maskedWord) {
+			// Count how many chars in maskedWord are still masked with asterisks, using Linq:
+			Int32 numberOfMaskedChars = maskedWord.TakeWhile(c => c == maskingChar).Count();
+			// Pick a masked character to unmask:
+			Int32 selectedIndex = GetRandomNumber(numberOfMaskedChars + 1) - 1;  // This will retrieve an integer between 0 and length-1.
+			// Work through maskedWord, locate the masked char with the selected index and unmask it:
+			Int32 maskCounter = 0;
+			string outputText = "";
+			for (Int32 charCounter = 0; charCounter < maskedWord.Length; charCounter++) {
+				char thisChar = maskedWord.ElementAt(charCounter);
+				if (thisChar == maskingChar) {
+					if (maskCounter == selectedIndex) {
+						// We are going to unmask this char:
+						outputText += plainText.ElementAt(charCounter);
+					} else {
+						outputText += maskedWord.ElementAt(charCounter);
+					}
+					maskCounter++;
+				} else {
+					outputText += maskedWord.ElementAt(charCounter);
+				}
+			}// for...
+			
+			
+			return outputText;
+		}// unmaskOneMoreChar
+		
+		
+		
+
+		protected Int32 loadFiniteQuestionFile() {
+			if(DEBUG_ON) {
+				Debug.WriteLine("About to load file " + questionFile);
+			}
+			try {
+				XDocument xdocument = XDocument.Load(questionFile);
+				questions = xdocument.Root.Elements();  // Root is the single top-level element, i.e. <questions>
+				if(DEBUG_ON) {
+					foreach (var question in questions)	{
+				    	Debug.WriteLine(question);
+					}
+				}
+				numQuestions = questions.Count();
+				thisQuestionNumber = 1;
+			} catch (XmlException myException) {
+				MessageBox.Show( myException.ToString() );
+				throw;
+			}
+			
+			
+			return numQuestions;
+		}// loadFiniteQuestionFile
+
+		
+		
+		
+		
+		protected void buildPlayersTable()
+		{
+		    // Declare DataColumn and DataRow variables.
+		    DataColumn column;
+		    //DataRow row;
+		
+		    // Create "Player" column   
+		    column = new DataColumn();
+		    column.DataType = System.Type.GetType("System.String");
+		    column.ColumnName = "Player";
+		    playersTable.Columns.Add(column);
+		    playersTable.PrimaryKey = new DataColumn[] { playersTable.Columns["Player"] };
+		
+		    // Create "Score" column
+		    column = new DataColumn();
+		    column.DataType = Type.GetType("System.Int32");
+		    column.ColumnName = "Score";
+		    playersTable.Columns.Add(column);
+		    
+		    // Create "LastAnswer" column
+		    column = new DataColumn();
+		    column.DataType = Type.GetType("System.String");
+		    column.ColumnName = "LastAnswer";
+		    playersTable.Columns.Add(column);
+		    
+		    // Create "Marking" column
+		    column = new DataColumn();
+		    column.DataType = Type.GetType("System.Int32");
+		    column.ColumnName = "Marking";
+		    playersTable.Columns.Add(column);
+	     
+		}// buildPlayersTable()
+		
+		protected void buildMostRecentESPsThisRoundTable()
+		{
+		    // Declare DataColumn and DataRow variables.
+		    DataColumn column;
+		    //DataRow row;
+		
+		    // Create "Player" column   
+		    column = new DataColumn();
+		    column.DataType = System.Type.GetType("System.String");
+		    column.ColumnName = "Player";
+		    mostRecentESPsThisRoundTable.Columns.Add(column);
+		    mostRecentESPsThisRoundTable.PrimaryKey = new DataColumn[] { mostRecentESPsThisRoundTable.Columns["Player"] };
+		    
+		    // Create "LastAnswer" column
+		    column = new DataColumn();
+		    column.DataType = Type.GetType("System.String");
+		    column.ColumnName = "LastAnswer";
+		    mostRecentESPsThisRoundTable.Columns.Add(column);
+		    
+		    // Create "Marking" column
+		    column = new DataColumn();
+		    column.DataType = Type.GetType("System.Int32");
+		    column.ColumnName = "Marking";
+		    mostRecentESPsThisRoundTable.Columns.Add(column);
+		    
+	     
+		}// buildMostRecentESPsThisRoundTable()
+		
+		protected void addPlayer(string playerName) {
+			DataRow row;
+			row = playersTable.NewRow();
+	        row["Player"] = playerName;
+	        playersTable.Rows.Add(row);
+	        playersTable.AcceptChanges();
+	        if(DEBUG_ON) {
+	        	Debug.WriteLine("Player " + playerName + " added.");
+	        }
+		}
+	
+		
+	}// class Game
+	
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	
+	public class TriviaGame : Game {
+		public TriviaGame() {  // Constructor method
+			gameType = "TRIVIA";
+			buildOptionsTable();
+
+		}
+	
+		
+	
+		
+		
+		protected void buildOptionsTable()
+		{
+		    // Declare DataColumn and DataRow variables.
+		    DataColumn column;
+		    //DataRow row;
+		
+		    // Create "Number" column   
+		    column = new DataColumn();
+		    column.DataType = System.Type.GetType("System.Int32");
+		    column.ColumnName = "Number";
+		    thisOptionsTable.Columns.Add(column);
+		
+		    // Create "Text" column
+		    column = new DataColumn();
+		    column.DataType = Type.GetType("System.String");
+		    column.ColumnName = "Text";
+		    thisOptionsTable.Columns.Add(column);
+		    
+		    // Create "Correct" column
+		    column = new DataColumn();
+		    column.DataType = Type.GetType("System.String");
+		    column.ColumnName = "Correct";
+		    thisOptionsTable.Columns.Add(column);
+	        
+		    
+		}// buildOptionsTable()
+		
+		
+		protected void loadTriviaQuestionDetailsPrivately() {
 			//Debug.WriteLine("loadTriviaQuestionDetailsPrivately called");
 			
 			thisQuestionElem = questions.ElementAt(thisQuestionNumber - 1);
@@ -521,21 +748,7 @@ namespace vzWordyHoster
 				
 		}// loadTriviaQuestionDetailsPrivately
 		
-		private void loadDevilsDictQuestionDetailsPrivately() {
-			
-			thisQuestionElem = questions.ElementAt(thisQuestionNumber - 1);
-			// Load thisQuestionText:
-			thisQuestionText = thisQuestionElem.Element("def").Value;
-			Debug.WriteLine("thisQuestionText: " + thisQuestionText);
-			
-			// Load thisAnswerText:
-			thisAnswerText = thisQuestionElem.Element("hw").Value;
-			Debug.WriteLine("thisAnswerText: " + thisAnswerText);
-				
-		}// loadDevilsDictQuestionDetailsPrivately
-		
-		
-		private void addOption(Int32 optionNumber, string optionText, string optionTruth) {
+		protected void addOption(Int32 optionNumber, string optionText, string optionTruth) {
 			DataRow row;
 			row = thisOptionsTable.NewRow();
 			row["Number"] = optionNumber;
@@ -551,32 +764,28 @@ namespace vzWordyHoster
 	        }
 		}
 		
-
-		private Int32 loadFiniteQuestionFile() {
-			if(DEBUG_ON) {
-				Debug.WriteLine("About to load file " + questionFile);
-			}
-			try {
-				XDocument xdocument = XDocument.Load(questionFile);
-				questions = xdocument.Root.Elements();  // Root is the single top-level element, i.e. <questions>
-				if(DEBUG_ON) {
-					foreach (var question in questions)	{
-				    	Debug.WriteLine(question);
-					}
-				}
-				numQuestions = questions.Count();
-				thisQuestionNumber = 1;
-			} catch (XmlException myException) {
-				MessageBox.Show( myException.ToString() );
-				throw;
-			}
-			
-			
-			return numQuestions;
-		}// loadFiniteQuestionFile
+		protected override void loadQuestionDetailsPrivately() {
+			Debug.WriteLine("Entered loadQuestionDetailsPrivately in Trivia");
+			loadTriviaQuestionDetailsPrivately();
+		}
+		
+		
+		
 
 		
-		private void buildOptionsTable()
+	}// class TriviaGame
+	
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	
+	public class DevilsDictGame : Game {
+		public DevilsDictGame() {  // Constructor method
+			gameType = "DEVILSDICT";
+			buildMasksTable();
+
+		}
+
+		
+		protected void buildMasksTable()
 		{
 		    // Declare DataColumn and DataRow variables.
 		    DataColumn column;
@@ -593,90 +802,79 @@ namespace vzWordyHoster
 		    column.DataType = Type.GetType("System.String");
 		    column.ColumnName = "Text";
 		    thisOptionsTable.Columns.Add(column);
-		    
-		    // Create "Correct" column
-		    column = new DataColumn();
-		    column.DataType = Type.GetType("System.String");
-		    column.ColumnName = "Correct";
-		    thisOptionsTable.Columns.Add(column);
 	        
 		    
-		}// buildOptionsTable()
+		}// buildMasksTable()
 		
 		
-		private void buildPlayersTable()
-		{
-		    // Declare DataColumn and DataRow variables.
-		    DataColumn column;
-		    //DataRow row;
+		protected void loadDevilsDictQuestionDetailsPrivately() {
+			
+			thisQuestionElem = questions.ElementAt(thisQuestionNumber - 1);
+			// Load thisQuestionText:
+			thisQuestionText = thisQuestionElem.Element("def").Value;
+			Debug.WriteLine("thisQuestionText: " + thisQuestionText);
+			
+			// Load thisAnswerText:
+			thisAnswerText = thisQuestionElem.Element("hw").Value;
+			Debug.WriteLine("thisAnswerText: " + thisAnswerText);
+			
+			thisOptionsTable.Clear();
+			charsRevealed = 0;
+			
+			//string thisMask;
+			//string thisMaskedWord;
+			
+			thisMask = maskAlphabeticals(thisAnswerText, '*');
+			thisMaskedWord = thisMask;
+			addMaskedWord(charsRevealed, thisMaskedWord);
+			thisOptionsTable.AcceptChanges();
+			
+			// Better to unmask on the fly, as required, rather than generate all forms of the
+			// string on the fly, because random numbers generated in quick succession are not
+			// very random.
+			/*
+			for (Int32 charCounter = 1; charCounter < thisAnswerText.Length; charCounter++) {
+				thisMaskedWord = unmaskOneMoreChar(thisAnswerText, thisMask, '*', thisMaskedWord);
+				addMaskedWord(charCounter, thisMaskedWord);
+			}
+			thisOptionsTable.AcceptChanges();
+			*/
+	
+		}// loadDevilsDictQuestionDetailsPrivately
 		
-		    // Create "Player" column   
-		    column = new DataColumn();
-		    column.DataType = System.Type.GetType("System.String");
-		    column.ColumnName = "Player";
-		    playersTable.Columns.Add(column);
-		    playersTable.PrimaryKey = new DataColumn[] { playersTable.Columns["Player"] };
 		
-		    // Create "Score" column
-		    column = new DataColumn();
-		    column.DataType = Type.GetType("System.Int32");
-		    column.ColumnName = "Score";
-		    playersTable.Columns.Add(column);
-		    
-		    // Create "LastAnswer" column
-		    column = new DataColumn();
-		    column.DataType = Type.GetType("System.String");
-		    column.ColumnName = "LastAnswer";
-		    playersTable.Columns.Add(column);
-		    
-		    // Create "Marking" column
-		    column = new DataColumn();
-		    column.DataType = Type.GetType("System.Int32");
-		    column.ColumnName = "Marking";
-		    playersTable.Columns.Add(column);
-	     
-		}// buildPlayersTable()
+		protected string maskAlphabeticals(string plainText, char maskingChar) {
+			// Takes a string and replaces all alphabetical chars with maskingChar
+			string maskedWord = "";
+			for (Int32 charCounter = 0; charCounter < plainText.Length; charCounter++) {
+				char thisChar = plainText.ElementAt(charCounter);
+				if (thisChar.ToString().All(Char.IsLetter)) {
+					maskedWord += maskingChar;
+				} else {
+					maskedWord += thisChar;
+				}
+			}//for
+			return maskedWord;
+		}// maskAlphabeticals
 		
-		private void buildMostRecentESPsThisRoundTable()
-		{
-		    // Declare DataColumn and DataRow variables.
-		    DataColumn column;
-		    //DataRow row;
-		
-		    // Create "Player" column   
-		    column = new DataColumn();
-		    column.DataType = System.Type.GetType("System.String");
-		    column.ColumnName = "Player";
-		    mostRecentESPsThisRoundTable.Columns.Add(column);
-		    mostRecentESPsThisRoundTable.PrimaryKey = new DataColumn[] { mostRecentESPsThisRoundTable.Columns["Player"] };
-		    
-		    // Create "LastAnswer" column
-		    column = new DataColumn();
-		    column.DataType = Type.GetType("System.String");
-		    column.ColumnName = "LastAnswer";
-		    mostRecentESPsThisRoundTable.Columns.Add(column);
-		    
-		    // Create "Marking" column
-		    column = new DataColumn();
-		    column.DataType = Type.GetType("System.Int32");
-		    column.ColumnName = "Marking";
-		    mostRecentESPsThisRoundTable.Columns.Add(column);
-		    
-	     
-		}// buildMostRecentESPsThisRoundTable()
-		
-		private void addPlayer(string playerName) {
+		protected void addMaskedWord(Int32 number, string text) {
+			// Adds a masked-word row to thisOptionsTable
 			DataRow row;
-			row = playersTable.NewRow();
-	        row["Player"] = playerName;
-	        playersTable.Rows.Add(row);
-	        playersTable.AcceptChanges();
-	        if(DEBUG_ON) {
-	        	Debug.WriteLine("Player " + playerName + " added.");
+			row = thisOptionsTable.NewRow();
+			row["Number"] = number;
+			row["Text"] = text;
+	        thisOptionsTable.Rows.Add(row);
+	        thisOptionsTable.AcceptChanges();
+	        if (DEBUG_ON) {
+	        	Debug.WriteLine("Masked word " + text + " added.");
 	        }
 		}
-	
 		
-	}// class Game
+		protected override void loadQuestionDetailsPrivately() {
+			Debug.WriteLine("Entered loadQuestionDetailsPrivately in DD");
+			loadDevilsDictQuestionDetailsPrivately();
+		}
+		
+	}// class DevilsDictGame
 
 }// namespace vzWordyHoster

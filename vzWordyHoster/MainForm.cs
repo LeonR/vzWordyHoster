@@ -39,6 +39,8 @@ namespace vzWordyHoster
 		private string closureMessage = "Closed!";
 		private Int32 secondsPerQuestion = 60;
 		private readonly List<Int32> questionTimerWarningsAt = new List<Int32> {30, 40, 50, 55, 56, 57, 58, 59}; // Never changes.
+		// TODO: Generate devilsDictWarningsAt according to length of answer.
+		//private List<Int32> devilsDictWarningsAt = new List<Int32>();
 		private List<Int32> thisQuestionTimerWarnings = new List<Int32>(); // Is reset for each question, and gets first element popped after each warning.
 
 		private Int32 thisQuestionSecondsElapsed;
@@ -130,9 +132,14 @@ namespace vzWordyHoster
 				case "TRIVIA":
 					answerTbx.Text = thisGame.ThisAnswerNumber.ToString() + " [" + thisGame.ThisAnswerText + "]";
 					UpdateOptionsGrid();
+					thisQuestionTimerWarnings.Clear();
+					thisQuestionTimerWarnings.AddRange(questionTimerWarningsAt);
 					break;
 				case "DEVILSDICT":
 					answerTbx.Text = thisGame.ThisAnswerText;
+					UpdateOptionsGrid();
+					thisQuestionTimerWarnings.Clear();
+					thisQuestionTimerWarnings.AddRange(thisGame.getWarningsFromAnswerLength() );
 					break;
 				default:
 					answerTbx.Text = "Unknown game type '" + thisGame.GameType + "' in LoadCurrentQuestion()";
@@ -148,8 +155,7 @@ namespace vzWordyHoster
 			questionReadBtn.Enabled = true;
 			thisQuestionHasAlreadyBeenRead = false;
 			questionReadBtn.Text = "Read Question";
-			thisQuestionTimerWarnings.Clear();
-			thisQuestionTimerWarnings.AddRange(questionTimerWarningsAt);
+			
 			questionPgb.Minimum = 0;
 			questionPgb.Maximum = secondsPerQuestion;
 			questionPgb.Value = secondsPerQuestion;
@@ -197,16 +203,26 @@ namespace vzWordyHoster
 					waSay(thisGame.ThisQuestionText);        			
         		}
 
-				List<string> optionTexts = getCurrentOptionTextsList();
-				foreach (string optionText in optionTexts) {
-					waSay(optionText);
-				}
-				
-				if(thisQuestionHasAlreadyBeenRead) {
-					announceSecondsRemaining();
-				} else {
-					waSay("You have " + secondsPerQuestion.ToString() + " seconds to answer.");
-				}
+				switch (thisGame.GameType) {
+					case "TRIVIA":
+						List<string> optionTexts = getCurrentOptionTextsList();
+						foreach (string optionText in optionTexts) {
+							waSay(optionText);
+						}
+						if(thisQuestionHasAlreadyBeenRead) {
+							announceSecondsRemaining();
+						} else {
+							waSay("You have " + secondsPerQuestion.ToString() + " seconds to answer.");
+						}
+						break;
+					case "DEVILSDICT":
+						waSay(thisGame.ThisMaskedWord);
+						break;
+					default:
+						answerTbx.Text = "Unknown game type '" + thisGame.GameType + "' in LoadCurrentQuestion()";
+						break;
+				}// switch (thisGame.GameType)
+
 				
 				inviteAnswers();
 				if (!thisQuestionHasAlreadyBeenRead) {
@@ -366,7 +382,7 @@ namespace vzWordyHoster
         	}
 			DialogResult fdResult = openFileDialog1.ShowDialog(); // Show the dialog.
 		    if (fdResult == DialogResult.OK) {
-				thisGame = new Game("TRIVIA");
+				thisGame = new TriviaGame();
 				MainForm.ActiveForm.Text = appName + " :: Trivia :: Finite";
 				string fdFileName = openFileDialog1.FileName;
 				questionsInGame = thisGame.LoadQuestionFile(fdFileName);
@@ -387,7 +403,7 @@ namespace vzWordyHoster
         	}
 			DialogResult fdResult = openFileDialog1.ShowDialog(); // Show the dialog.
 		    if (fdResult == DialogResult.OK) {
-				thisGame = new Game("DEVILSDICT");
+				thisGame = new DevilsDictGame();
 				MainForm.ActiveForm.Text = appName + " :: Devil's Dictionary :: Finite";
 				string fdFileName = openFileDialog1.FileName;
 				questionsInGame = thisGame.LoadQuestionFile(fdFileName);
@@ -544,24 +560,47 @@ namespace vzWordyHoster
 		
 		void QuestionTmrTick(object sender, EventArgs e)
 		{
+			switch (thisGame.GameType) {
+				case "TRIVIA":
+					thisQuestionSecondsElapsed += questionTmr.Interval / 1000;
+					Int32 secondsRemaining = secondsPerQuestion - thisQuestionSecondsElapsed;
+					if (secondsRemaining <= 10) {
+						autoGetTmr.Enabled = false;  // To prevent a waGet() from slowing down the countdown timer.
+					}
+					if ( (thisQuestionTimerWarnings.Count > 0) && (thisQuestionSecondsElapsed >= thisQuestionTimerWarnings.ElementAt(0) )) {
+						announceSecondsRemaining();
+						thisQuestionTimerWarnings.RemoveAt(0);
+					}
+					
+					if (secondsRemaining >= 0) {
+						questionPgb.Value = secondsRemaining;
+					}
+					
+					if ( thisQuestionSecondsElapsed >= secondsPerQuestion ) {
+						CloseCurrentQuestion();
+					}
+					break;
+				case "DEVILSDICT":
+					thisQuestionSecondsElapsed += questionTmr.Interval / 1000;
+					if ( (thisQuestionTimerWarnings.Count > 0) && (thisQuestionSecondsElapsed >= thisQuestionTimerWarnings.ElementAt(0) )) {
+						thisGame.UnmaskAnother();
+						UpdateOptionsGrid();
+						thisQuestionTimerWarnings.RemoveAt(0);
+						ReadCurrentQuestion();
+					} else if ( thisQuestionTimerWarnings.Count == 0 ) {
+						CloseCurrentQuestion();
+					}
+					
+					break;
+				default:
+					answerTbx.Text = "Unknown game type '" + thisGame.GameType + "' in QuestionTmrTick()";
+					break;
+			}// switch (thisGame.GameType)
 			
-			thisQuestionSecondsElapsed += questionTmr.Interval / 1000;
-			Int32 secondsRemaining = secondsPerQuestion - thisQuestionSecondsElapsed;
-			if (secondsRemaining <= 10) {
-				autoGetTmr.Enabled = false;  // To prevent a waGet() from slowing down the countdown timer.
-			}
-			if ( (thisQuestionTimerWarnings.Count > 0) && (thisQuestionSecondsElapsed >= thisQuestionTimerWarnings.ElementAt(0) )) {
-				announceSecondsRemaining();
-				thisQuestionTimerWarnings.RemoveAt(0);
-			}
 			
-			if (secondsRemaining >= 0) {
-				questionPgb.Value = secondsRemaining;
-			}
 			
-			if ( thisQuestionSecondsElapsed >= secondsPerQuestion ) {
-				CloseCurrentQuestion();
-			}
+			
+			
 		}
 		
 		void QuestionPgbMouseClick(object sender, MouseEventArgs e)
