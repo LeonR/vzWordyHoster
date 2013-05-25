@@ -38,9 +38,11 @@ namespace vzWordyHoster
 		{
 			this.components = new System.ComponentModel.Container();
 			this.playersPnl = new System.Windows.Forms.Panel();
+			this.autoPilotChb = new System.Windows.Forms.CheckBox();
 			this.readScoresBtn = new System.Windows.Forms.Button();
 			this.playersDgv = new System.Windows.Forms.DataGridView();
 			this.debugPnl = new System.Windows.Forms.Panel();
+			this.testBtn = new System.Windows.Forms.Button();
 			this.dummyAnswerTbx = new System.Windows.Forms.TextBox();
 			this.harryBtn = new System.Windows.Forms.Button();
 			this.dickBtn = new System.Windows.Forms.Button();
@@ -82,6 +84,7 @@ namespace vzWordyHoster
 			this.autoGetTmr = new System.Windows.Forms.Timer(this.components);
 			this.questionTmr = new System.Windows.Forms.Timer(this.components);
 			this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+			this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
 			this.playersPnl.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.playersDgv)).BeginInit();
 			this.debugPnl.SuspendLayout();
@@ -96,6 +99,7 @@ namespace vzWordyHoster
 			// 
 			// playersPnl
 			// 
+			this.playersPnl.Controls.Add(this.autoPilotChb);
 			this.playersPnl.Controls.Add(this.readScoresBtn);
 			this.playersPnl.Controls.Add(this.playersDgv);
 			this.playersPnl.Dock = System.Windows.Forms.DockStyle.Right;
@@ -103,6 +107,16 @@ namespace vzWordyHoster
 			this.playersPnl.Name = "playersPnl";
 			this.playersPnl.Size = new System.Drawing.Size(365, 514);
 			this.playersPnl.TabIndex = 0;
+			// 
+			// autoPilotChb
+			// 
+			this.autoPilotChb.Location = new System.Drawing.Point(112, 420);
+			this.autoPilotChb.Name = "autoPilotChb";
+			this.autoPilotChb.Size = new System.Drawing.Size(104, 24);
+			this.autoPilotChb.TabIndex = 5;
+			this.autoPilotChb.Text = "Auto-pilot";
+			this.autoPilotChb.UseVisualStyleBackColor = true;
+			this.autoPilotChb.CheckedChanged += new System.EventHandler(this.AutoPilotChbCheckedChanged);
 			// 
 			// readScoresBtn
 			// 
@@ -127,6 +141,7 @@ namespace vzWordyHoster
 			// 
 			this.debugPnl.AutoSize = true;
 			this.debugPnl.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+			this.debugPnl.Controls.Add(this.testBtn);
 			this.debugPnl.Controls.Add(this.dummyAnswerTbx);
 			this.debugPnl.Controls.Add(this.harryBtn);
 			this.debugPnl.Controls.Add(this.dickBtn);
@@ -140,6 +155,16 @@ namespace vzWordyHoster
 			this.debugPnl.Name = "debugPnl";
 			this.debugPnl.Size = new System.Drawing.Size(300, 514);
 			this.debugPnl.TabIndex = 1;
+			// 
+			// testBtn
+			// 
+			this.testBtn.Location = new System.Drawing.Point(166, 247);
+			this.testBtn.Name = "testBtn";
+			this.testBtn.Size = new System.Drawing.Size(75, 23);
+			this.testBtn.TabIndex = 9;
+			this.testBtn.Text = "testBtn";
+			this.testBtn.UseVisualStyleBackColor = true;
+			this.testBtn.Click += new System.EventHandler(this.TestBtnClick);
 			// 
 			// dummyAnswerTbx
 			// 
@@ -445,15 +470,16 @@ namespace vzWordyHoster
 			// devilsDictFiniteTmi
 			// 
 			this.devilsDictFiniteTmi.Name = "devilsDictFiniteTmi";
-			this.devilsDictFiniteTmi.Size = new System.Drawing.Size(152, 22);
+			this.devilsDictFiniteTmi.Size = new System.Drawing.Size(120, 22);
 			this.devilsDictFiniteTmi.Text = "Finite...";
 			this.devilsDictFiniteTmi.Click += new System.EventHandler(this.DevilsDictFiniteTmiClick);
 			// 
 			// devilsDictInfiniteTmi
 			// 
 			this.devilsDictInfiniteTmi.Name = "devilsDictInfiniteTmi";
-			this.devilsDictInfiniteTmi.Size = new System.Drawing.Size(152, 22);
+			this.devilsDictInfiniteTmi.Size = new System.Drawing.Size(120, 22);
 			this.devilsDictInfiniteTmi.Text = "Infinite...";
+			this.devilsDictInfiniteTmi.Click += new System.EventHandler(this.DevilsDictInfiniteTmiClick);
 			// 
 			// scrambleTmi
 			// 
@@ -532,6 +558,9 @@ namespace vzWordyHoster
 			this.ResumeLayout(false);
 			this.PerformLayout();
 		}
+		private System.Windows.Forms.CheckBox autoPilotChb;
+		private System.Windows.Forms.Button testBtn;
+		private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
 		private System.Windows.Forms.OpenFileDialog openFileDialog1;
 		private System.Windows.Forms.ToolStripMenuItem scrambleInfiniteTmi;
 		private System.Windows.Forms.ToolStripMenuItem scrambleFiniteTmi;

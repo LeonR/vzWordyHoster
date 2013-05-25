@@ -18,22 +18,30 @@ using System.Xml;
 using System.Xml.Linq;
 using System.Timers;
 using System.Configuration;
+using System.IO;
 
 
 namespace vzWordyHoster
 {
 	public class Game {
 		
-		public static readonly bool DEBUG_ON = true;
-		//public Random rnd = new Random();
-		
 		public Game() {  // Constructor method
-			//gameType = passedGameType;
+			// Unsure why this is needed, as Game is never instantiated with 0 parameters. But if we don't
+			// have it, the compiler throws a CS1729 error.
+			buildPlayersTable();
+			buildMostRecentESPsThisRoundTable();
+		}
+		
+		public Game(string passedGameSubtype) {  // Constructor method
 			
+			gameSubtype = passedGameSubtype;
 			buildPlayersTable();
 			buildMostRecentESPsThisRoundTable();
 			
 		}
+		
+		public static readonly bool DEBUG_ON = false;
+		public Random rnd = new Random();  // Used by LongRandom()
 		
 		public DataTable ThisOptionsTable {
 			get {
@@ -54,11 +62,27 @@ namespace vzWordyHoster
 			return r.Next(1, maxNumber);
 		}
 		
+		
+		public long LongRandom(long min, long max, Random rand) {
+			// From http://stackoverflow.com/questions/6651554/random-number-in-long-range-is-this-the-way
+		    byte[] buf = new byte[8];
+		    rand.NextBytes(buf);
+		    long longRand = BitConverter.ToInt64(buf, 0);
+		    return (Math.Abs(longRand % (max - min)) + min);
+		}
+		
+
+		
 
 		// ----- Begin public interface -----
 		public string GameType {
             get { return gameType; }
             set { gameType = value; }
+		}
+		
+		public string GameSubtype {
+            get { return gameSubtype; }
+            set { gameSubtype = value; }
 		}
 		
 		public string QuestionFile {
@@ -67,7 +91,7 @@ namespace vzWordyHoster
 			}
 		}
 		
-		public Int32 ThisQuestionNumber {
+		public long ThisQuestionNumber {
             get {
 				return thisQuestionNumber;
 			}
@@ -112,6 +136,12 @@ namespace vzWordyHoster
 		public bool ThisLettersAnswersHaveBeenMarked {
 			get {
 				return thisLettersAnswersHaveBeenMarked;
+			}
+		}
+		
+		public bool Awarded1st {
+			get {
+				return awarded1st;
 			}
 		}
 		
@@ -179,9 +209,20 @@ namespace vzWordyHoster
 		
 		public void NextQuestion() {
 			//Debug.WriteLine("NextQuestion called");
-			if(thisQuestionNumber + 1 <= numQuestions) {
-				thisQuestionNumber++;
-				loadQuestionDetailsPrivately();
+			if (gameSubtype != "INFINITE" ) {
+				if(thisQuestionNumber + 1 <= numQuestions) {
+					thisQuestionNumber++;
+					loadQuestionDetailsPrivately();
+					currentQuestionClosed = false;
+				}
+			} else {
+				//gameSubtype is INFINITE.
+				bool foundAGoodQuestion = false;
+				do {
+					thisQuestionNumber = LongRandom(1, questions.Count(), rnd);
+					loadQuestionDetailsPrivately();
+					foundAGoodQuestion = checkValidityOfQuestion();
+				} while (foundAGoodQuestion == false);
 				currentQuestionClosed = false;
 			}
 		}
@@ -216,6 +257,24 @@ namespace vzWordyHoster
 			}// switch (gameType)
 			return questionsLoaded;
 		}// loadQuestionFile
+		
+		
+		public long LoadInfiniteQuestionFolder(string passedFolderPath) {
+			long questionsAvailable = 0;
+			folderPath = passedFolderPath;
+			switch (gameType) {
+				case "DEVILSDICT":
+					questionsAvailable = loadInfiniteDevilsDictFolder();
+					if (DEBUG_ON) {
+						Debug.WriteLine("Counted " + questionsAvailable + " nodes in total.");
+					}
+					break;
+				default:
+					questionsAvailable = 0;
+					break;
+			}
+			return questionsAvailable;
+		}
 
 		
 		public static string GetHostNameByInitString(string allText, string initString) {
@@ -233,6 +292,12 @@ namespace vzWordyHoster
 		public void MarkAnswers(string allText, string sinceHostUtterance, string closeMessage, string hostName) {
 			
 			string startFromMessage = hostName + ": " + sinceHostUtterance;
+			
+			if (DEBUG_ON) {
+				Debug.WriteLine("startFromMessage is: " + startFromMessage);
+				Debug.WriteLine("closeMessage is: " + closeMessage);
+				
+			}
 			
 			//Do some cleanup from any previous round:
 			mostRecentESPsThisRoundTable.Clear();
@@ -316,9 +381,11 @@ namespace vzWordyHoster
 				}// iteration through relevantMessagesArray
 			}// if ( (foundQuestionLine) && (foundClosureLine) && (questionUtterancePosition > -1) )
 			else {
-				Debug.WriteLine("Could not find question in messagesArray");
-				Debug.WriteLine("foundQuestionLine: " + foundQuestionLine.ToString() );
-				Debug.WriteLine("questionUtterancePosition: " + questionUtterancePosition.ToString() );
+				if (DEBUG_ON) {
+					Debug.WriteLine("Could not find question in messagesArray");
+					Debug.WriteLine("foundQuestionLine: " + foundQuestionLine.ToString() );
+					Debug.WriteLine("questionUtterancePosition: " + questionUtterancePosition.ToString() );
+				}
 			}
 			
 			if(DEBUG_ON) {
@@ -346,7 +413,9 @@ namespace vzWordyHoster
 							break;
 						default:
 							expectedAnswerString = "xyzzyxyzzy";
-							Debug.WriteLine("Unknown gameType '" + gameType + "' in MarkAnswers()");
+							if (DEBUG_ON) {
+								Debug.WriteLine("Unknown gameType '" + gameType + "' in MarkAnswers()");
+							}
 							break;
 					}// switch (gameType)
 					
@@ -451,8 +520,10 @@ namespace vzWordyHoster
 		protected bool thisLettersAnswersHaveBeenMarked = false;
 		
 		protected string gameType;
+		protected string gameSubtype;
 		protected string questionFile;
-		protected Int32 thisQuestionNumber;
+		protected string folderPath;
+		protected long thisQuestionNumber;
 		protected Int32 numQuestions;
 		protected string thisQuestionText;
 		protected string thisQuestionType;
@@ -479,7 +550,7 @@ namespace vzWordyHoster
 
 		protected virtual void loadQuestionDetailsPrivately() {	
 		// See inheritors
-			Debug.WriteLine("Entered loadQuestionDetailsPrivately in Game");
+			//Debug.WriteLine("Entered loadQuestionDetailsPrivately in Game");
 		}
 		
 		protected Int32 getNextMark() {
@@ -626,10 +697,64 @@ namespace vzWordyHoster
 			
 			return numQuestions;
 		}// loadFiniteQuestionFile
+		
+		
+		protected void appendWordsToQuestionsXmlStruct(string questionFile) {
+			if(DEBUG_ON) {
+				Debug.WriteLine("About to append <word>s from file " + questionFile);
+			}
+			try {
+				XDocument xdocument = XDocument.Load(questionFile);
+				if (questions == null) {
+					questions = xdocument.Root.Elements();
+				} else {
+					// Add the elements from this file to the expanding list of elements in questions:
+					questions = questions.Union( xdocument.Root.Elements() );  // Root is the single top-level element, i.e. <questions>
+				}
+			} catch (XmlException myException) {
+				MessageBox.Show( myException.ToString() );
+				throw;
+			}
+		}
+		
+		
+		
+		protected long loadInfiniteDevilsDictFolder() {
+			long totalNodes = 0;
+			if(DEBUG_ON) {
+				Debug.WriteLine("About to load folder " + folderPath);
+			}
+			string[] filePaths = Directory.GetFiles(@folderPath, "*.xml", SearchOption.AllDirectories);
+			foreach (string myFile in filePaths) {
+				long numNodes = count2ndLevelNodesInXmlFile(myFile);  // TODO: Remove: pointless count.
+				appendWordsToQuestionsXmlStruct(myFile);
+				if (DEBUG_ON) {
+					Debug.WriteLine( "Loaded " + numNodes + " nodes." );
+				}
+				totalNodes += numNodes;
+			}
+			totalNodes = questions.Count();
+			thisQuestionNumber = LongRandom(1, totalNodes, rnd);
+			return totalNodes;
+		}// loadInfiniteDevilsDictFolder
 
 		
-		
-		
+		protected Int32 count2ndLevelNodesInXmlFile(string fileName) {
+			Int32 numWordNodes = 0;
+			if(DEBUG_ON) {
+				Debug.WriteLine("About to load file " + fileName);
+			}
+			try {
+				IEnumerable<XElement> wordNodes;
+				XDocument xdocument = XDocument.Load(fileName);
+				wordNodes = xdocument.Root.Elements();  // Root is the single top-level element, i.e. <questions>
+				numWordNodes = wordNodes.Count();
+			} catch (XmlException myException) {
+				MessageBox.Show( myException.ToString() );
+				throw;
+			}
+			return numWordNodes;
+		}
 		
 		protected void buildPlayersTable()
 		{
@@ -702,6 +827,37 @@ namespace vzWordyHoster
 	        	Debug.WriteLine("Player " + playerName + " added.");
 	        }
 		}
+		
+		protected bool checkValidityOfQuestion() {
+			bool allIsWell = true;
+			
+			if (thisQuestionText == "") { allIsWell = false; };
+			if (thisAnswerText == "") { allIsWell = false; };
+			if (thisQuestionText.Substring(0, 4).ToLower() == "see ") { allIsWell = false; };  // A dictionary reference to another word.
+			if (thisQuestionText.ToLower().Contains(thisAnswerText.ToLower() )) { allIsWell = false; };  // The answer is contained in the question.
+			if (stringContainsNumbers(thisAnswerText) ) {allIsWell = false; };  // Players shouldn't expect the word to contain numbers.
+			if (thisQuestionText.Contains(" ") == false ) { allIsWell = false; };  // The question contains no spaces, so presumably is a one-word definition.
+			
+			return allIsWell;
+		}
+		
+		public string TryGetElementValue(XElement parentEl, string elementName, string defaultValue = null) {
+			// Checks parentEl to see if elementName exists. If it does, return the element's value; otherwise, return defaultValue.
+		    var foundEl = parentEl.Element(elementName);
+		    if(foundEl != null)
+		    {
+		         return foundEl.Value;
+		    }
+		    else
+		    {
+		         return defaultValue;
+		    }
+		}
+		
+		public bool stringContainsNumbers(string inString) {
+			bool returnVal = System.Text.RegularExpressions.Regex.IsMatch(inString, @"\d");
+			return returnVal;
+		}
 	
 		
 	}// class Game
@@ -709,16 +865,13 @@ namespace vzWordyHoster
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	
 	public class TriviaGame : Game {
-		public TriviaGame() {  // Constructor method
+		public TriviaGame(string passedGameSubtype) {  // Constructor method
 			gameType = "TRIVIA";
+			gameSubtype = passedGameSubtype;
 			buildOptionsTable();
 
 		}
-	
-		
-	
-		
-		
+
 		protected void buildOptionsTable()
 		{
 		    // Declare DataColumn and DataRow variables.
@@ -750,7 +903,9 @@ namespace vzWordyHoster
 		protected void loadTriviaQuestionDetailsPrivately() {
 			//Debug.WriteLine("loadTriviaQuestionDetailsPrivately called");
 			
-			thisQuestionElem = questions.ElementAt(thisQuestionNumber - 1);
+			//thisQuestionElem = questions.ElementAt(thisQuestionNumber - 1);
+			// Using .ToArray()[] because .ElementAt only takes an integer, not long
+			thisQuestionElem = questions.ToArray()[thisQuestionNumber - 1];
 			// Load thisQuestionText:
 			thisQuestionText = thisQuestionElem.Element("clue").Value;
 			thisQuestionType = thisQuestionElem.Attribute("type").Value;
@@ -802,7 +957,7 @@ namespace vzWordyHoster
 		}
 		
 		protected override void loadQuestionDetailsPrivately() {
-			Debug.WriteLine("Entered loadQuestionDetailsPrivately in Trivia");
+			//Debug.WriteLine("Entered loadQuestionDetailsPrivately in Trivia");
 			loadTriviaQuestionDetailsPrivately();
 		}
 		
@@ -815,9 +970,11 @@ namespace vzWordyHoster
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	
 	public class DevilsDictGame : Game {
-		public DevilsDictGame() {  // Constructor method
+		public DevilsDictGame(string passedGameSubtype) {  // Constructor method
 			gameType = "DEVILSDICT";
+			gameSubtype = passedGameSubtype;
 			buildMasksTable();
+			//MessageBox.Show("Finished DevilsDictGame constructor with gameSubtype: " + passedGameSubtype );
 
 		}
 
@@ -846,14 +1003,25 @@ namespace vzWordyHoster
 		
 		protected void loadDevilsDictQuestionDetailsPrivately() {
 			
-			thisQuestionElem = questions.ElementAt(thisQuestionNumber - 1);
+			thisQuestionType = "Devil's Dictionary";
+			
+			//thisQuestionElem = questions.ElementAt(thisQuestionNumber - 1);
+			// Using .ToArray()[] because .ElementAt only takes an integer, not long
+			thisQuestionElem = questions.ToArray()[thisQuestionNumber - 1];
+			
 			// Load thisQuestionText:
-			thisQuestionText = thisQuestionElem.Element("def").Value;
-			Debug.WriteLine("thisQuestionText: " + thisQuestionText);
+			//thisQuestionText = thisQuestionElem.Element("def").Value;
+			thisQuestionText = TryGetElementValue(thisQuestionElem, "def", "");  // If no def node exists, return ""
+			if (DEBUG_ON) {
+				Debug.WriteLine("thisQuestionText: " + thisQuestionText);
+			}
 			
 			// Load thisAnswerText:
-			thisAnswerText = thisQuestionElem.Element("hw").Value;
-			Debug.WriteLine("thisAnswerText: " + thisAnswerText);
+			//thisAnswerText = thisQuestionElem.Element("hw").Value;
+			thisAnswerText = TryGetElementValue(thisQuestionElem, "hw", "");     // If no hw node exists, return ""
+			if (DEBUG_ON) {
+				Debug.WriteLine("thisAnswerText: " + thisAnswerText);
+			}
 			
 			thisOptionsTable.Clear();
 			charsRevealed = 0;
@@ -909,10 +1077,15 @@ namespace vzWordyHoster
 		}
 		
 		protected override void loadQuestionDetailsPrivately() {
-			Debug.WriteLine("Entered loadQuestionDetailsPrivately in DD");
+			//Debug.WriteLine("Entered loadQuestionDetailsPrivately in DD");
 			loadDevilsDictQuestionDetailsPrivately();
 		}
 		
+		
+		
+		
 	}// class DevilsDictGame
+	
+
 
 }// namespace vzWordyHoster

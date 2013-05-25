@@ -24,15 +24,16 @@ namespace vzWordyHoster
 	/// Description of MainForm.
 	/// </summary>
 	/// 
-	
-	//TODO: Add in Devil's Dictionary incremental clue functionality.
+
 	
 	public partial class MainForm : Form
 	{
 		
 		private Int32 questionsInGame;
+		private long questionsInInfiniteFolder;
 		private Game thisGame;
 		private string thisQuestionNumberDescriptor;
+		private string thisQuestionXofY;
 		private string hostAvatarName;
 		private string appName = "vzWordyHoster";
 		private string initialisationString = "vzWordyHoster initialised!";
@@ -41,10 +42,14 @@ namespace vzWordyHoster
 		private Int32 secondsPerDevilsDictLetter = 20;
 		private readonly List<Int32> questionTimerWarningsAt = new List<Int32> {30, 40, 50, 55, 56, 57, 58, 59}; // Never changes.
 		private List<Int32> thisQuestionTimerWarnings = new List<Int32>(); // Is reset for each question, and gets first element popped after each warning.
+		private string infiniteFolder;
+		private string thisQuestionFirstChunk;
+		private bool autoPilotOn = false;
 
 		private Int32 thisQuestionSecondsElapsed;
 		private Int32 thisLetterSecondsElapsed;
 		private bool thisQuestionHasAlreadyBeenRead;
+		private Int32 infiniteQuestionCounter = 1;
 		
 		private System.Timers.Timer postInitTmr = new System.Timers.Timer();
 		
@@ -74,8 +79,8 @@ namespace vzWordyHoster
 			triviaInfiniteTmi.Enabled = false;
 			triviaInfiniteTmi.Visible = false;
 			
-			devilsDictInfiniteTmi.Enabled = false;
-			devilsDictInfiniteTmi.Visible = false;
+			devilsDictInfiniteTmi.Enabled = true;
+			devilsDictInfiniteTmi.Visible = true;
 			
 			scrambleTmi.Enabled = false;
 			scrambleTmi.Visible = false;
@@ -119,14 +124,14 @@ namespace vzWordyHoster
 		
 
 		
-		private void LoadCurrentQuestion() {
+		private void LoadCurrentQuestionIntoForm() {
         	//Debug.WriteLine("LoadCurrentQuestion called");
         	if(hostAvatarName == "") {
         		announceInitialisation();
         	}
 			//thisGame.RefreshQuestion();
 			questionTbx.Text = thisGame.ThisQuestionText;
-			qHeaderTypeLbl.Text = "Type: " + FirstLetterToUpper(thisGame.ThisQuestionType);
+			
 			
 			questionPgb.Minimum = 0;
 			
@@ -134,14 +139,17 @@ namespace vzWordyHoster
 			switch (thisGame.GameType) {
 				case "TRIVIA":
 					answerTbx.Text = thisGame.ThisAnswerNumber.ToString() + " [" + thisGame.ThisAnswerText + "]";
+					qHeaderTypeLbl.Text = "Type: Trivia";
 					UpdateOptionsGrid();
 					thisQuestionTimerWarnings.Clear();
 					thisQuestionTimerWarnings.AddRange(questionTimerWarningsAt);
 					questionPgb.Maximum = secondsPerQuestion;
 					questionPgb.Value = secondsPerQuestion;
+					
 					break;
 				case "DEVILSDICT":
 					answerTbx.Text = thisGame.ThisAnswerText;
+					qHeaderTypeLbl.Text = "Type: D's Dict";
 					UpdateOptionsGrid();
 					thisQuestionTimerWarnings.Clear();
 					thisQuestionTimerWarnings.AddRange(thisGame.getWarningsFromAnswerLength(secondsPerDevilsDictLetter) );
@@ -150,15 +158,28 @@ namespace vzWordyHoster
 					autoGetTmr.Enabled = false;  // Because we're just going to get answers once per letter.
 					break;
 				default:
-					answerTbx.Text = "Unknown game type '" + thisGame.GameType + "' in LoadCurrentQuestion()";
+					answerTbx.Text = "Unknown game type '" + thisGame.GameType + "' in LoadCurrentQuestionIntoForm()";
 					break;
 			}// switch (thisGame.GameType)
 
-			thisQuestionNumberDescriptor = "Question " + thisGame.ThisQuestionNumber.ToString() + " of " + questionsInGame.ToString();
-			qHeaderNumberLbl.Text = thisQuestionNumberDescriptor;
-			questionTrk.Minimum = 1;
-			questionTrk.Maximum = questionsInGame;
-			questionTrk.Value = thisGame.ThisQuestionNumber;
+			
+			if (thisGame.GameSubtype != "INFINITE") {
+				thisQuestionXofY = "Question " + thisGame.ThisQuestionNumber.ToString() + " of " + questionsInGame.ToString();
+				thisQuestionNumberDescriptor = thisGame.ThisQuestionType + " :: " + thisQuestionXofY;
+				qHeaderNumberLbl.Text = thisQuestionXofY;
+				questionTrk.Minimum = 1;
+				questionTrk.Maximum = questionsInGame;
+				questionTrk.Value = (Int32)thisGame.ThisQuestionNumber;
+			} else {
+				thisQuestionXofY = "Question " + infiniteQuestionCounter.ToString() + " of infinity";
+				thisQuestionNumberDescriptor = thisGame.ThisQuestionType + " :: " + thisQuestionXofY;
+				qHeaderNumberLbl.Text = thisQuestionXofY;
+				questionTrk.Minimum = 1;
+				questionTrk.Maximum = 1;
+				questionTrk.Value = 1;
+				questionBackBtn.Enabled = false;
+				questionForwardBtn.Enabled = true;
+			}
 			closeQuestionBtn.Enabled = false;
 			questionReadBtn.Enabled = true;
 			thisQuestionHasAlreadyBeenRead = false;
@@ -171,7 +192,14 @@ namespace vzWordyHoster
         	//Debug.WriteLine("GetNextQuestion called");
 			if (thisGame != null) {
 				thisGame.NextQuestion();
-				LoadCurrentQuestion();
+				if (thisGame.GameSubtype == "INFINITE") {
+					infiniteQuestionCounter++;
+				}
+				LoadCurrentQuestionIntoForm();
+				if (autoPilotOn) {
+					ReadCurrentQuestion();
+				}
+				
 			} else {
 				MessageBox.Show("You need to start a game first.", "vzWordyHoster");
 			}
@@ -180,7 +208,7 @@ namespace vzWordyHoster
 		private void GetPreviousQuestion() {
 			if (thisGame != null) {
 				thisGame.PreviousQuestion();
-				LoadCurrentQuestion();
+				LoadCurrentQuestionIntoForm();
 			} else {
 				MessageBox.Show("You need to start a game first.", "vzWordyHoster");
 			}
@@ -189,7 +217,7 @@ namespace vzWordyHoster
 		private void GetSpecificQuestion(Int32 requestedQuestionNumber) {
 			if (thisGame != null) {
 				thisGame.GoToQuestion(requestedQuestionNumber);
-				LoadCurrentQuestion();
+				LoadCurrentQuestionIntoForm();
 			} else {
 				MessageBox.Show("You need to start a game first.", "vzWordyHoster");
 				questionTrk.Value = 0;
@@ -203,10 +231,11 @@ namespace vzWordyHoster
         	if (thisGame != null) {
         		if (thisQuestionHasAlreadyBeenRead) {
         			waSay(thisQuestionNumberDescriptor);
-        			waSay("Repeating: " + thisGame.ThisQuestionText);
+        			waSayChunked("Repeating: " + thisGame.ThisQuestionText);
         		} else {
 	        		waSay(thisQuestionNumberDescriptor);
-					waSay(thisGame.ThisQuestionText);        			
+					waSayChunked(thisGame.ThisQuestionText);       
+					thisQuestionFirstChunk = chunkStringFixedLength(thisGame.ThisQuestionText, CHUNKSIZE).ToList()[0];
         		}
 
 				switch (thisGame.GameType) {
@@ -223,13 +252,13 @@ namespace vzWordyHoster
 						break;
 					case "DEVILSDICT":
 						string lettersHelp = " [" + thisGame.ThisMaskedWord.Length.ToString() + " letters]";
-						waSay(thisGame.ThisMaskedWord + lettersHelp);
+						waSay(thisGame.ThisMaskedWord.ToUpper() + lettersHelp);
 						if (!thisQuestionHasAlreadyBeenRead) {
 							questionPgb.Value = secondsPerDevilsDictLetter;
 						}
 						break;
 					default:
-						answerTbx.Text = "Unknown game type '" + thisGame.GameType + "' in LoadCurrentQuestion()";
+						answerTbx.Text = "Unknown game type '" + thisGame.GameType + "' in LoadCurrentQuestionIntoForm()";
 						break;
 				}// switch (thisGame.GameType)
 
@@ -396,7 +425,7 @@ namespace vzWordyHoster
         	}
 			DialogResult fdResult = openFileDialog1.ShowDialog(); // Show the dialog.
 		    if (fdResult == DialogResult.OK) {
-				thisGame = new TriviaGame();
+				thisGame = new TriviaGame("FINITE");
 				MainForm.ActiveForm.Text = appName + " :: Trivia :: Finite";
 				string fdFileName = openFileDialog1.FileName;
 				questionsInGame = thisGame.LoadQuestionFile(fdFileName);
@@ -404,7 +433,7 @@ namespace vzWordyHoster
 					Debug.WriteLine(questionsInGame.ToString() + " questions loaded.");
 				}
 				thisGame.RefreshQuestion();
-				LoadCurrentQuestion();
+				LoadCurrentQuestionIntoForm();
 				
 			} else {
 				MessageBox.Show("There was a problem loading the file.");
@@ -417,7 +446,8 @@ namespace vzWordyHoster
         	}
 			DialogResult fdResult = openFileDialog1.ShowDialog(); // Show the dialog.
 		    if (fdResult == DialogResult.OK) {
-				thisGame = new DevilsDictGame();
+				//release thisgame
+				thisGame = new DevilsDictGame("FINITE");
 				MainForm.ActiveForm.Text = appName + " :: Devil's Dictionary :: Finite";
 				string fdFileName = openFileDialog1.FileName;
 				questionsInGame = thisGame.LoadQuestionFile(fdFileName);
@@ -425,11 +455,30 @@ namespace vzWordyHoster
 					Debug.WriteLine(questionsInGame.ToString() + " questions loaded.");
 				}
 				thisGame.RefreshQuestion();
-				LoadCurrentQuestion();
+				LoadCurrentQuestionIntoForm();
 			} else {
 				MessageBox.Show("There was a problem loading the file.");
 			}
-		}// loadTriviaFinite
+		}// loadDevilsDictFinite
+		
+		public void loadDevilsDictInfinite() {
+			if(hostAvatarName == "") {
+        		announceInitialisation();
+        	}
+			DialogResult fdResult = folderBrowserDialog1.ShowDialog(); // Show the dialog.
+		    if (fdResult == DialogResult.OK) {
+				thisGame = new DevilsDictGame("INFINITE");
+				MainForm.ActiveForm.Text = appName + " :: Devil's Dictionary :: Infinite";
+				infiniteFolder = folderBrowserDialog1.SelectedPath;
+				//MessageBox.Show("Folder selected was: " + infiniteFolder );
+				questionsInInfiniteFolder = thisGame.LoadInfiniteQuestionFolder(infiniteFolder);
+				thisGame.RefreshQuestion();
+				LoadCurrentQuestionIntoForm();
+				waSay("Loaded database of " + questionsInInfiniteFolder + " words.");
+			} else {
+				MessageBox.Show("There was a problem loading the folder.");
+			}
+		}// loadDevilsDictInfinite
 		
 		private void readScores() {
 			UpdatePlayersGrid();
@@ -607,7 +656,9 @@ namespace vzWordyHoster
 					if ( (thisQuestionTimerWarnings.Count > 0) && (thisQuestionSecondsElapsed >= thisQuestionTimerWarnings.ElementAt(0) )) {
 						if (thisGame.ThisLettersAnswersHaveBeenMarked) {
 							// Only unmask another letter if we have not already awarded 1st, 2nd and 3rd position points:
-							if (!thisGame.Awarded3rd) {
+							//if (!thisGame.Awarded3rd) {
+							// Only unmask another letter if we have not already awarded 1st (i.e. at least one person has found the word):
+							if (!thisGame.Awarded1st) {
 								thisGame.UnmaskAnother();
 								UpdateOptionsGrid();
 								thisQuestionTimerWarnings.RemoveAt(0);
@@ -653,8 +704,7 @@ namespace vzWordyHoster
 		
 		void TriviaFiniteTmiClick(object sender, EventArgs e)
 		{
-			loadTriviaFinite();
-			
+			loadTriviaFinite();	
 		}
 		
 		void DevilsDictFiniteTmiClick(object sender, EventArgs e)
@@ -662,11 +712,27 @@ namespace vzWordyHoster
 			loadDevilsDictFinite();
 		}
 		
+		void TestBtnClick(object sender, EventArgs e)
+		{
+			//MessageBox.Show(thisGame.stringContainsNumbers("abc123DEF").ToString() );
+		}
+		
 		//---------- END FORM CONTROL EVENTS ------------------------------------------------------------------------------
 		
 
 		
 		
+		
+		void DevilsDictInfiniteTmiClick(object sender, EventArgs e)
+		{
+			loadDevilsDictInfinite();
+		}
+		
+		
+		void AutoPilotChbCheckedChanged(object sender, EventArgs e)
+		{
+			autoPilotOn = autoPilotChb.Checked;			
+		}
 	}// class MainForm
 	
 	

@@ -21,6 +21,7 @@ namespace vzWordyHoster
     {
     	private static readonly string APP_NAME = "vzWordyHoster";
     	public static readonly bool DEBUG_ON = false;    
+    	public readonly Int32 CHUNKSIZE = 255;
     	
     	
     	// ----------------------------------------------
@@ -70,7 +71,9 @@ namespace vzWordyHoster
         public static void ProcessReceiveData(String sAvatar, Int32 nDataLen, String sData)
         {
             // Do nothing! I don't believe that this will ever be used in my intended application.
-            Debug.WriteLine("Data received: " + sData);
+            if (DEBUG_ON) {
+            	Debug.WriteLine("Data received: " + sData);
+            }
         }
 
         public static void ProcessGetAllText(String sTextData)
@@ -260,7 +263,7 @@ namespace vzWordyHoster
         			case "MARK":
         				commsBufferTable.Rows.RemoveAt(0);
         				if (thisGame != null) {
-							thisGame.MarkAnswers(allText, thisGame.ThisQuestionText, closureMessage, hostAvatarName);
+							thisGame.MarkAnswers(allText, thisQuestionFirstChunk, closureMessage, hostAvatarName);
 						} else {
 							Debug.Print("You need to start a game before attempting to get players.");
 						}
@@ -434,6 +437,14 @@ namespace vzWordyHoster
         	addCommsBufferItem("SAY", text, "");
         }
         
+        void waSayChunked(string text) {
+        	List<string> myChunks = chunkStringFixedLength(text, CHUNKSIZE).ToList();
+        	foreach (string myChunk in myChunks) {
+        		addCommsBufferItem("SAY", myChunk, "");
+        	}
+        }
+        
+        
         void waThink(string text) {
         	addCommsBufferItem("THINK", text, "");
         }
@@ -446,10 +457,19 @@ namespace vzWordyHoster
         	addCommsBufferItem("GETALLTEXT", "", "");
         }
         
+        static IEnumerable<string> chunkStringFixedLength(string str, int maxChunkSize) {
+        	// Eamon Nerbonne's answer from http://stackoverflow.com/questions/1450774/splitting-a-string-into-chunks-of-a-certain-size
+        	// Splits text into chunks of maxChunkSize characters.
+        	// TODO: Check if the chunks are actually maxChunkSize - 1.
+        	for (int i = 0; i < str.Length; i += maxChunkSize) yield return str.Substring(i, Math.Min(maxChunkSize, str.Length-i));
+		}
+        
         
         // ---------------------------------------------- 
         // ------ END STANDARD WADAPI WRAPPER CODE ------
         // ----------------------------------------------
+		
+
     }// class MainForm
     
 }// namespace wadapi_test

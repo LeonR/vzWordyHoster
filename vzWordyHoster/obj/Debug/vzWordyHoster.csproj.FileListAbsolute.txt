@@ -1,4 +1,5 @@
 C:\Users\Leon\Documents\SharpDevelop Projects\CSharp\vzWordyHoster\vzWordyHoster\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\Leon\Documents\SharpDevelop Projects\CSharp\vzWordyHoster\vzWordyHoster\obj\Debug\vzWordyHoster.AboutForm.resources
 C:\Users\Leon\Documents\SharpDevelop Projects\CSharp\vzWordyHoster\vzWordyHoster\obj\Debug\vzWordyHoster.MainForm.resources
 C:\Users\Leon\Documents\SharpDevelop Projects\CSharp\vzWordyHoster\vzWordyHoster\obj\Debug\GenerateResource.read.1.tlog
 C:\Users\Leon\Documents\SharpDevelop Projects\CSharp\vzWordyHoster\vzWordyHoster\obj\Debug\GenerateResource.write.1.tlog
@@ -7,4 +8,3 @@ C:\Users\Leon\Documents\SharpDevelop Projects\CSharp\vzWordyHoster\vzWordyHoster
 C:\Users\Leon\Documents\SharpDevelop Projects\CSharp\vzWordyHoster\vzWordyHoster\bin\Debug\vzWordyHoster.pdb
 C:\Users\Leon\Documents\SharpDevelop Projects\CSharp\vzWordyHoster\vzWordyHoster\obj\Debug\vzWordyHoster.exe
 C:\Users\Leon\Documents\SharpDevelop Projects\CSharp\vzWordyHoster\vzWordyHoster\obj\Debug\vzWordyHoster.pdb
-C:\Users\Leon\Documents\SharpDevelop Projects\CSharp\vzWordyHoster\vzWordyHoster\obj\Debug\vzWordyHoster.AboutForm.resources
