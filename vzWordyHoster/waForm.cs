@@ -138,7 +138,7 @@ namespace vzWordyHoster
             if (request.ReqType == ActionRequestType.ACTION_SAY || request.ReqType == ActionRequestType.ACTION_THINK || request.ReqType == ActionRequestType.ACTION_ESP || request.ReqType == ActionRequestType.ACTION_GETALLTEXT) 
             {
                 _commsInProgress = false;
-				if ((commsBufferTable != null) && (commsBufferTable.Rows != null)) {
+                if ((commsBufferTable != null) && (commsBufferTable.Rows != null) && (commsBufferTable.Rows.Count > 0)) {
                 	// ack values: 0 = acknowledged; -1 = client not present/other error; 13 = cannot say because avatar is ghosted.
                 	//             10 occurs when hoster app is started before VZ client. DDE not initiated?
                 	// TODO: Try doing a new DDE init if ack 10 is received.

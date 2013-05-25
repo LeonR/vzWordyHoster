@@ -109,6 +109,18 @@ namespace vzWordyHoster
 			}
 		}
 		
+		public bool ThisLettersAnswersHaveBeenMarked {
+			get {
+				return thisLettersAnswersHaveBeenMarked;
+			}
+		}
+		
+		public bool Awarded3rd {
+			get {
+				return awarded3rd;
+			}
+		}
+		
 		
 		public List<string> LatestWinnersList {
 			get {
@@ -135,11 +147,11 @@ namespace vzWordyHoster
 			}
 		}
 		
-		public List<Int32> getWarningsFromAnswerLength() {
+		public List<Int32> getWarningsFromAnswerLength(Int32 secondsPerLetter) {
 			List<Int32> tempList = new List<Int32>();
 			if (thisAnswerText.Length > 0) {
 				for (Int32 charCounter = 1; charCounter < thisAnswerText.Length; charCounter++) {
-					tempList.Add(charCounter * 10);
+					tempList.Add(charCounter * secondsPerLetter);
 				}
 			}
 			return tempList;			
@@ -154,6 +166,9 @@ namespace vzWordyHoster
 
 			thisOptionsTable.Rows[0][0] = charsRevealed;
 			thisOptionsTable.Rows[0][1] = thisMaskedWord;	
+			if (gameType == "DEVILSDICT") {
+				thisLettersAnswersHaveBeenMarked = false;
+			}
 		}// UnmaskAnother
 
 		
@@ -411,6 +426,10 @@ namespace vzWordyHoster
 				}
 			}
 			
+			if (gameType == "DEVILSDICT") {
+				thisLettersAnswersHaveBeenMarked = true;
+			}
+			
 			if(DEBUG_ON) {
 				Debug.WriteLine("Marking session is complete.");
 			}
@@ -428,6 +447,8 @@ namespace vzWordyHoster
 		protected bool awarded1st = false;
 		protected bool awarded2nd = false;
 		protected bool awarded3rd = false;
+		
+		protected bool thisLettersAnswersHaveBeenMarked = false;
 		
 		protected string gameType;
 		protected string questionFile;
@@ -536,12 +557,28 @@ namespace vzWordyHoster
 			}
 		}
 		
+		protected Int32 getNumberOfMaskedChars(string maskedWord, char maskingChar) {
+			Int32 maskCounter = 0;
+			for (Int32 charCounter = 0; charCounter < maskedWord.Length; charCounter++) {
+				char thisChar = maskedWord.ElementAt(charCounter);
+				if (thisChar == maskingChar) {
+					maskCounter++;
+				}
+			}
+			return maskCounter;
+		}
+		
 		
 		protected string unmaskOneMoreChar(string plainText, string mask, char maskingChar, string maskedWord) {
-			// Count how many chars in maskedWord are still masked with asterisks, using Linq:
-			Int32 numberOfMaskedChars = maskedWord.TakeWhile(c => c == maskingChar).Count();
+			// Count how many chars in maskedWord are still masked with asterisks:
+			Int32 numberOfMaskedChars = getNumberOfMaskedChars(maskedWord, maskingChar);
 			// Pick a masked character to unmask:
 			Int32 selectedIndex = GetRandomNumber(numberOfMaskedChars + 1) - 1;  // This will retrieve an integer between 0 and length-1.
+			if (DEBUG_ON) {
+				Debug.WriteLine("numberOfMaskedChars: " + numberOfMaskedChars.ToString() );
+				Debug.WriteLine("selectedIndex: " + selectedIndex.ToString() );
+			}
+			
 			// Work through maskedWord, locate the masked char with the selected index and unmask it:
 			Int32 maskCounter = 0;
 			string outputText = "";
@@ -828,6 +865,7 @@ namespace vzWordyHoster
 			thisMaskedWord = thisMask;
 			addMaskedWord(charsRevealed, thisMaskedWord);
 			thisOptionsTable.AcceptChanges();
+			thisLettersAnswersHaveBeenMarked = false;
 			
 			// Better to unmask on the fly, as required, rather than generate all forms of the
 			// string on the fly, because random numbers generated in quick succession are not

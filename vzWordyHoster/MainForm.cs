@@ -38,12 +38,12 @@ namespace vzWordyHoster
 		private string initialisationString = "vzWordyHoster initialised!";
 		private string closureMessage = "Closed!";
 		private Int32 secondsPerQuestion = 60;
+		private Int32 secondsPerDevilsDictLetter = 20;
 		private readonly List<Int32> questionTimerWarningsAt = new List<Int32> {30, 40, 50, 55, 56, 57, 58, 59}; // Never changes.
-		// TODO: Generate devilsDictWarningsAt according to length of answer.
-		//private List<Int32> devilsDictWarningsAt = new List<Int32>();
 		private List<Int32> thisQuestionTimerWarnings = new List<Int32>(); // Is reset for each question, and gets first element popped after each warning.
 
 		private Int32 thisQuestionSecondsElapsed;
+		private Int32 thisLetterSecondsElapsed;
 		private bool thisQuestionHasAlreadyBeenRead;
 		
 		private System.Timers.Timer postInitTmr = new System.Timers.Timer();
@@ -128,18 +128,26 @@ namespace vzWordyHoster
 			questionTbx.Text = thisGame.ThisQuestionText;
 			qHeaderTypeLbl.Text = "Type: " + FirstLetterToUpper(thisGame.ThisQuestionType);
 			
+			questionPgb.Minimum = 0;
+			
+			
 			switch (thisGame.GameType) {
 				case "TRIVIA":
 					answerTbx.Text = thisGame.ThisAnswerNumber.ToString() + " [" + thisGame.ThisAnswerText + "]";
 					UpdateOptionsGrid();
 					thisQuestionTimerWarnings.Clear();
 					thisQuestionTimerWarnings.AddRange(questionTimerWarningsAt);
+					questionPgb.Maximum = secondsPerQuestion;
+					questionPgb.Value = secondsPerQuestion;
 					break;
 				case "DEVILSDICT":
 					answerTbx.Text = thisGame.ThisAnswerText;
 					UpdateOptionsGrid();
 					thisQuestionTimerWarnings.Clear();
-					thisQuestionTimerWarnings.AddRange(thisGame.getWarningsFromAnswerLength() );
+					thisQuestionTimerWarnings.AddRange(thisGame.getWarningsFromAnswerLength(secondsPerDevilsDictLetter) );
+					questionPgb.Maximum = secondsPerDevilsDictLetter;
+					questionPgb.Value = secondsPerDevilsDictLetter;
+					autoGetTmr.Enabled = false;  // Because we're just going to get answers once per letter.
 					break;
 				default:
 					answerTbx.Text = "Unknown game type '" + thisGame.GameType + "' in LoadCurrentQuestion()";
@@ -156,9 +164,7 @@ namespace vzWordyHoster
 			thisQuestionHasAlreadyBeenRead = false;
 			questionReadBtn.Text = "Read Question";
 			
-			questionPgb.Minimum = 0;
-			questionPgb.Maximum = secondsPerQuestion;
-			questionPgb.Value = secondsPerQuestion;
+			
 		}
 		
 		private void GetNextQuestion() {
@@ -216,7 +222,11 @@ namespace vzWordyHoster
 						}
 						break;
 					case "DEVILSDICT":
-						waSay(thisGame.ThisMaskedWord);
+						string lettersHelp = " [" + thisGame.ThisMaskedWord.Length.ToString() + " letters]";
+						waSay(thisGame.ThisMaskedWord + lettersHelp);
+						if (!thisQuestionHasAlreadyBeenRead) {
+							questionPgb.Value = secondsPerDevilsDictLetter;
+						}
 						break;
 					default:
 						answerTbx.Text = "Unknown game type '" + thisGame.GameType + "' in LoadCurrentQuestion()";
@@ -226,13 +236,17 @@ namespace vzWordyHoster
 				
 				inviteAnswers();
 				if (!thisQuestionHasAlreadyBeenRead) {
-					autoGetTmr.Enabled = true;  // Start getting chat/ESP text automatically
+					if (thisGame.GameType == "TRIVIA") {
+						autoGetTmr.Enabled = true;  // Start getting chat/ESP text automatically
+					}
 					questionTmr.Enabled = true; // Start the question duration timer
 					thisQuestionSecondsElapsed = 0;
+					thisLetterSecondsElapsed = 0;
 					questionBackBtn.Enabled = false;
 					questionForwardBtn.Enabled = false;
 					questionTrk.Enabled = false;
 					closeQuestionBtn.Enabled = true;
+					//thisGame.ThisLettersAnswersHaveBeenMarked = false;
 				}
 				thisQuestionHasAlreadyBeenRead = true;
 				questionReadBtn.Text = "Repeat Question";
@@ -562,9 +576,10 @@ namespace vzWordyHoster
 		{
 			switch (thisGame.GameType) {
 				case "TRIVIA":
+					Int32 secondsRemainingForQuestion;
 					thisQuestionSecondsElapsed += questionTmr.Interval / 1000;
-					Int32 secondsRemaining = secondsPerQuestion - thisQuestionSecondsElapsed;
-					if (secondsRemaining <= 10) {
+					secondsRemainingForQuestion = secondsPerQuestion - thisQuestionSecondsElapsed;
+					if (secondsRemainingForQuestion <= 10) {
 						autoGetTmr.Enabled = false;  // To prevent a waGet() from slowing down the countdown timer.
 					}
 					if ( (thisQuestionTimerWarnings.Count > 0) && (thisQuestionSecondsElapsed >= thisQuestionTimerWarnings.ElementAt(0) )) {
@@ -572,8 +587,8 @@ namespace vzWordyHoster
 						thisQuestionTimerWarnings.RemoveAt(0);
 					}
 					
-					if (secondsRemaining >= 0) {
-						questionPgb.Value = secondsRemaining;
+					if (secondsRemainingForQuestion >= 0) {
+						questionPgb.Value = secondsRemainingForQuestion;
 					}
 					
 					if ( thisQuestionSecondsElapsed >= secondsPerQuestion ) {
@@ -581,13 +596,31 @@ namespace vzWordyHoster
 					}
 					break;
 				case "DEVILSDICT":
+					Int32 secondsRemainingForLetter;
 					thisQuestionSecondsElapsed += questionTmr.Interval / 1000;
+					thisLetterSecondsElapsed += questionTmr.Interval / 1000;
+					secondsRemainingForLetter = secondsPerDevilsDictLetter - thisLetterSecondsElapsed;
+					if (secondsRemainingForLetter >= 0) {
+						questionPgb.Value = secondsRemainingForLetter;
+					}
+					
 					if ( (thisQuestionTimerWarnings.Count > 0) && (thisQuestionSecondsElapsed >= thisQuestionTimerWarnings.ElementAt(0) )) {
-						thisGame.UnmaskAnother();
-						UpdateOptionsGrid();
-						thisQuestionTimerWarnings.RemoveAt(0);
-						ReadCurrentQuestion();
-					} else if ( thisQuestionTimerWarnings.Count == 0 ) {
+						if (thisGame.ThisLettersAnswersHaveBeenMarked) {
+							// Only unmask another letter if we have not already awarded 1st, 2nd and 3rd position points:
+							if (!thisGame.Awarded3rd) {
+								thisGame.UnmaskAnother();
+								UpdateOptionsGrid();
+								thisQuestionTimerWarnings.RemoveAt(0);
+								ReadCurrentQuestion();
+								thisLetterSecondsElapsed = 0;
+							} else {
+								CloseCurrentQuestion();
+							}
+						} else {
+							getESPsAndMarkThem();
+						}
+
+					} else if ( (thisQuestionTimerWarnings.Count) == 0 && (thisLetterSecondsElapsed == secondsPerDevilsDictLetter) ) {
 						CloseCurrentQuestion();
 					}
 					
