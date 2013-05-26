@@ -191,9 +191,18 @@ namespace vzWordyHoster
 		private void GetNextQuestion() {
         	//Debug.WriteLine("GetNextQuestion called");
 			if (thisGame != null) {
+        		waSay("---------- Next question! ----------");
 				thisGame.NextQuestion();
 				if (thisGame.GameSubtype == "INFINITE") {
 					infiniteQuestionCounter++;
+					switch (thisGame.GameType) {
+						case "DEVILSDICT":
+							string numFormatted = questionsInInfiniteFolder.ToString("N0");
+							waSay("Picked one random word from a dictionary containing " + numFormatted + " entries.");
+							break;
+						default:
+							break;
+					}
 				}
 				LoadCurrentQuestionIntoForm();
 				if (autoPilotOn) {
@@ -472,9 +481,11 @@ namespace vzWordyHoster
 				infiniteFolder = folderBrowserDialog1.SelectedPath;
 				//MessageBox.Show("Folder selected was: " + infiniteFolder );
 				questionsInInfiniteFolder = thisGame.LoadInfiniteQuestionFolder(infiniteFolder);
-				thisGame.RefreshQuestion();
+				//thisGame.RefreshQuestion();  // Don't think we need to do this again (already done when we load question)
 				LoadCurrentQuestionIntoForm();
-				waSay("Loaded database of " + questionsInInfiniteFolder + " words.");
+				string numFormatted = questionsInInfiniteFolder.ToString("N0");
+				waSay("I have loaded a devilish dictionary of " + numFormatted + " words!");
+				waSay("All words will be picked from this dictionary at random.");
 			} else {
 				MessageBox.Show("There was a problem loading the folder.");
 			}
@@ -527,7 +538,6 @@ namespace vzWordyHoster
 		
 		void QuestionForwardBtnClick(object sender, EventArgs e)
 		{
-			//Debug.WriteLine("QuestionForwardBtnClick called");
 			GetNextQuestion();
 		}
 		

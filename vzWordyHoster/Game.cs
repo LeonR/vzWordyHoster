@@ -32,6 +32,9 @@ namespace vzWordyHoster
 			buildMostRecentESPsThisRoundTable();
 		}
 		
+		public static readonly bool DEBUG_ON = true;
+		public Random rnd = new Random();  // Used by GetRandomLong()
+		
 		public Game(string passedGameSubtype) {  // Constructor method
 			
 			gameSubtype = passedGameSubtype;
@@ -40,9 +43,6 @@ namespace vzWordyHoster
 			
 		}
 		
-		public static readonly bool DEBUG_ON = false;
-		public Random rnd = new Random();  // Used by LongRandom()
-		
 		public DataTable ThisOptionsTable {
 			get {
 				return thisOptionsTable;
@@ -50,25 +50,31 @@ namespace vzWordyHoster
 		}
 		
 		
-		public Int32 GetRandomNumber(Int32 maxNumber) {
+		public Int32 GetRandomInteger(Int32 min, Int32 max) {
 			// From http://blog.codeeffects.com/Article/Generate-Random-Numbers-And-Strings-C-Sharp
-			// Returns a integer between 1 and (maxNumber - 1).
-			if(maxNumber < 1)
-				throw new System.Exception("The maxNumber value should be greater than 1");
+			// Version there returns a integer between 1 and (max - 1).
+			// Amended by LR to return an integer between min and max.
+			//if(max < 1)
+			//	throw new System.Exception("The maxNumber value should be greater than 1");
+			if(max < 0)
+				throw new System.Exception("The maxNumber value should be 0 or more");
 			byte[] b = new byte[4];
 			new System.Security.Cryptography.RNGCryptoServiceProvider().GetBytes(b);
 			int seed = (b[0] & 0x7f) << 24 | b[1] << 16 | b[2] << 8 | b[3];
 			System.Random r = new System.Random(seed);
-			return r.Next(1, maxNumber);
+			return r.Next(min, max+1);
 		}
 		
 		
-		public long LongRandom(long min, long max, Random rand) {
+		public long GetRandomLong(long min, long max, Random rand) {
 			// From http://stackoverflow.com/questions/6651554/random-number-in-long-range-is-this-the-way
+			// The version there returns a number between min and max-1, which seems misleading.
+			// Amended by LR to return a number between min and max.
 		    byte[] buf = new byte[8];
 		    rand.NextBytes(buf);
 		    long longRand = BitConverter.ToInt64(buf, 0);
-		    return (Math.Abs(longRand % (max - min)) + min);
+		    //return (Math.Abs(longRand % (max - min)) + min);
+		    return (Math.Abs(longRand % ((max+1) - min)) + min);
 		}
 		
 
@@ -178,9 +184,13 @@ namespace vzWordyHoster
 		}
 		
 		public List<Int32> getWarningsFromAnswerLength(Int32 secondsPerLetter) {
+			// Returns a list of x integers, where x is the number of masked characters in the answer.
+			// The integers are the times (in seconds) at which each additional letter will be revealed
+			// in a Devil's Dictionary game (until someone gets the answer).
 			List<Int32> tempList = new List<Int32>();
+			Int32 numMaskedCharsInMask = getNumberOfMaskedChars(thisMask, MASKINGCHAR);
 			if (thisAnswerText.Length > 0) {
-				for (Int32 charCounter = 1; charCounter < thisAnswerText.Length; charCounter++) {
+				for (Int32 charCounter = 1; charCounter < numMaskedCharsInMask; charCounter++) {
 					tempList.Add(charCounter * secondsPerLetter);
 				}
 			}
@@ -190,7 +200,7 @@ namespace vzWordyHoster
 		
 		public void UnmaskAnother() {
 			if ( thisAnswerText.Length > charsRevealed ) {
-				thisMaskedWord = unmaskOneMoreChar(thisAnswerText, thisMask, '*', thisMaskedWord);
+				thisMaskedWord = unmaskOneMoreChar(thisAnswerText, thisMask, MASKINGCHAR, thisMaskedWord);
 				charsRevealed++;
 			}
 
@@ -209,6 +219,9 @@ namespace vzWordyHoster
 		
 		public void NextQuestion() {
 			//Debug.WriteLine("NextQuestion called");
+			if (DEBUG_ON) {
+				Debug.WriteLine("----- NextQuestion -----");
+			}
 			if (gameSubtype != "INFINITE" ) {
 				if(thisQuestionNumber + 1 <= numQuestions) {
 					thisQuestionNumber++;
@@ -217,14 +230,18 @@ namespace vzWordyHoster
 				}
 			} else {
 				//gameSubtype is INFINITE.
-				bool foundAGoodQuestion = false;
+				pickValidRandomQuestionNumber();
+				currentQuestionClosed = false;
+			}
+		}
+		
+		private void pickValidRandomQuestionNumber() {
+			bool foundAGoodQuestion = false;
 				do {
-					thisQuestionNumber = LongRandom(1, questions.Count(), rnd);
+					thisQuestionNumber = GetRandomLong(1, questions.Count(), rnd);
 					loadQuestionDetailsPrivately();
 					foundAGoodQuestion = checkValidityOfQuestion();
 				} while (foundAGoodQuestion == false);
-				currentQuestionClosed = false;
-			}
 		}
 		
 		public void PreviousQuestion() {
@@ -512,6 +529,7 @@ namespace vzWordyHoster
 		protected readonly Int32 marksFor2nd = 3;
 		protected readonly Int32 marksFor3rd = 2;
 		protected readonly Int32 marksForOthers = 1;
+		protected readonly char MASKINGCHAR = '*';
 		
 		protected bool awarded1st = false;
 		protected bool awarded2nd = false;
@@ -644,7 +662,7 @@ namespace vzWordyHoster
 			// Count how many chars in maskedWord are still masked with asterisks:
 			Int32 numberOfMaskedChars = getNumberOfMaskedChars(maskedWord, maskingChar);
 			// Pick a masked character to unmask:
-			Int32 selectedIndex = GetRandomNumber(numberOfMaskedChars + 1) - 1;  // This will retrieve an integer between 0 and length-1.
+			Int32 selectedIndex = GetRandomInteger(1, numberOfMaskedChars) - 1;  // This will retrieve an integer between 0 and length-1.
 			if (DEBUG_ON) {
 				Debug.WriteLine("numberOfMaskedChars: " + numberOfMaskedChars.ToString() );
 				Debug.WriteLine("selectedIndex: " + selectedIndex.ToString() );
@@ -734,7 +752,8 @@ namespace vzWordyHoster
 				totalNodes += numNodes;
 			}
 			totalNodes = questions.Count();
-			thisQuestionNumber = LongRandom(1, totalNodes, rnd);
+			//thisQuestionNumber = GetRandomLong(1, totalNodes, rnd);
+			pickValidRandomQuestionNumber();
 			return totalNodes;
 		}// loadInfiniteDevilsDictFolder
 
@@ -838,15 +857,32 @@ namespace vzWordyHoster
 			if (stringContainsNumbers(thisAnswerText) ) {allIsWell = false; };  // Players shouldn't expect the word to contain numbers.
 			if (thisQuestionText.Contains(" ") == false ) { allIsWell = false; };  // The question contains no spaces, so presumably is a one-word definition.
 			
+			if(DEBUG_ON) {
+				if (allIsWell) {
+					Debug.WriteLine("checkValidityOfQuestion accepted word: " + thisAnswerText);
+				} else {
+					Debug.WriteLine("checkValidityOfQuestion rejected word: " + thisAnswerText);
+				}
+			}
+			
+			
 			return allIsWell;
 		}
 		
-		public string TryGetElementValue(XElement parentEl, string elementName, string defaultValue = null) {
-			// Checks parentEl to see if elementName exists. If it does, return the element's value; otherwise, return defaultValue.
-		    var foundEl = parentEl.Element(elementName);
-		    if(foundEl != null)
+		public string TryGetElementValue(XElement parentElement, string elementName, string defaultValue = null) {
+			// Checks parentElement to see if elementName exists as a child. If it does, and there is only one
+			// such element, returns that element's value. If more than one matching child exists, returns the
+			// value of one of those children selected at random. If no matching child exists, returns defaultValue.
+		    var foundElement = parentElement.Element(elementName);
+		    if(foundElement != null)
 		    {
-		         return foundEl.Value;
+		         var matchingChildren = parentElement.Elements(elementName);
+		         if (matchingChildren.Count() == 1) {
+		         	return matchingChildren.ElementAt(0).Value;
+		         } else {
+		         	Int32 randomChildIndex = GetRandomInteger(0, matchingChildren.Count()-1);
+		         	return matchingChildren.ElementAt(randomChildIndex).Value;
+		         }
 		    }
 		    else
 		    {
@@ -869,6 +905,10 @@ namespace vzWordyHoster
 			gameType = "TRIVIA";
 			gameSubtype = passedGameSubtype;
 			buildOptionsTable();
+			
+			for (int i = 0; i < 100; i++) {
+				Debug.WriteLine( "GetRandomInteger: " + GetRandomInteger(1, 10).ToString() );
+			}
 
 		}
 
@@ -1013,14 +1053,14 @@ namespace vzWordyHoster
 			//thisQuestionText = thisQuestionElem.Element("def").Value;
 			thisQuestionText = TryGetElementValue(thisQuestionElem, "def", "");  // If no def node exists, return ""
 			if (DEBUG_ON) {
-				Debug.WriteLine("thisQuestionText: " + thisQuestionText);
+				Debug.WriteLine("lddqdp:thisQuestionText: " + thisQuestionText);
 			}
 			
 			// Load thisAnswerText:
 			//thisAnswerText = thisQuestionElem.Element("hw").Value;
 			thisAnswerText = TryGetElementValue(thisQuestionElem, "hw", "");     // If no hw node exists, return ""
 			if (DEBUG_ON) {
-				Debug.WriteLine("thisAnswerText: " + thisAnswerText);
+				Debug.WriteLine("lddqdp:thisAnswerText: " + thisAnswerText);
 			}
 			
 			thisOptionsTable.Clear();
@@ -1029,7 +1069,7 @@ namespace vzWordyHoster
 			//string thisMask;
 			//string thisMaskedWord;
 			
-			thisMask = maskAlphabeticals(thisAnswerText, '*');
+			thisMask = maskAlphabeticals(thisAnswerText, MASKINGCHAR);
 			thisMaskedWord = thisMask;
 			addMaskedWord(charsRevealed, thisMaskedWord);
 			thisOptionsTable.AcceptChanges();
