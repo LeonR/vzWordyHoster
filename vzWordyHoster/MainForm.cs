@@ -78,12 +78,27 @@ namespace vzWordyHoster
 			devilsDictInfiniteFolder = ConfigurationManager.AppSettings["devilsDictInfiniteFolder"];
 			devilsDictFiniteFile = ConfigurationManager.AppSettings["devilsDictFiniteFile"];
 			triviaFiniteFile = ConfigurationManager.AppSettings["triviaFiniteFile"];
+
+			waSetup();
+			announceInitialisation();
 			
+		}// MainForm() constructor method
+		
+		
+		~MainForm()  // Destructor
+        {
+        	waWrapup();
+        }
+		
+		
+		void MainFormLoad(object sender, EventArgs e)
+		{
 			// Enable/disable debug-related controls:
 			debugPnl.Enabled = DEBUG_ON;
 			debugPnl.Visible = DEBUG_ON;
 			if (!DEBUG_ON) {
-				this.Width = leftPnl.Width + playersPnl.Width + 30;
+				this.Width = leftPnl.Width + playersPnl.Width + 15;
+				
 			}
 			
 			// Enable/disable standard controls:
@@ -108,23 +123,22 @@ namespace vzWordyHoster
 			scrambleInfiniteTmi.Enabled = false;
 			scrambleInfiniteTmi.Visible = false;
 			
-			// Enable/disable timers:
-			postInitTmr.Enabled = false;
 			
 			// Populate macros:
 			loadMacrosFromTextFile();
 			macroLbx.DataSource = macroList;
-
-			waSetup();
-			announceInitialisation();
 			
-		}// MainForm() constructor method
-		
-		
-		~MainForm()  // Destructor
-        {
-        	waWrapup();
-        }
+			// Set tooltips:
+			System.Windows.Forms.ToolTip macroLbxTtp = new System.Windows.Forms.ToolTip();
+   			macroLbxTtp.SetToolTip(this.macroLbx, "Double-click to send macro. Single-click to select. Right-click to edit.");
+   			
+   			System.Windows.Forms.ToolTip questionPgbTtp = new System.Windows.Forms.ToolTip();
+   			questionPgbTtp.SetToolTip(this.questionPgb, "Click to pause/resume timer.");
+   			
+   			System.Windows.Forms.ToolTip getAnswersBtnTtp = new System.Windows.Forms.ToolTip();
+   			getAnswersBtnTtp.SetToolTip(this.getAnswersBtn, "Click to perform an ad-hoc check of the answers so far." + Environment.NewLine + "(You don't really need to do this because answers are collected automatically by the hoster at intervals.)");
+	
+		}// MainFormLoad
 		
 		private void loadMacrosFromTextFile() {
 			if ( File.Exists(MACROFILE) ){
@@ -768,12 +782,12 @@ namespace vzWordyHoster
 			if (questionTmr.Enabled) {
 				questionTmr.Enabled = false;
 				questionPgb.Style = ProgressBarStyle.Marquee;
-				qHeaderNumberLbl.Text = thisQuestionNumberDescriptor + " [PAUSED]";
+				qHeaderNumberLbl.Text = thisQuestionXofY + " [PAUSED]";
 				waSay("::::: Timer PAUSED by host :::::");
 			} else if ( (questionTmr.Enabled == false) && thisQuestionHasAlreadyBeenRead ) {
 				questionTmr.Enabled = true;
 				questionPgb.Style = ProgressBarStyle.Continuous;
-				qHeaderNumberLbl.Text = thisQuestionNumberDescriptor;
+				qHeaderNumberLbl.Text = thisQuestionXofY;
 				waSay("::::: Timer RESUMED :::::");
 				qHeaderNumberLbl.Refresh();
 			}
@@ -876,15 +890,14 @@ namespace vzWordyHoster
 			}
 		}// MacroLbxDoubleClick
 		
-		void MainFormLoad(object sender, EventArgs e)
+
+		void GetAnswersBtnClick(object sender, EventArgs e)
 		{
-			// Set tooltips:
-			System.Windows.Forms.ToolTip macroLbxTtp = new System.Windows.Forms.ToolTip();
-   			macroLbxTtp.SetToolTip(this.macroLbx, "Double-click to send macro. Single-click to select. Right-click to edit.");
-   			
-   			System.Windows.Forms.ToolTip questionPgbTtp = new System.Windows.Forms.ToolTip();
-   			questionPgbTtp.SetToolTip(this.questionPgb, "Click to pause/resume timer.");
-	
+			if (thisGame != null) {
+				getESPsAndMarkThem();
+			} else {
+				MessageBox.Show("You need to start a game first.", "vzWordyHoster");
+			}			
 		}
 	}// class MainForm
 	

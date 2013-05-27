@@ -38,9 +38,14 @@ namespace vzWordyHoster
 		{
 			this.components = new System.ComponentModel.Container();
 			this.playersPnl = new System.Windows.Forms.Panel();
+			this.macroLbx = new System.Windows.Forms.ListBox();
+			this.macroLbxCms = new System.Windows.Forms.ContextMenuStrip(this.components);
+			this.macroLbxContextAdd = new System.Windows.Forms.ToolStripMenuItem();
+			this.macroLbxContextEdit = new System.Windows.Forms.ToolStripMenuItem();
+			this.macroLbxContextDelete = new System.Windows.Forms.ToolStripMenuItem();
+			this.playersDgv = new System.Windows.Forms.DataGridView();
 			this.autoPilotChb = new System.Windows.Forms.CheckBox();
 			this.readScoresBtn = new System.Windows.Forms.Button();
-			this.playersDgv = new System.Windows.Forms.DataGridView();
 			this.debugPnl = new System.Windows.Forms.Panel();
 			this.testBtn = new System.Windows.Forms.Button();
 			this.dummyAnswerTbx = new System.Windows.Forms.TextBox();
@@ -52,13 +57,8 @@ namespace vzWordyHoster
 			this.commsBufferDgv = new System.Windows.Forms.DataGridView();
 			this.processBufferTmr = new System.Windows.Forms.Timer(this.components);
 			this.leftPnl = new System.Windows.Forms.Panel();
-			this.commsPnl = new System.Windows.Forms.Panel();
-			this.macroLbx = new System.Windows.Forms.ListBox();
-			this.macroLbxCms = new System.Windows.Forms.ContextMenuStrip(this.components);
-			this.macroLbxContextAdd = new System.Windows.Forms.ToolStripMenuItem();
-			this.macroLbxContextEdit = new System.Windows.Forms.ToolStripMenuItem();
-			this.macroLbxContextDelete = new System.Windows.Forms.ToolStripMenuItem();
 			this.questionPnl = new System.Windows.Forms.Panel();
+			this.getAnswersBtn = new System.Windows.Forms.Button();
 			this.questionPgb = new System.Windows.Forms.ProgressBar();
 			this.optionsDgv = new System.Windows.Forms.DataGridView();
 			this.closeQuestionBtn = new System.Windows.Forms.Button();
@@ -92,12 +92,11 @@ namespace vzWordyHoster
 			this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
 			this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
 			this.playersPnl.SuspendLayout();
+			this.macroLbxCms.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.playersDgv)).BeginInit();
 			this.debugPnl.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.commsBufferDgv)).BeginInit();
 			this.leftPnl.SuspendLayout();
-			this.commsPnl.SuspendLayout();
-			this.macroLbxCms.SuspendLayout();
 			this.questionPnl.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.optionsDgv)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.questionTrk)).BeginInit();
@@ -106,34 +105,53 @@ namespace vzWordyHoster
 			// 
 			// playersPnl
 			// 
-			this.playersPnl.Controls.Add(this.autoPilotChb);
-			this.playersPnl.Controls.Add(this.readScoresBtn);
+			this.playersPnl.Controls.Add(this.macroLbx);
 			this.playersPnl.Controls.Add(this.playersDgv);
 			this.playersPnl.Dock = System.Windows.Forms.DockStyle.Right;
-			this.playersPnl.Location = new System.Drawing.Point(692, 24);
+			this.playersPnl.Location = new System.Drawing.Point(623, 24);
 			this.playersPnl.Name = "playersPnl";
 			this.playersPnl.Size = new System.Drawing.Size(365, 514);
 			this.playersPnl.TabIndex = 0;
 			// 
-			// autoPilotChb
+			// macroLbx
 			// 
-			this.autoPilotChb.Location = new System.Drawing.Point(112, 420);
-			this.autoPilotChb.Name = "autoPilotChb";
-			this.autoPilotChb.Size = new System.Drawing.Size(104, 24);
-			this.autoPilotChb.TabIndex = 5;
-			this.autoPilotChb.Text = "Auto-pilot";
-			this.autoPilotChb.UseVisualStyleBackColor = true;
-			this.autoPilotChb.CheckedChanged += new System.EventHandler(this.AutoPilotChbCheckedChanged);
+			this.macroLbx.ContextMenuStrip = this.macroLbxCms;
+			this.macroLbx.FormattingEnabled = true;
+			this.macroLbx.Location = new System.Drawing.Point(6, 332);
+			this.macroLbx.Name = "macroLbx";
+			this.macroLbx.Size = new System.Drawing.Size(350, 173);
+			this.macroLbx.TabIndex = 6;
+			this.macroLbx.DoubleClick += new System.EventHandler(this.MacroLbxDoubleClick);
 			// 
-			// readScoresBtn
+			// macroLbxCms
 			// 
-			this.readScoresBtn.Location = new System.Drawing.Point(6, 419);
-			this.readScoresBtn.Name = "readScoresBtn";
-			this.readScoresBtn.Size = new System.Drawing.Size(99, 23);
-			this.readScoresBtn.TabIndex = 4;
-			this.readScoresBtn.Text = "Read Scores";
-			this.readScoresBtn.UseVisualStyleBackColor = true;
-			this.readScoresBtn.Click += new System.EventHandler(this.ReadScoresBtnClick);
+			this.macroLbxCms.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+									this.macroLbxContextAdd,
+									this.macroLbxContextEdit,
+									this.macroLbxContextDelete});
+			this.macroLbxCms.Name = "macroLbxCms";
+			this.macroLbxCms.Size = new System.Drawing.Size(153, 92);
+			// 
+			// macroLbxContextAdd
+			// 
+			this.macroLbxContextAdd.Name = "macroLbxContextAdd";
+			this.macroLbxContextAdd.Size = new System.Drawing.Size(152, 22);
+			this.macroLbxContextAdd.Text = "Add...";
+			this.macroLbxContextAdd.Click += new System.EventHandler(this.MacroLbxContextAddClick);
+			// 
+			// macroLbxContextEdit
+			// 
+			this.macroLbxContextEdit.Name = "macroLbxContextEdit";
+			this.macroLbxContextEdit.Size = new System.Drawing.Size(152, 22);
+			this.macroLbxContextEdit.Text = "Edit...";
+			this.macroLbxContextEdit.Click += new System.EventHandler(this.MacroLbxContextEditClick);
+			// 
+			// macroLbxContextDelete
+			// 
+			this.macroLbxContextDelete.Name = "macroLbxContextDelete";
+			this.macroLbxContextDelete.Size = new System.Drawing.Size(152, 22);
+			this.macroLbxContextDelete.Text = "Delete";
+			this.macroLbxContextDelete.Click += new System.EventHandler(this.MacroLbxContextDeleteClick);
 			// 
 			// playersDgv
 			// 
@@ -144,8 +162,28 @@ namespace vzWordyHoster
 			this.playersDgv.Location = new System.Drawing.Point(6, 0);
 			this.playersDgv.Name = "playersDgv";
 			this.playersDgv.ReadOnly = true;
-			this.playersDgv.Size = new System.Drawing.Size(350, 413);
+			this.playersDgv.Size = new System.Drawing.Size(350, 326);
 			this.playersDgv.TabIndex = 0;
+			// 
+			// autoPilotChb
+			// 
+			this.autoPilotChb.Location = new System.Drawing.Point(22, 451);
+			this.autoPilotChb.Name = "autoPilotChb";
+			this.autoPilotChb.Size = new System.Drawing.Size(120, 24);
+			this.autoPilotChb.TabIndex = 5;
+			this.autoPilotChb.Text = "Auto-pilot";
+			this.autoPilotChb.UseVisualStyleBackColor = true;
+			this.autoPilotChb.CheckedChanged += new System.EventHandler(this.AutoPilotChbCheckedChanged);
+			// 
+			// readScoresBtn
+			// 
+			this.readScoresBtn.Location = new System.Drawing.Point(22, 422);
+			this.readScoresBtn.Name = "readScoresBtn";
+			this.readScoresBtn.Size = new System.Drawing.Size(120, 23);
+			this.readScoresBtn.TabIndex = 4;
+			this.readScoresBtn.Text = "Read Scores";
+			this.readScoresBtn.UseVisualStyleBackColor = true;
+			this.readScoresBtn.Click += new System.EventHandler(this.ReadScoresBtnClick);
 			// 
 			// debugPnl
 			// 
@@ -160,7 +198,7 @@ namespace vzWordyHoster
 			this.debugPnl.Controls.Add(this.allTextTbx);
 			this.debugPnl.Controls.Add(this.commsBufferDgv);
 			this.debugPnl.Dock = System.Windows.Forms.DockStyle.Right;
-			this.debugPnl.Location = new System.Drawing.Point(392, 24);
+			this.debugPnl.Location = new System.Drawing.Point(323, 24);
 			this.debugPnl.MinimumSize = new System.Drawing.Size(300, 0);
 			this.debugPnl.Name = "debugPnl";
 			this.debugPnl.Size = new System.Drawing.Size(300, 514);
@@ -251,67 +289,19 @@ namespace vzWordyHoster
 			// 
 			// leftPnl
 			// 
-			this.leftPnl.Controls.Add(this.commsPnl);
 			this.leftPnl.Controls.Add(this.questionPnl);
 			this.leftPnl.Location = new System.Drawing.Point(1, 24);
 			this.leftPnl.Name = "leftPnl";
 			this.leftPnl.Size = new System.Drawing.Size(300, 514);
 			this.leftPnl.TabIndex = 2;
 			// 
-			// commsPnl
-			// 
-			this.commsPnl.Controls.Add(this.macroLbx);
-			this.commsPnl.Dock = System.Windows.Forms.DockStyle.Bottom;
-			this.commsPnl.Location = new System.Drawing.Point(0, 422);
-			this.commsPnl.Name = "commsPnl";
-			this.commsPnl.Size = new System.Drawing.Size(300, 92);
-			this.commsPnl.TabIndex = 1;
-			// 
-			// macroLbx
-			// 
-			this.macroLbx.ContextMenuStrip = this.macroLbxCms;
-			this.macroLbx.FormattingEnabled = true;
-			this.macroLbx.Location = new System.Drawing.Point(22, 3);
-			this.macroLbx.Name = "macroLbx";
-			this.macroLbx.Size = new System.Drawing.Size(278, 82);
-			this.macroLbx.TabIndex = 0;
-			this.macroLbx.Click += new System.EventHandler(this.MacroLbxClick);
-			this.macroLbx.DoubleClick += new System.EventHandler(this.MacroLbxDoubleClick);
-			// 
-			// macroLbxCms
-			// 
-			this.macroLbxCms.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-									this.macroLbxContextAdd,
-									this.macroLbxContextEdit,
-									this.macroLbxContextDelete});
-			this.macroLbxCms.Name = "macroLbxCms";
-			this.macroLbxCms.Size = new System.Drawing.Size(153, 92);
-			// 
-			// macroLbxContextAdd
-			// 
-			this.macroLbxContextAdd.Name = "macroLbxContextAdd";
-			this.macroLbxContextAdd.Size = new System.Drawing.Size(152, 22);
-			this.macroLbxContextAdd.Text = "Add...";
-			this.macroLbxContextAdd.Click += new System.EventHandler(this.MacroLbxContextAddClick);
-			// 
-			// macroLbxContextEdit
-			// 
-			this.macroLbxContextEdit.Name = "macroLbxContextEdit";
-			this.macroLbxContextEdit.Size = new System.Drawing.Size(152, 22);
-			this.macroLbxContextEdit.Text = "Edit...";
-			this.macroLbxContextEdit.Click += new System.EventHandler(this.MacroLbxContextEditClick);
-			// 
-			// macroLbxContextDelete
-			// 
-			this.macroLbxContextDelete.Name = "macroLbxContextDelete";
-			this.macroLbxContextDelete.Size = new System.Drawing.Size(152, 22);
-			this.macroLbxContextDelete.Text = "Delete";
-			this.macroLbxContextDelete.Click += new System.EventHandler(this.MacroLbxContextDeleteClick);
-			// 
 			// questionPnl
 			// 
+			this.questionPnl.Controls.Add(this.getAnswersBtn);
 			this.questionPnl.Controls.Add(this.questionPgb);
+			this.questionPnl.Controls.Add(this.autoPilotChb);
 			this.questionPnl.Controls.Add(this.optionsDgv);
+			this.questionPnl.Controls.Add(this.readScoresBtn);
 			this.questionPnl.Controls.Add(this.closeQuestionBtn);
 			this.questionPnl.Controls.Add(this.questionReadBtn);
 			this.questionPnl.Controls.Add(this.questionForwardBtn);
@@ -326,8 +316,18 @@ namespace vzWordyHoster
 			this.questionPnl.Dock = System.Windows.Forms.DockStyle.Top;
 			this.questionPnl.Location = new System.Drawing.Point(0, 0);
 			this.questionPnl.Name = "questionPnl";
-			this.questionPnl.Size = new System.Drawing.Size(300, 419);
+			this.questionPnl.Size = new System.Drawing.Size(300, 502);
 			this.questionPnl.TabIndex = 0;
+			// 
+			// getAnswersBtn
+			// 
+			this.getAnswersBtn.Location = new System.Drawing.Point(180, 422);
+			this.getAnswersBtn.Name = "getAnswersBtn";
+			this.getAnswersBtn.Size = new System.Drawing.Size(120, 23);
+			this.getAnswersBtn.TabIndex = 13;
+			this.getAnswersBtn.Text = "Get Answers";
+			this.getAnswersBtn.UseVisualStyleBackColor = true;
+			this.getAnswersBtn.Click += new System.EventHandler(this.GetAnswersBtnClick);
 			// 
 			// questionPgb
 			// 
@@ -461,7 +461,7 @@ namespace vzWordyHoster
 									this.helpTmi});
 			this.mainMnu.Location = new System.Drawing.Point(0, 0);
 			this.mainMnu.Name = "mainMnu";
-			this.mainMnu.Size = new System.Drawing.Size(1057, 24);
+			this.mainMnu.Size = new System.Drawing.Size(988, 24);
 			this.mainMnu.TabIndex = 3;
 			this.mainMnu.Text = "menuStrip2";
 			// 
@@ -589,23 +589,24 @@ namespace vzWordyHoster
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(1057, 538);
+			this.ClientSize = new System.Drawing.Size(988, 538);
 			this.Controls.Add(this.leftPnl);
 			this.Controls.Add(this.debugPnl);
 			this.Controls.Add(this.playersPnl);
 			this.Controls.Add(this.mainMnu);
+			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+			this.MaximizeBox = false;
 			this.Name = "MainForm";
 			this.Text = "vzWordyHoster";
 			this.Activated += new System.EventHandler(this.MainFormActivated);
 			this.Load += new System.EventHandler(this.MainFormLoad);
 			this.playersPnl.ResumeLayout(false);
+			this.macroLbxCms.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.playersDgv)).EndInit();
 			this.debugPnl.ResumeLayout(false);
 			this.debugPnl.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.commsBufferDgv)).EndInit();
 			this.leftPnl.ResumeLayout(false);
-			this.commsPnl.ResumeLayout(false);
-			this.macroLbxCms.ResumeLayout(false);
 			this.questionPnl.ResumeLayout(false);
 			this.questionPnl.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.optionsDgv)).EndInit();
@@ -615,6 +616,7 @@ namespace vzWordyHoster
 			this.ResumeLayout(false);
 			this.PerformLayout();
 		}
+		private System.Windows.Forms.Button getAnswersBtn;
 		private System.Windows.Forms.ToolStripMenuItem macroLbxContextEdit;
 		private System.Windows.Forms.ToolStripMenuItem macroLbxContextDelete;
 		private System.Windows.Forms.ToolStripMenuItem macroLbxContextAdd;
@@ -661,7 +663,6 @@ namespace vzWordyHoster
 		private System.Windows.Forms.TextBox questionTbx;
 		private System.Windows.Forms.TextBox answerTbx;
 		private System.Windows.Forms.Panel questionPnl;
-		private System.Windows.Forms.Panel commsPnl;
 		private System.Windows.Forms.Panel leftPnl;
 		private System.Windows.Forms.Button getAllTextBtn;
 		private System.Windows.Forms.Timer processBufferTmr;
