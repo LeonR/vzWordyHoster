@@ -17,6 +17,7 @@ using System.Xml;
 using System.Xml.Linq;
 using System.Timers;
 using System.Configuration;
+using System.IO;
 
 
 namespace vzWordyHoster
@@ -30,8 +31,14 @@ namespace vzWordyHoster
 	public partial class MainForm : Form
 	{
 		
-		public static bool acceptAnswersInEsp = false;
-		public static bool acceptAnswersInSpeech = false;
+		public static bool acceptAnswersInEsp;
+		public static bool acceptAnswersInSpeech;
+		public static List<string> macroList = new List<string>();
+		public static string MACROFILE = "macros.txt";
+		
+		private string devilsDictInfiniteFolder;
+		private string devilsDictFiniteFile;
+		private string triviaFiniteFile;
 		
 		private Int32 questionsInGame;
 		private long questionsInInfiniteFolder;
@@ -46,7 +53,6 @@ namespace vzWordyHoster
 		private Int32 secondsPerDevilsDictLetter = 20;
 		private readonly List<Int32> questionTimerWarningsAt = new List<Int32> {30, 40, 50, 55, 56, 57, 58, 59}; // Never changes.
 		private List<Int32> thisQuestionTimerWarnings = new List<Int32>(); // Is reset for each question, and gets first element popped after each warning.
-		private string infiniteFolder;
 		private string thisQuestionFirstChunk;
 		private bool autoPilotOn = false;
 
@@ -69,11 +75,9 @@ namespace vzWordyHoster
 			// Load settings from app.config:
 			acceptAnswersInEsp = Convert.ToBoolean( ConfigurationManager.AppSettings["acceptAnswersInEsp"] );
 			acceptAnswersInSpeech = Convert.ToBoolean( ConfigurationManager.AppSettings["acceptAnswersInSpeech"] );
-			
-			if (DEBUG_ON) {
-				Debug.WriteLine("acceptAnswersInEsp: " + acceptAnswersInEsp);
-				Debug.WriteLine("acceptAnswersInSpeech: " + acceptAnswersInSpeech);
-			}
+			devilsDictInfiniteFolder = ConfigurationManager.AppSettings["devilsDictInfiniteFolder"];
+			devilsDictFiniteFile = ConfigurationManager.AppSettings["devilsDictFiniteFile"];
+			triviaFiniteFile = ConfigurationManager.AppSettings["triviaFiniteFile"];
 			
 			// Enable/disable debug-related controls:
 			debugPnl.Enabled = DEBUG_ON;
@@ -106,6 +110,10 @@ namespace vzWordyHoster
 			
 			// Enable/disable timers:
 			postInitTmr.Enabled = false;
+			
+			// Populate macros:
+			loadMacrosFromTextFile();
+			macroLbx.DataSource = macroList;
 
 			waSetup();
 			announceInitialisation();
@@ -117,6 +125,16 @@ namespace vzWordyHoster
         {
         	waWrapup();
         }
+		
+		private void loadMacrosFromTextFile() {
+			if ( File.Exists(MACROFILE) ){
+				var macroFile = File.ReadAllLines(MACROFILE);
+				List<string> tempMacroList = new List<string>(macroFile);
+				foreach (string macro in tempMacroList) {
+					macroList.Add(macro);
+				}
+			}		
+		}// loadMacrosFromTextFile
 		
 		
         private void PerformThreadSafePostGetAllTextProcessing(string text)
@@ -457,12 +475,20 @@ namespace vzWordyHoster
 			if(hostAvatarName == "") {
         		announceInitialisation();
         	}
+			openFileDialog1.FileName = triviaFiniteFile;
 			DialogResult fdResult = openFileDialog1.ShowDialog(); // Show the dialog.
 		    if (fdResult == DialogResult.OK) {
 				thisGame = new TriviaGame("FINITE");
 				MainForm.ActiveForm.Text = appName + " :: Trivia :: Finite";
-				string fdFileName = openFileDialog1.FileName;
-				questionsInGame = thisGame.LoadQuestionFile(fdFileName);
+				triviaFiniteFile = openFileDialog1.FileName;
+				// Remember triviaFiniteFile value for next time:
+				Configuration config = ConfigurationManager.OpenExeConfiguration(Application.ExecutablePath);
+				config.AppSettings.Settings.Remove("triviaFiniteFile");
+				config.AppSettings.Settings.Add("triviaFiniteFile", triviaFiniteFile );
+				config.Save(ConfigurationSaveMode.Modified);
+				
+				
+				questionsInGame = thisGame.LoadQuestionFile(triviaFiniteFile);
 				if(DEBUG_ON) {
 					Debug.WriteLine(questionsInGame.ToString() + " questions loaded.");
 				}
@@ -478,13 +504,21 @@ namespace vzWordyHoster
 			if(hostAvatarName == "") {
         		announceInitialisation();
         	}
+			openFileDialog1.FileName = devilsDictFiniteFile;
 			DialogResult fdResult = openFileDialog1.ShowDialog(); // Show the dialog.
 		    if (fdResult == DialogResult.OK) {
 				//release thisgame
 				thisGame = new DevilsDictGame("FINITE");
 				MainForm.ActiveForm.Text = appName + " :: Devil's Dictionary :: Finite";
-				string fdFileName = openFileDialog1.FileName;
-				questionsInGame = thisGame.LoadQuestionFile(fdFileName);
+				devilsDictFiniteFile = openFileDialog1.FileName;
+				
+				// Remember devilsDictFiniteFile value for next time:
+				Configuration config = ConfigurationManager.OpenExeConfiguration(Application.ExecutablePath);
+				config.AppSettings.Settings.Remove("devilsDictFiniteFile");
+				config.AppSettings.Settings.Add("devilsDictFiniteFile", devilsDictFiniteFile );
+				config.Save(ConfigurationSaveMode.Modified);
+				
+				questionsInGame = thisGame.LoadQuestionFile(devilsDictFiniteFile);
 				if(DEBUG_ON) {
 					Debug.WriteLine(questionsInGame.ToString() + " questions loaded.");
 				}
@@ -499,13 +533,21 @@ namespace vzWordyHoster
 			if(hostAvatarName == "") {
         		announceInitialisation();
         	}
+			folderBrowserDialog1.SelectedPath = devilsDictInfiniteFolder;  // Loaded from settings at startup
 			DialogResult fdResult = folderBrowserDialog1.ShowDialog(); // Show the dialog.
 		    if (fdResult == DialogResult.OK) {
 				thisGame = new DevilsDictGame("INFINITE");
 				MainForm.ActiveForm.Text = appName + " :: Devil's Dictionary :: Infinite";
-				infiniteFolder = folderBrowserDialog1.SelectedPath;
-				//MessageBox.Show("Folder selected was: " + infiniteFolder );
-				questionsInInfiniteFolder = thisGame.LoadInfiniteQuestionFolder(infiniteFolder);
+				devilsDictInfiniteFolder = folderBrowserDialog1.SelectedPath;
+				
+				// Remember devilsDictInfiniteFolder value for next time:
+				Configuration config = ConfigurationManager.OpenExeConfiguration(Application.ExecutablePath);
+				config.AppSettings.Settings.Remove("devilsDictInfiniteFolder");
+				config.AppSettings.Settings.Add("devilsDictInfiniteFolder", devilsDictInfiniteFolder );
+				config.Save(ConfigurationSaveMode.Modified);
+				
+				//MessageBox.Show("Folder selected was: " + devilsDictInfiniteFolder );
+				questionsInInfiniteFolder = thisGame.LoadInfiniteQuestionFolder(devilsDictInfiniteFolder);
 				LoadCurrentQuestionIntoForm();
 				string numFormatted = questionsInInfiniteFolder.ToString("N0");
 				waSay("I have loaded a devilish dictionary of " + numFormatted + " words!");
@@ -544,8 +586,8 @@ namespace vzWordyHoster
 		
 		void MacroLbxClick(object sender, EventArgs e)
 		{
-			waSay( macroLbx.SelectedItem.ToString() );
-		}
+			
+		}// MacroLbxClick
 		
 		void AllTextTbxTextChanged(object sender, EventArgs e)
 		{
@@ -774,6 +816,75 @@ namespace vzWordyHoster
 		{
 			OptionsForm myOptionsForm = new OptionsForm();
             myOptionsForm.ShowDialog();			
+		}
+		
+		
+		void MainFormActivated(object sender, EventArgs e)
+		{
+			// Refresh macroLbx because it might have changed if focus has just been returned to MainForm
+			// after closure of MacroEditorForm. The Refresh() method doesn't serve to update it.
+			macroLbx.DataSource = null;
+			macroLbx.DataSource = macroList;			
+		}
+		
+		
+		void MacroLbxContextAddClick(object sender, EventArgs e)
+		{
+			MacroEditorForm myMacroEditorForm = new MacroEditorForm();
+			myMacroEditorForm.itemToEdit = -1;
+			myMacroEditorForm.ShowDialog();
+		}
+		
+		
+		void MacroLbxContextDeleteClick(object sender, EventArgs e)
+		{
+			Int32 macroIndex = macroLbx.SelectedIndex;
+			
+			macroList.RemoveAt(macroIndex);
+			File.WriteAllLines(MainForm.MACROFILE, MainForm.macroList);	
+			if (macroList.Count > 0) {
+				macroLbx.SelectedIndex = 0;
+			} else {
+				macroLbx.ClearSelected();
+			}
+			macroLbx.DataSource = null;
+			if (macroList.Count > 0) {
+				macroLbx.DataSource = macroList;
+			}
+		}
+		
+		void MacroLbxContextEditClick(object sender, EventArgs e)
+		{
+			MacroEditorForm myMacroEditorForm = new MacroEditorForm();
+			myMacroEditorForm.itemToEdit = macroLbx.SelectedIndex;
+			myMacroEditorForm.ShowDialog();
+		}
+		
+		void MacroLbxDoubleClick(object sender, EventArgs e)
+		{
+			if ( macroLbx.SelectedItem != null ) {
+				string macroString = macroLbx.SelectedItem.ToString();
+				if ( macroString.Contains("//") ) {
+					// Split macroLines into a list, using "//" as the split string:
+			    	string[] macroLines = macroString.Split(new string[] { "//" }, StringSplitOptions.None);
+			    	foreach (string macroLine in macroLines) {
+			    		waSayChunked(macroLine);
+			    	}
+				} else {
+					waSayChunked(macroString);
+				}
+			}
+		}// MacroLbxDoubleClick
+		
+		void MainFormLoad(object sender, EventArgs e)
+		{
+			// Set tooltips:
+			System.Windows.Forms.ToolTip macroLbxTtp = new System.Windows.Forms.ToolTip();
+   			macroLbxTtp.SetToolTip(this.macroLbx, "Double-click to send macro. Single-click to select. Right-click to edit.");
+   			
+   			System.Windows.Forms.ToolTip questionPgbTtp = new System.Windows.Forms.ToolTip();
+   			questionPgbTtp.SetToolTip(this.questionPgb, "Click to pause/resume timer.");
+	
 		}
 	}// class MainForm
 	

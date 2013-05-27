@@ -383,6 +383,8 @@ namespace vzWordyHoster
 						stillMarking = false;
 					} else if ( (thisLine.Length >= 6) && (thisLine.Substring(0, 6) == "ESP to") ) {
 						// Do nothing.
+					} else if ( (thisLine.Length >= 8) && (thisLine.Substring(0, 8) == "<system>") ) {
+						// Do nothing.
 					} else if( (MainForm.acceptAnswersInEsp) && (thisLine.Length >= 8) && (thisLine.Substring(0, 8) == "ESP from") ) {  // This is an ESP
 						Int32 colonPos = thisLine.IndexOf(":");
 						if( (colonPos > -1) && (thisLine.Length >= 10) ) {
@@ -873,6 +875,7 @@ namespace vzWordyHoster
 			if (thisAnswerText == "") { allIsWell = false; };
 			if (thisQuestionText.Substring(0, 4).ToLower() == "see ") { allIsWell = false; };  // A dictionary reference to another word.
 			if (thisQuestionText.Contains(". See")) { allIsWell = false; };  // A dictionary reference further on in the definition.
+			if (thisQuestionText.Substring(0, 7).ToLower() == "same as") { allIsWell = false; };  // Another style of reference to another word.
 			if (thisQuestionText.ToLower().Contains(thisAnswerText.ToLower() )) { allIsWell = false; };  // The answer is contained in the question.
 			if (stringContainsNumbers(thisAnswerText) ) {allIsWell = false; };  // Players shouldn't expect the word to contain numbers.
 			if (thisQuestionText.Contains(" ") == false ) { allIsWell = false; };  // The question contains no spaces, so presumably is a one-word definition.
@@ -925,10 +928,6 @@ namespace vzWordyHoster
 			gameType = "TRIVIA";
 			gameSubtype = passedGameSubtype;
 			buildOptionsTable();
-			
-			for (int i = 0; i < 100; i++) {
-				Debug.WriteLine( "GetRandomInteger: " + GetRandomInteger(1, 10).ToString() );
-			}
 
 		}
 

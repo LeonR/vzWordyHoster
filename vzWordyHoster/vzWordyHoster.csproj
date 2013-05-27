@@ -51,6 +51,10 @@
     <Compile Include="AboutForm.Designer.cs">
       <DependentUpon>AboutForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="MacroEditorForm.cs" />
+    <Compile Include="MacroEditorForm.Designer.cs">
+      <DependentUpon>MacroEditorForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="OptionsForm.cs" />
     <Compile Include="OptionsForm.Designer.cs">
       <DependentUpon>OptionsForm.cs</DependentUpon>
@@ -72,6 +76,9 @@
   <ItemGroup>
     <EmbeddedResource Include="AboutForm.resx">
       <DependentUpon>AboutForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MacroEditorForm.resx">
+      <DependentUpon>MacroEditorForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>

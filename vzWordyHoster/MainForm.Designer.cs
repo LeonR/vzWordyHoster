@@ -54,6 +54,10 @@ namespace vzWordyHoster
 			this.leftPnl = new System.Windows.Forms.Panel();
 			this.commsPnl = new System.Windows.Forms.Panel();
 			this.macroLbx = new System.Windows.Forms.ListBox();
+			this.macroLbxCms = new System.Windows.Forms.ContextMenuStrip(this.components);
+			this.macroLbxContextAdd = new System.Windows.Forms.ToolStripMenuItem();
+			this.macroLbxContextEdit = new System.Windows.Forms.ToolStripMenuItem();
+			this.macroLbxContextDelete = new System.Windows.Forms.ToolStripMenuItem();
 			this.questionPnl = new System.Windows.Forms.Panel();
 			this.questionPgb = new System.Windows.Forms.ProgressBar();
 			this.optionsDgv = new System.Windows.Forms.DataGridView();
@@ -93,6 +97,7 @@ namespace vzWordyHoster
 			((System.ComponentModel.ISupportInitialize)(this.commsBufferDgv)).BeginInit();
 			this.leftPnl.SuspendLayout();
 			this.commsPnl.SuspendLayout();
+			this.macroLbxCms.SuspendLayout();
 			this.questionPnl.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.optionsDgv)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.questionTrk)).BeginInit();
@@ -132,10 +137,13 @@ namespace vzWordyHoster
 			// 
 			// playersDgv
 			// 
+			this.playersDgv.AllowUserToAddRows = false;
+			this.playersDgv.AllowUserToDeleteRows = false;
 			this.playersDgv.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
 			this.playersDgv.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
 			this.playersDgv.Location = new System.Drawing.Point(6, 0);
 			this.playersDgv.Name = "playersDgv";
+			this.playersDgv.ReadOnly = true;
 			this.playersDgv.Size = new System.Drawing.Size(350, 413);
 			this.playersDgv.TabIndex = 0;
 			// 
@@ -261,16 +269,44 @@ namespace vzWordyHoster
 			// 
 			// macroLbx
 			// 
+			this.macroLbx.ContextMenuStrip = this.macroLbxCms;
 			this.macroLbx.FormattingEnabled = true;
-			this.macroLbx.Items.AddRange(new object[] {
-									"WTG!",
-									"Jolly well done!",
-									"Hurry up!"});
 			this.macroLbx.Location = new System.Drawing.Point(22, 3);
 			this.macroLbx.Name = "macroLbx";
 			this.macroLbx.Size = new System.Drawing.Size(278, 82);
 			this.macroLbx.TabIndex = 0;
 			this.macroLbx.Click += new System.EventHandler(this.MacroLbxClick);
+			this.macroLbx.DoubleClick += new System.EventHandler(this.MacroLbxDoubleClick);
+			// 
+			// macroLbxCms
+			// 
+			this.macroLbxCms.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+									this.macroLbxContextAdd,
+									this.macroLbxContextEdit,
+									this.macroLbxContextDelete});
+			this.macroLbxCms.Name = "macroLbxCms";
+			this.macroLbxCms.Size = new System.Drawing.Size(153, 92);
+			// 
+			// macroLbxContextAdd
+			// 
+			this.macroLbxContextAdd.Name = "macroLbxContextAdd";
+			this.macroLbxContextAdd.Size = new System.Drawing.Size(152, 22);
+			this.macroLbxContextAdd.Text = "Add...";
+			this.macroLbxContextAdd.Click += new System.EventHandler(this.MacroLbxContextAddClick);
+			// 
+			// macroLbxContextEdit
+			// 
+			this.macroLbxContextEdit.Name = "macroLbxContextEdit";
+			this.macroLbxContextEdit.Size = new System.Drawing.Size(152, 22);
+			this.macroLbxContextEdit.Text = "Edit...";
+			this.macroLbxContextEdit.Click += new System.EventHandler(this.MacroLbxContextEditClick);
+			// 
+			// macroLbxContextDelete
+			// 
+			this.macroLbxContextDelete.Name = "macroLbxContextDelete";
+			this.macroLbxContextDelete.Size = new System.Drawing.Size(152, 22);
+			this.macroLbxContextDelete.Text = "Delete";
+			this.macroLbxContextDelete.Click += new System.EventHandler(this.MacroLbxContextDeleteClick);
 			// 
 			// questionPnl
 			// 
@@ -516,7 +552,7 @@ namespace vzWordyHoster
 			// optionsTmi
 			// 
 			this.optionsTmi.Name = "optionsTmi";
-			this.optionsTmi.Size = new System.Drawing.Size(152, 22);
+			this.optionsTmi.Size = new System.Drawing.Size(125, 22);
 			this.optionsTmi.Text = "Options...";
 			this.optionsTmi.Click += new System.EventHandler(this.OptionsTmiClick);
 			// 
@@ -531,7 +567,7 @@ namespace vzWordyHoster
 			// aboutTmi
 			// 
 			this.aboutTmi.Name = "aboutTmi";
-			this.aboutTmi.Size = new System.Drawing.Size(152, 22);
+			this.aboutTmi.Size = new System.Drawing.Size(116, 22);
 			this.aboutTmi.Text = "About...";
 			this.aboutTmi.Click += new System.EventHandler(this.AboutTmiClick);
 			// 
@@ -560,6 +596,8 @@ namespace vzWordyHoster
 			this.Controls.Add(this.mainMnu);
 			this.Name = "MainForm";
 			this.Text = "vzWordyHoster";
+			this.Activated += new System.EventHandler(this.MainFormActivated);
+			this.Load += new System.EventHandler(this.MainFormLoad);
 			this.playersPnl.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.playersDgv)).EndInit();
 			this.debugPnl.ResumeLayout(false);
@@ -567,6 +605,7 @@ namespace vzWordyHoster
 			((System.ComponentModel.ISupportInitialize)(this.commsBufferDgv)).EndInit();
 			this.leftPnl.ResumeLayout(false);
 			this.commsPnl.ResumeLayout(false);
+			this.macroLbxCms.ResumeLayout(false);
 			this.questionPnl.ResumeLayout(false);
 			this.questionPnl.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.optionsDgv)).EndInit();
@@ -576,6 +615,10 @@ namespace vzWordyHoster
 			this.ResumeLayout(false);
 			this.PerformLayout();
 		}
+		private System.Windows.Forms.ToolStripMenuItem macroLbxContextEdit;
+		private System.Windows.Forms.ToolStripMenuItem macroLbxContextDelete;
+		private System.Windows.Forms.ToolStripMenuItem macroLbxContextAdd;
+		private System.Windows.Forms.ContextMenuStrip macroLbxCms;
 		private System.Windows.Forms.ToolStripMenuItem optionsTmi;
 		private System.Windows.Forms.ToolStripMenuItem editToolStripMenuItem;
 		private System.Windows.Forms.CheckBox autoPilotChb;

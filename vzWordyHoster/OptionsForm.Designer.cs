@@ -89,6 +89,9 @@ namespace vzWordyHoster
 			this.ClientSize = new System.Drawing.Size(484, 462);
 			this.Controls.Add(this.AnswersGrp);
 			this.Controls.Add(this.OkBtn);
+			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+			this.MaximizeBox = false;
+			this.MinimizeBox = false;
 			this.Name = "OptionsForm";
 			this.Text = "vzWordyHoster :: Options";
 			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.OptionsFormFormClosing);
