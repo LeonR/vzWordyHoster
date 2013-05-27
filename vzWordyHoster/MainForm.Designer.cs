@@ -79,6 +79,8 @@ namespace vzWordyHoster
 			this.scrambleTmi = new System.Windows.Forms.ToolStripMenuItem();
 			this.scrambleFiniteTmi = new System.Windows.Forms.ToolStripMenuItem();
 			this.scrambleInfiniteTmi = new System.Windows.Forms.ToolStripMenuItem();
+			this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.optionsTmi = new System.Windows.Forms.ToolStripMenuItem();
 			this.helpTmi = new System.Windows.Forms.ToolStripMenuItem();
 			this.aboutTmi = new System.Windows.Forms.ToolStripMenuItem();
 			this.autoGetTmr = new System.Windows.Forms.Timer(this.components);
@@ -419,6 +421,7 @@ namespace vzWordyHoster
 			// 
 			this.mainMnu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
 									this.fileTmi,
+									this.editToolStripMenuItem,
 									this.helpTmi});
 			this.mainMnu.Location = new System.Drawing.Point(0, 0);
 			this.mainMnu.Name = "mainMnu";
@@ -502,6 +505,21 @@ namespace vzWordyHoster
 			this.scrambleInfiniteTmi.Size = new System.Drawing.Size(120, 22);
 			this.scrambleInfiniteTmi.Text = "Infinite...";
 			// 
+			// editToolStripMenuItem
+			// 
+			this.editToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+									this.optionsTmi});
+			this.editToolStripMenuItem.Name = "editToolStripMenuItem";
+			this.editToolStripMenuItem.Size = new System.Drawing.Size(39, 20);
+			this.editToolStripMenuItem.Text = "Edit";
+			// 
+			// optionsTmi
+			// 
+			this.optionsTmi.Name = "optionsTmi";
+			this.optionsTmi.Size = new System.Drawing.Size(152, 22);
+			this.optionsTmi.Text = "Options...";
+			this.optionsTmi.Click += new System.EventHandler(this.OptionsTmiClick);
+			// 
 			// helpTmi
 			// 
 			this.helpTmi.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -513,7 +531,7 @@ namespace vzWordyHoster
 			// aboutTmi
 			// 
 			this.aboutTmi.Name = "aboutTmi";
-			this.aboutTmi.Size = new System.Drawing.Size(116, 22);
+			this.aboutTmi.Size = new System.Drawing.Size(152, 22);
 			this.aboutTmi.Text = "About...";
 			this.aboutTmi.Click += new System.EventHandler(this.AboutTmiClick);
 			// 
@@ -558,6 +576,8 @@ namespace vzWordyHoster
 			this.ResumeLayout(false);
 			this.PerformLayout();
 		}
+		private System.Windows.Forms.ToolStripMenuItem optionsTmi;
+		private System.Windows.Forms.ToolStripMenuItem editToolStripMenuItem;
 		private System.Windows.Forms.CheckBox autoPilotChb;
 		private System.Windows.Forms.Button testBtn;
 		private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;

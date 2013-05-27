@@ -32,8 +32,10 @@ namespace vzWordyHoster
 			buildMostRecentESPsThisRoundTable();
 		}
 		
-		public static readonly bool DEBUG_ON = true;
+		public static readonly bool DEBUG_ON = false;
 		public Random rnd = new Random();  // Used by GetRandomLong()
+		public readonly char MASKINGCHAR = '*';
+		public readonly char VZMASKINGCHAR = '¥';
 		
 		public Game(string passedGameSubtype) {  // Constructor method
 			
@@ -377,7 +379,11 @@ namespace vzWordyHoster
 					}
 					
 					// Process ESPed answers:
-					if( (thisLine.Length >= 8) && (thisLine.Substring(0, 8) == "ESP from") ) {  // This is an ESP
+					if (thisLine == hostName + ": " + closeMessage) {
+						stillMarking = false;
+					} else if ( (thisLine.Length >= 6) && (thisLine.Substring(0, 6) == "ESP to") ) {
+						// Do nothing.
+					} else if( (MainForm.acceptAnswersInEsp) && (thisLine.Length >= 8) && (thisLine.Substring(0, 8) == "ESP from") ) {  // This is an ESP
 						Int32 colonPos = thisLine.IndexOf(":");
 						if( (colonPos > -1) && (thisLine.Length >= 10) ) {
 							string ESPer = thisLine.Substring(9, colonPos - 9);
@@ -391,10 +397,22 @@ namespace vzWordyHoster
 							}
 							addRecentESP(ESPer, ESPText);
 						}
-					}// if( (thisLine.Length >= 8) && (thisLine.Substring(0, 8) == "ESP from") )
-					else if (thisLine == hostName + ": " + closeMessage) {
-						stillMarking = false;
+					} else if ( (MainForm.acceptAnswersInSpeech) && (thisLine.Length >= 4) && (thisLine.Contains(":")) ) {
+						// This *might* be an utterance in the speech channel...
+						Int32 colonPos = thisLine.IndexOf(":");
+						if( (colonPos > -1) ) {
+							string talker = thisLine.Substring(0, colonPos);
+							if(DEBUG_ON) {
+								Debug.WriteLine("I think the talker's name is '" + talker + "'.");
+							}
+							string talkerText = thisLine.Substring(colonPos + 2, thisLine.Length - (talker.Length + 2) );
+							if(DEBUG_ON) {
+								Debug.WriteLine("I think the talker text is '" + talkerText + "'.");
+							}
+							addRecentESP(talker, talkerText);
+						}	
 					}
+					
 				}// iteration through relevantMessagesArray
 			}// if ( (foundQuestionLine) && (foundClosureLine) && (questionUtterancePosition > -1) )
 			else {
@@ -529,7 +547,7 @@ namespace vzWordyHoster
 		protected readonly Int32 marksFor2nd = 3;
 		protected readonly Int32 marksFor3rd = 2;
 		protected readonly Int32 marksForOthers = 1;
-		protected readonly char MASKINGCHAR = '*';
+
 		
 		protected bool awarded1st = false;
 		protected bool awarded2nd = false;
@@ -602,6 +620,7 @@ namespace vzWordyHoster
 		}
 		
 		protected void addRecentESP(string player, string lastAnswer) {
+			// Now also used for answers received in speech. TODO: Misnomer. Rename.
 			
 			DataRow row;
 			
@@ -853,6 +872,7 @@ namespace vzWordyHoster
 			if (thisQuestionText == "") { allIsWell = false; };
 			if (thisAnswerText == "") { allIsWell = false; };
 			if (thisQuestionText.Substring(0, 4).ToLower() == "see ") { allIsWell = false; };  // A dictionary reference to another word.
+			if (thisQuestionText.Contains(". See")) { allIsWell = false; };  // A dictionary reference further on in the definition.
 			if (thisQuestionText.ToLower().Contains(thisAnswerText.ToLower() )) { allIsWell = false; };  // The answer is contained in the question.
 			if (stringContainsNumbers(thisAnswerText) ) {allIsWell = false; };  // Players shouldn't expect the word to contain numbers.
 			if (thisQuestionText.Contains(" ") == false ) { allIsWell = false; };  // The question contains no spaces, so presumably is a one-word definition.
@@ -1052,6 +1072,7 @@ namespace vzWordyHoster
 			// Load thisQuestionText:
 			//thisQuestionText = thisQuestionElem.Element("def").Value;
 			thisQuestionText = TryGetElementValue(thisQuestionElem, "def", "");  // If no def node exists, return ""
+			thisQuestionText = StringUtils.FirstLetterToUpper(thisQuestionText);
 			if (DEBUG_ON) {
 				Debug.WriteLine("lddqdp:thisQuestionText: " + thisQuestionText);
 			}

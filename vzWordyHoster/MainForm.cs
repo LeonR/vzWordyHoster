@@ -16,6 +16,7 @@ using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using System.Timers;
+using System.Configuration;
 
 
 namespace vzWordyHoster
@@ -28,6 +29,9 @@ namespace vzWordyHoster
 	
 	public partial class MainForm : Form
 	{
+		
+		public static bool acceptAnswersInEsp = false;
+		public static bool acceptAnswersInSpeech = false;
 		
 		private Int32 questionsInGame;
 		private long questionsInInfiniteFolder;
@@ -61,6 +65,15 @@ namespace vzWordyHoster
 		{
 			// The InitializeComponent() call is required for Windows Forms designer support.
 			InitializeComponent();
+			
+			// Load settings from app.config:
+			acceptAnswersInEsp = Convert.ToBoolean( ConfigurationManager.AppSettings["acceptAnswersInEsp"] );
+			acceptAnswersInSpeech = Convert.ToBoolean( ConfigurationManager.AppSettings["acceptAnswersInSpeech"] );
+			
+			if (DEBUG_ON) {
+				Debug.WriteLine("acceptAnswersInEsp: " + acceptAnswersInEsp);
+				Debug.WriteLine("acceptAnswersInSpeech: " + acceptAnswersInSpeech);
+			}
 			
 			// Enable/disable debug-related controls:
 			debugPnl.Enabled = DEBUG_ON;
@@ -261,7 +274,9 @@ namespace vzWordyHoster
 						break;
 					case "DEVILSDICT":
 						string lettersHelp = " [" + thisGame.ThisMaskedWord.Length.ToString() + " letters]";
-						waSay(thisGame.ThisMaskedWord.ToUpper() + lettersHelp);
+						// Replace * (used by hoster for mask char) with the VZ circle char, which looks ugly in the hoster but good in VZ:
+						string vzFriendlyMask = thisGame.ThisMaskedWord.ToUpper().Replace(thisGame.MASKINGCHAR, thisGame.VZMASKINGCHAR);
+						waSay(vzFriendlyMask + lettersHelp);
 						if (!thisQuestionHasAlreadyBeenRead) {
 							questionPgb.Value = secondsPerDevilsDictLetter;
 						}
@@ -367,7 +382,15 @@ namespace vzWordyHoster
 					waSay("Please ESP me, " + hostAvatarName + ", the number of your answer.");
 					break;
 				case "DEVILSDICT":
-					waSay("Please ESP me, " + hostAvatarName + ", your answer.");
+					if (acceptAnswersInEsp && !acceptAnswersInSpeech) {
+						waSay("Please ESP me, " + hostAvatarName + ", your answer.");
+					} else if (!acceptAnswersInEsp && acceptAnswersInSpeech) {
+						waSay("Please shout out your answer.");
+					} else if (acceptAnswersInEsp && acceptAnswersInSpeech) {
+						waSay("Please ESP me, " + hostAvatarName + ", your answer, or just shout it out!");
+					} else {
+						waSay("I don't know how I expect you to answer, because I'm not accepting answers in ESP or speech!");
+					}
 					break;
 				default:
 					answerTbx.Text = "Unknown game type '" + thisGame.GameType + "' in inviteAnswers()";
@@ -416,6 +439,7 @@ namespace vzWordyHoster
 			addCommsBufferItem("UPDATEPLAYERS", "", "");
 		}	
 
+		/*
 		public string FirstLetterToUpper(string str) {
 		    if (str != null) {
 				if(str.Length > 1) {
@@ -427,6 +451,7 @@ namespace vzWordyHoster
 		    }
 		    return str;
 		}
+		*/
 
 		public void loadTriviaFinite() {
 			if(hostAvatarName == "") {
@@ -481,7 +506,6 @@ namespace vzWordyHoster
 				infiniteFolder = folderBrowserDialog1.SelectedPath;
 				//MessageBox.Show("Folder selected was: " + infiniteFolder );
 				questionsInInfiniteFolder = thisGame.LoadInfiniteQuestionFolder(infiniteFolder);
-				//thisGame.RefreshQuestion();  // Don't think we need to do this again (already done when we load question)
 				LoadCurrentQuestionIntoForm();
 				string numFormatted = questionsInInfiniteFolder.ToString("N0");
 				waSay("I have loaded a devilish dictionary of " + numFormatted + " words!");
@@ -703,10 +727,12 @@ namespace vzWordyHoster
 				questionTmr.Enabled = false;
 				questionPgb.Style = ProgressBarStyle.Marquee;
 				qHeaderNumberLbl.Text = thisQuestionNumberDescriptor + " [PAUSED]";
+				waSay("::::: Timer PAUSED by host :::::");
 			} else if ( (questionTmr.Enabled == false) && thisQuestionHasAlreadyBeenRead ) {
 				questionTmr.Enabled = true;
 				questionPgb.Style = ProgressBarStyle.Continuous;
 				qHeaderNumberLbl.Text = thisQuestionNumberDescriptor;
+				waSay("::::: Timer RESUMED :::::");
 				qHeaderNumberLbl.Refresh();
 			}
 		}
@@ -742,6 +768,12 @@ namespace vzWordyHoster
 		void AutoPilotChbCheckedChanged(object sender, EventArgs e)
 		{
 			autoPilotOn = autoPilotChb.Checked;			
+		}
+		
+		void OptionsTmiClick(object sender, EventArgs e)
+		{
+			OptionsForm myOptionsForm = new OptionsForm();
+            myOptionsForm.ShowDialog();			
 		}
 	}// class MainForm
 	
