@@ -288,6 +288,12 @@ namespace vzWordyHoster
 						Debug.WriteLine("Counted " + questionsAvailable + " nodes in total.");
 					}
 					break;
+				case "SCRAMBLE":
+					questionsAvailable = loadInfiniteScrambleFolder();
+					if (DEBUG_ON) {
+						Debug.WriteLine("Counted " + questionsAvailable + " nodes in total.");
+					}
+					break;
 				default:
 					questionsAvailable = 0;
 					break;
@@ -777,6 +783,28 @@ namespace vzWordyHoster
 			pickValidRandomQuestionNumber();
 			return totalNodes;
 		}// loadInfiniteDevilsDictFolder
+		
+		
+		protected long loadInfiniteScrambleFolder() {
+			// TODO: At the moment, this is identical to loadInfiniteDevilsDictFolder(). Refactor?
+			long totalNodes = 0;
+			if(DEBUG_ON) {
+				Debug.WriteLine("About to load folder " + folderPath);
+			}
+			string[] filePaths = Directory.GetFiles(@folderPath, "*.xml", SearchOption.AllDirectories);
+			foreach (string myFile in filePaths) {
+				long numNodes = count2ndLevelNodesInXmlFile(myFile);  // TODO: Remove: pointless count.
+				appendWordsToQuestionsXmlStruct(myFile);
+				if (DEBUG_ON) {
+					Debug.WriteLine( "Loaded " + numNodes + " nodes." );
+				}
+				totalNodes += numNodes;
+			}
+			totalNodes = questions.Count();
+			//thisQuestionNumber = GetRandomLong(1, totalNodes, rnd);
+			pickValidRandomQuestionNumber();
+			return totalNodes;
+		}// loadInfiniteScrambleFolder
 
 		
 		protected Int32 count2ndLevelNodesInXmlFile(string fileName) {
@@ -1145,6 +1173,124 @@ namespace vzWordyHoster
 		
 		
 	}// class DevilsDictGame
+	
+	
+public class ScrambleGame : Game {
+		public ScrambleGame(string passedGameSubtype) {  // Constructor method
+			gameType = "SCRAMBLE";
+			gameSubtype = passedGameSubtype;
+			buildScrambleTable();
+			//MessageBox.Show("Finished DevilsDictGame constructor with gameSubtype: " + passedGameSubtype );
+
+		}
+
+		
+		protected void buildScrambleTable()
+		{
+		    // Declare DataColumn and DataRow variables.
+		    DataColumn column;
+		    //DataRow row;
+		
+		    // Create "Number" column   
+		    column = new DataColumn();
+		    column.DataType = System.Type.GetType("System.Int32");
+		    column.ColumnName = "Number";
+		    thisOptionsTable.Columns.Add(column);
+		
+		    // Create "Text" column
+		    column = new DataColumn();
+		    column.DataType = Type.GetType("System.String");
+		    column.ColumnName = "Text";
+		    thisOptionsTable.Columns.Add(column);
+	        
+		    
+		}// buildMasksTable()
+		
+		
+		protected void loadScrambleQuestionDetailsPrivately() {
+			
+			thisQuestionType = "Word Scramble";
+			
+			//thisQuestionElem = questions.ElementAt(thisQuestionNumber - 1);
+			// Using .ToArray()[] because .ElementAt only takes an integer, not long
+			thisQuestionElem = questions.ToArray()[thisQuestionNumber - 1];
+			
+			//TODO: Continue converting for ScrambleGame.
+			
+			// Load thisQuestionText:
+			//thisQuestionText = thisQuestionElem.Element("def").Value;
+			thisQuestionText = TryGetElementValue(thisQuestionElem, "def", "");  // If no def node exists, return ""
+			thisQuestionText = StringUtils.FirstLetterToUpper(thisQuestionText);
+			if (DEBUG_ON) {
+				Debug.WriteLine("lddqdp:thisQuestionText: " + thisQuestionText);
+			}
+			
+			// Load thisAnswerText:
+			//thisAnswerText = thisQuestionElem.Element("hw").Value;
+			thisAnswerText = TryGetElementValue(thisQuestionElem, "hw", "");     // If no hw node exists, return ""
+			if (DEBUG_ON) {
+				Debug.WriteLine("lddqdp:thisAnswerText: " + thisAnswerText);
+			}
+			
+			thisOptionsTable.Clear();
+			charsRevealed = 0;
+			
+			//string thisMask;
+			//string thisMaskedWord;
+			
+			thisMask = maskAlphabeticals(thisAnswerText, MASKINGCHAR);
+			thisMaskedWord = thisMask;
+			addMaskedWord(charsRevealed, thisMaskedWord);
+			thisOptionsTable.AcceptChanges();
+			thisLettersAnswersHaveBeenMarked = false;
+			
+			// Better to unmask on the fly, as required, rather than generate all forms of the
+			// string on the fly, because random numbers generated in quick succession are not
+			// very random.
+			/*
+			for (Int32 charCounter = 1; charCounter < thisAnswerText.Length; charCounter++) {
+				thisMaskedWord = unmaskOneMoreChar(thisAnswerText, thisMask, '*', thisMaskedWord);
+				addMaskedWord(charCounter, thisMaskedWord);
+			}
+			thisOptionsTable.AcceptChanges();
+			*/
+	
+		}// loadDevilsDictQuestionDetailsPrivately
+		
+		
+		protected string maskAlphabeticals(string plainText, char maskingChar) {
+			// Takes a string and replaces all alphabetical chars with maskingChar
+			string maskedWord = "";
+			for (Int32 charCounter = 0; charCounter < plainText.Length; charCounter++) {
+				char thisChar = plainText.ElementAt(charCounter);
+				if (thisChar.ToString().All(Char.IsLetter)) {
+					maskedWord += maskingChar;
+				} else {
+					maskedWord += thisChar;
+				}
+			}//for
+			return maskedWord;
+		}// maskAlphabeticals
+		
+		protected void addMaskedWord(Int32 number, string text) {
+			// Adds a masked-word row to thisOptionsTable
+			DataRow row;
+			row = thisOptionsTable.NewRow();
+			row["Number"] = number;
+			row["Text"] = text;
+	        thisOptionsTable.Rows.Add(row);
+	        thisOptionsTable.AcceptChanges();
+	        if (DEBUG_ON) {
+	        	Debug.WriteLine("Masked word " + text + " added.");
+	        }
+		}
+		
+		protected override void loadQuestionDetailsPrivately() {
+			//Debug.WriteLine("Entered loadQuestionDetailsPrivately in DD");
+			loadScrambleQuestionDetailsPrivately();
+		}
+
+	}// class scrambleGame
 	
 
 

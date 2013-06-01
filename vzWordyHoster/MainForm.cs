@@ -38,6 +38,8 @@ namespace vzWordyHoster
 		
 		private string devilsDictInfiniteFolder;
 		private string devilsDictFiniteFile;
+		private string scrambleInfiniteFolder;
+		//private string scrambleFiniteFolder;
 		private string triviaFiniteFile;
 		
 		private Int32 questionsInGame;
@@ -77,6 +79,8 @@ namespace vzWordyHoster
 			acceptAnswersInSpeech = Convert.ToBoolean( ConfigurationManager.AppSettings["acceptAnswersInSpeech"] );
 			devilsDictInfiniteFolder = ConfigurationManager.AppSettings["devilsDictInfiniteFolder"];
 			devilsDictFiniteFile = ConfigurationManager.AppSettings["devilsDictFiniteFile"];
+			scrambleInfiniteFolder = ConfigurationManager.AppSettings["scrambleInfiniteFolder"];
+			//scrambleFiniteFile = ConfigurationManager.AppSettings["scrambleFiniteFile"];
 			triviaFiniteFile = ConfigurationManager.AppSettings["triviaFiniteFile"];
 
 			waSetup();
@@ -114,8 +118,8 @@ namespace vzWordyHoster
 			devilsDictInfiniteTmi.Enabled = true;
 			devilsDictInfiniteTmi.Visible = true;
 			
-			scrambleTmi.Enabled = false;
-			scrambleTmi.Visible = false;
+			scrambleTmi.Enabled = true;
+			scrambleTmi.Visible = true;
 			
 			scrambleFiniteTmi.Enabled = false;
 			scrambleFiniteTmi.Visible = false;
@@ -200,6 +204,16 @@ namespace vzWordyHoster
 					thisQuestionTimerWarnings.AddRange(thisGame.getWarningsFromAnswerLength(secondsPerDevilsDictLetter) );
 					questionPgb.Maximum = secondsPerDevilsDictLetter;
 					questionPgb.Value = secondsPerDevilsDictLetter;
+					autoGetTmr.Enabled = false;  // Because we're just going to get answers once per letter.
+					break;
+				case "SCRAMBLE":
+					answerTbx.Text = thisGame.ThisAnswerText;
+					qHeaderTypeLbl.Text = "Type: Scramble";
+					UpdateOptionsGrid();
+					thisQuestionTimerWarnings.Clear();
+					thisQuestionTimerWarnings.AddRange(questionTimerWarningsAt);
+					questionPgb.Maximum = secondsPerQuestion;
+					questionPgb.Value = secondsPerQuestion;
 					autoGetTmr.Enabled = false;  // Because we're just going to get answers once per letter.
 					break;
 				default:
@@ -563,13 +577,41 @@ namespace vzWordyHoster
 				//MessageBox.Show("Folder selected was: " + devilsDictInfiniteFolder );
 				questionsInInfiniteFolder = thisGame.LoadInfiniteQuestionFolder(devilsDictInfiniteFolder);
 				LoadCurrentQuestionIntoForm();
-				string numFormatted = questionsInInfiniteFolder.ToString("N0");
+				string numFormatted = questionsInInfiniteFolder.ToString("N0");  // Adds commas as thousand-separators
 				waSay("I have loaded a devilish dictionary of " + numFormatted + " words!");
 				waSay("All words will be picked from this dictionary at random.");
 			} else {
 				MessageBox.Show("There was a problem loading the folder.");
 			}
 		}// loadDevilsDictInfinite
+		
+		public void loadScrambleInfinite() {
+			if(hostAvatarName == "") {
+        		announceInitialisation();
+        	}
+			folderBrowserDialog1.SelectedPath = scrambleInfiniteFolder;  // Loaded from settings at startup
+			DialogResult fdResult = folderBrowserDialog1.ShowDialog(); // Show the dialog.
+		    if (fdResult == DialogResult.OK) {
+				thisGame = new ScrambleGame("INFINITE");
+				MainForm.ActiveForm.Text = appName + " :: Word Scramble :: Infinite";
+				scrambleInfiniteFolder = folderBrowserDialog1.SelectedPath;
+				
+				// Remember ScrambleInfiniteFolder value for next time:
+				Configuration config = ConfigurationManager.OpenExeConfiguration(Application.ExecutablePath);
+				config.AppSettings.Settings.Remove("scrambleInfiniteFolder");
+				config.AppSettings.Settings.Add("scrambleInfiniteFolder", scrambleInfiniteFolder );
+				config.Save(ConfigurationSaveMode.Modified);
+				
+				//MessageBox.Show("Folder selected was: " + devilsDictInfiniteFolder );
+				questionsInInfiniteFolder = thisGame.LoadInfiniteQuestionFolder(scrambleInfiniteFolder);
+				LoadCurrentQuestionIntoForm();
+				string numFormatted = questionsInInfiniteFolder.ToString("N0");  // Adds commas as thousand-separators
+				waSay("I have loaded a scrambled dictionary of " + numFormatted + " words!");
+				waSay("All words will be picked from this dictionary at random.");
+			} else {
+				MessageBox.Show("There was a problem loading the folder.");
+			}
+		}// loadScrambleInfinite
 		
 		private void readScores() {
 			UpdatePlayersGrid();
@@ -820,6 +862,11 @@ namespace vzWordyHoster
 			loadDevilsDictInfinite();
 		}
 		
+		void ScrambleInfiniteTmiClick(object sender, EventArgs e)
+		{
+			//TODO.
+		}
+		
 		
 		void AutoPilotChbCheckedChanged(object sender, EventArgs e)
 		{
@@ -899,6 +946,8 @@ namespace vzWordyHoster
 				MessageBox.Show("You need to start a game first.", "vzWordyHoster");
 			}			
 		}
+		
+
 	}// class MainForm
 	
 	

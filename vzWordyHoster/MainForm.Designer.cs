@@ -532,14 +532,15 @@ namespace vzWordyHoster
 			// scrambleFiniteTmi
 			// 
 			this.scrambleFiniteTmi.Name = "scrambleFiniteTmi";
-			this.scrambleFiniteTmi.Size = new System.Drawing.Size(120, 22);
+			this.scrambleFiniteTmi.Size = new System.Drawing.Size(152, 22);
 			this.scrambleFiniteTmi.Text = "Finite...";
 			// 
 			// scrambleInfiniteTmi
 			// 
 			this.scrambleInfiniteTmi.Name = "scrambleInfiniteTmi";
-			this.scrambleInfiniteTmi.Size = new System.Drawing.Size(120, 22);
+			this.scrambleInfiniteTmi.Size = new System.Drawing.Size(152, 22);
 			this.scrambleInfiniteTmi.Text = "Infinite...";
+			this.scrambleInfiniteTmi.Click += new System.EventHandler(this.ScrambleInfiniteTmiClick);
 			// 
 			// editToolStripMenuItem
 			// 
