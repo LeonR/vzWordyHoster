@@ -873,9 +873,9 @@ namespace vzWordyHoster
 			
 			if (thisQuestionText == "") { allIsWell = false; };
 			if (thisAnswerText == "") { allIsWell = false; };
-			if (thisQuestionText.Substring(0, 4).ToLower() == "see ") { allIsWell = false; };  // A dictionary reference to another word.
+			if ((thisQuestionText.Length >=4) && (thisQuestionText.Substring(0, 4).ToLower() == "see ")) { allIsWell = false; };  // A dictionary reference to another word.
 			if (thisQuestionText.Contains(". See")) { allIsWell = false; };  // A dictionary reference further on in the definition.
-			if (thisQuestionText.Substring(0, 7).ToLower() == "same as") { allIsWell = false; };  // Another style of reference to another word.
+			if ((thisQuestionText.Length >=7) && (thisQuestionText.Substring(0, 7).ToLower() == "same as")) { allIsWell = false; };  // Another style of reference to another word.
 			if (thisQuestionText.ToLower().Contains(thisAnswerText.ToLower() )) { allIsWell = false; };  // The answer is contained in the question.
 			if (stringContainsNumbers(thisAnswerText) ) {allIsWell = false; };  // Players shouldn't expect the word to contain numbers.
 			if (thisQuestionText.Contains(" ") == false ) { allIsWell = false; };  // The question contains no spaces, so presumably is a one-word definition.
