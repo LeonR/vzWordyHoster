@@ -373,6 +373,7 @@ namespace vzWordyHoster
 				questionForwardBtn.Enabled = true;
 				questionTrk.Enabled = true;
 				questionPgb.Value = 0;
+				questionPgb.Style = ProgressBarStyle.Continuous;
         		thisGame.CloseQuestion();  // The position of this is crucial: it must be called before getESPsAndMarkThem(), or points will be doubled.
         		waSay(closureMessage);
         		getESPsAndMarkThem();
@@ -946,7 +947,6 @@ namespace vzWordyHoster
 				MessageBox.Show("You need to start a game first.", "vzWordyHoster");
 			}			
 		}
-		
 
 	}// class MainForm
 	
