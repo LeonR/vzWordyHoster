@@ -600,6 +600,7 @@ namespace vzWordyHoster
 			this.Name = "MainForm";
 			this.Text = "vzWordyHoster";
 			this.Activated += new System.EventHandler(this.MainFormActivated);
+			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainFormFormClosing);
 			this.Load += new System.EventHandler(this.MainFormLoad);
 			this.playersPnl.ResumeLayout(false);
 			this.macroLbxCms.ResumeLayout(false);

@@ -34,6 +34,7 @@ namespace vzWordyHoster
 		{
 			acceptAnswersInEspChb.Checked = MainForm.acceptAnswersInEsp;
 			acceptAnswersInSpeechChb.Checked = MainForm.acceptAnswersInSpeech;
+			ddSecondsPerLetterUpd.Value = MainForm.secondsPerDevilsDictLetter;
 		}
 		
 		void OptionsFormFormClosing(object sender, FormClosingEventArgs e)
@@ -41,6 +42,7 @@ namespace vzWordyHoster
 			// Store checkbox options in global variables:
 			MainForm.acceptAnswersInEsp = acceptAnswersInEspChb.Checked;
 			MainForm.acceptAnswersInSpeech = acceptAnswersInSpeechChb.Checked;
+			MainForm.secondsPerDevilsDictLetter = Convert.ToInt32( ddSecondsPerLetterUpd.Value );
 			
 			// Now store those options in the app.config file:
 			Configuration config = ConfigurationManager.OpenExeConfiguration(Application.ExecutablePath);
@@ -50,6 +52,9 @@ namespace vzWordyHoster
 			
 			config.AppSettings.Settings.Remove("acceptAnswersInSpeech");
 			config.AppSettings.Settings.Add("acceptAnswersInSpeech", MainForm.acceptAnswersInSpeech.ToString() );
+			
+			config.AppSettings.Settings.Remove("devilsDictSecondsPerLetter");
+			config.AppSettings.Settings.Add("devilsDictSecondsPerLetter", MainForm.secondsPerDevilsDictLetter.ToString() );
 			
 			config.Save(ConfigurationSaveMode.Modified);
 

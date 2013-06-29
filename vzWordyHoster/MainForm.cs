@@ -35,6 +35,7 @@ namespace vzWordyHoster
 		public static bool acceptAnswersInSpeech;
 		public static List<string> macroList = new List<string>();
 		public static string MACROFILE = "macros.txt";
+		public static Int32 secondsPerDevilsDictLetter; // = 20;
 		
 		private string devilsDictInfiniteFolder;
 		private string devilsDictFiniteFile;
@@ -52,7 +53,6 @@ namespace vzWordyHoster
 		private string initialisationString = "vzWordyHoster initialised!";
 		private string closureMessage = "Closed!";
 		private Int32 secondsPerQuestion = 60;
-		private Int32 secondsPerDevilsDictLetter = 20;
 		private readonly List<Int32> questionTimerWarningsAt = new List<Int32> {30, 40, 50, 55, 56, 57, 58, 59}; // Never changes.
 		private List<Int32> thisQuestionTimerWarnings = new List<Int32>(); // Is reset for each question, and gets first element popped after each warning.
 		private string thisQuestionFirstChunk;
@@ -65,7 +65,9 @@ namespace vzWordyHoster
 		
 		private System.Timers.Timer postInitTmr = new System.Timers.Timer();
 		
-		private DataTable playersTableLocal = new DataTable();
+		private DataTable playersTableLocal = new DataTable();  // TODO: Is this now redundant?
+		private DataView playersTableLocalView = new DataView();
+		
 		private DataTable optionsTableLocal = new DataTable();
 		
 		
@@ -82,6 +84,7 @@ namespace vzWordyHoster
 			scrambleInfiniteFolder = ConfigurationManager.AppSettings["scrambleInfiniteFolder"];
 			//scrambleFiniteFile = ConfigurationManager.AppSettings["scrambleFiniteFile"];
 			triviaFiniteFile = ConfigurationManager.AppSettings["triviaFiniteFile"];
+			secondsPerDevilsDictLetter = Convert.ToInt32( ConfigurationManager.AppSettings["devilsDictSecondsPerLetter"] );
 
 			waSetup();
 			announceInitialisation();
@@ -91,7 +94,7 @@ namespace vzWordyHoster
 		
 		~MainForm()  // Destructor
         {
-        	waWrapup();
+        	
         }
 		
 		
@@ -319,7 +322,8 @@ namespace vzWordyHoster
 						}
 						break;
 					case "DEVILSDICT":
-						string lettersHelp = " [" + thisGame.ThisMaskedWord.Length.ToString() + " letters]";
+						//string lettersHelp = " [" + thisGame.ThisMaskedWord.Length.ToString() + " letters]";
+						string lettersHelp = " [" + thisGame.GetCountOfAlphabeticalsInAnswer().ToString() + " letters]";
 						// Replace * (used by hoster for mask char) with the VZ circle char, which looks ugly in the hoster but good in VZ:
 						string vzFriendlyMask = thisGame.ThisMaskedWord.ToUpper().Replace(thisGame.MASKINGCHAR, thisGame.VZMASKINGCHAR);
 						waSay(vzFriendlyMask + lettersHelp);
@@ -616,13 +620,12 @@ namespace vzWordyHoster
 		
 		private void readScores() {
 			UpdatePlayersGrid();
-			// Iterate through playersTableLocal.
-			if (playersTableLocal.Rows.Count > 0) {
+			// Iterate through playersTableLocalView.
+			if (playersTableLocalView.Count > 0) {
 				waSay("The scores are:");
-				DataRow playerRow;
-				for (Int32 playerCounter = 0; playerCounter < playersTableLocal.Rows.Count; playerCounter++) {
-					playerRow = playersTableLocal.Rows[playerCounter];
-					waSay( playerRow["Player"].ToString() + ": " + playerRow["Score"].ToString() );
+				foreach (DataRowView rowView in playersTableLocalView) {
+				    DataRow playerRow = rowView.Row;
+				    waSay( playerRow["Player"].ToString() + ": " + playerRow["Score"].ToString() );
 				}
 			} else {
 				waSay("There are no players yet!");
@@ -687,7 +690,10 @@ namespace vzWordyHoster
 		void UpdatePlayersGrid() {
 			if (thisGame != null) {
 				playersTableLocal = thisGame.PlayersTable.Copy();  // We make a local copy to avoid threading issues that arise when using the table in class Game.
-				playersDgv.DataSource = playersTableLocal;
+				playersTableLocal.DefaultView.Sort = "Score desc";
+				playersTableLocalView = playersTableLocal.DefaultView;
+				playersDgv.DataSource = playersTableLocalView;
+				
 			} else {
 				MessageBox.Show("You need to start a game first.", "vzWordyHoster");
 			}
@@ -865,7 +871,7 @@ namespace vzWordyHoster
 		
 		void ScrambleInfiniteTmiClick(object sender, EventArgs e)
 		{
-			//TODO.
+			loadScrambleInfinite();
 		}
 		
 		
@@ -884,9 +890,16 @@ namespace vzWordyHoster
 		void MainFormActivated(object sender, EventArgs e)
 		{
 			// Refresh macroLbx because it might have changed if focus has just been returned to MainForm
-			// after closure of MacroEditorForm. The Refresh() method doesn't serve to update it.
+			// after closure of MacroEditorForm or OptionsForm. The Refresh() method doesn't serve to update it.
 			macroLbx.DataSource = null;
-			macroLbx.DataSource = macroList;			
+			macroLbx.DataSource = macroList;
+			
+			questionPgb.Maximum = secondsPerDevilsDictLetter;
+			questionPgb.Value = secondsPerDevilsDictLetter;	
+			if (thisGame != null) {  // Only update the warnings if MainFormActivated is called during a game. Not when the form is first activated.
+				thisQuestionTimerWarnings.Clear();
+				thisQuestionTimerWarnings.AddRange(thisGame.getWarningsFromAnswerLength(secondsPerDevilsDictLetter) );			
+			}
 		}
 		
 		
@@ -948,6 +961,11 @@ namespace vzWordyHoster
 			}			
 		}
 
+		
+		void MainFormFormClosing(object sender, FormClosingEventArgs e)
+		{
+			waWrapup();
+		}
 	}// class MainForm
 	
 	

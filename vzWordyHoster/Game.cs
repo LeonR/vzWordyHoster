@@ -129,6 +129,8 @@ namespace vzWordyHoster
 			}
 		}
 		
+		
+		
 		public string ThisMaskedWord {
 			get {
 				return thisMaskedWord;
@@ -170,9 +172,6 @@ namespace vzWordyHoster
 			currentQuestionClosed = true;
 		}
 		
-		
-		
-		
 		public DataTable PlayersTable {
 			get {
 				return playersTable;
@@ -184,6 +183,17 @@ namespace vzWordyHoster
 				return mostRecentESPsThisRoundTable;
 			}
 		}
+		
+		public Int32 GetCountOfAlphabeticalsInAnswer() { 
+			Int32 alphaCount = 0;
+			for (Int32 charCounter = 0; charCounter < thisAnswerText.Length; charCounter++) {
+				char thisChar = thisAnswerText.ElementAt(charCounter);
+				if (thisChar.ToString().All(Char.IsLetter)) {
+					alphaCount++;
+				}
+			}//for
+			return alphaCount;
+		}// getCountOfAlphabeticalsInAnswer
 		
 		public List<Int32> getWarningsFromAnswerLength(Int32 secondsPerLetter) {
 			// Returns a list of x integers, where x is the number of masked characters in the answer.
@@ -578,6 +588,7 @@ namespace vzWordyHoster
 		protected Int32 charsRevealed;
 		protected string thisMaskedWord;
 		protected string thisMask;
+		protected string thisScramble;
 		
 		protected DataTable playersTable = new DataTable();
 		
@@ -1222,7 +1233,7 @@ public class ScrambleGame : Game {
 			thisQuestionText = TryGetElementValue(thisQuestionElem, "def", "");  // If no def node exists, return ""
 			thisQuestionText = StringUtils.FirstLetterToUpper(thisQuestionText);
 			if (DEBUG_ON) {
-				Debug.WriteLine("lddqdp:thisQuestionText: " + thisQuestionText);
+				Debug.WriteLine("lsqdp:thisQuestionText: " + thisQuestionText);
 			}
 			
 			// Load thisAnswerText:
@@ -1233,16 +1244,18 @@ public class ScrambleGame : Game {
 			}
 			
 			thisOptionsTable.Clear();
-			charsRevealed = 0;
 			
-			//string thisMask;
-			//string thisMaskedWord;
+			// Good so far.
+			thisScramble = scrambleAlphabeticals(thisAnswerText);
 			
+			
+			/*
 			thisMask = maskAlphabeticals(thisAnswerText, MASKINGCHAR);
 			thisMaskedWord = thisMask;
 			addMaskedWord(charsRevealed, thisMaskedWord);
 			thisOptionsTable.AcceptChanges();
 			thisLettersAnswersHaveBeenMarked = false;
+			*/
 			
 			// Better to unmask on the fly, as required, rather than generate all forms of the
 			// string on the fly, because random numbers generated in quick succession are not
@@ -1258,13 +1271,14 @@ public class ScrambleGame : Game {
 		}// loadDevilsDictQuestionDetailsPrivately
 		
 		
-		protected string maskAlphabeticals(string plainText, char maskingChar) {
-			// Takes a string and replaces all alphabetical chars with maskingChar
+		protected string scrambleAlphabeticals(string plainText) {
+			// Takes a string and randomises all of its alpha chars
+			// TODO: Not converted yet.
 			string maskedWord = "";
 			for (Int32 charCounter = 0; charCounter < plainText.Length; charCounter++) {
 				char thisChar = plainText.ElementAt(charCounter);
 				if (thisChar.ToString().All(Char.IsLetter)) {
-					maskedWord += maskingChar;
+					maskedWord += MASKINGCHAR;
 				} else {
 					maskedWord += thisChar;
 				}
@@ -1272,7 +1286,7 @@ public class ScrambleGame : Game {
 			return maskedWord;
 		}// maskAlphabeticals
 		
-		protected void addMaskedWord(Int32 number, string text) {
+		protected void addScrambledWord(Int32 number, string text) {
 			// Adds a masked-word row to thisOptionsTable
 			DataRow row;
 			row = thisOptionsTable.NewRow();

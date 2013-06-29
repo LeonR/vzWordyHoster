@@ -40,7 +40,12 @@ namespace vzWordyHoster
 			this.AnswersGrp = new System.Windows.Forms.GroupBox();
 			this.acceptAnswersInSpeechChb = new System.Windows.Forms.CheckBox();
 			this.acceptAnswersInEspChb = new System.Windows.Forms.CheckBox();
+			this.ddQuestionsGrp = new System.Windows.Forms.GroupBox();
+			this.label1 = new System.Windows.Forms.Label();
+			this.ddSecondsPerLetterUpd = new System.Windows.Forms.NumericUpDown();
 			this.AnswersGrp.SuspendLayout();
+			this.ddQuestionsGrp.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.ddSecondsPerLetterUpd)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// OkBtn
@@ -57,7 +62,7 @@ namespace vzWordyHoster
 			// 
 			this.AnswersGrp.Controls.Add(this.acceptAnswersInSpeechChb);
 			this.AnswersGrp.Controls.Add(this.acceptAnswersInEspChb);
-			this.AnswersGrp.Location = new System.Drawing.Point(12, 12);
+			this.AnswersGrp.Location = new System.Drawing.Point(13, 243);
 			this.AnswersGrp.Name = "AnswersGrp";
 			this.AnswersGrp.Size = new System.Drawing.Size(200, 79);
 			this.AnswersGrp.TabIndex = 3;
@@ -82,11 +87,53 @@ namespace vzWordyHoster
 			this.acceptAnswersInEspChb.Text = "Accept answers in ESP";
 			this.acceptAnswersInEspChb.UseVisualStyleBackColor = true;
 			// 
+			// ddQuestionsGrp
+			// 
+			this.ddQuestionsGrp.Controls.Add(this.label1);
+			this.ddQuestionsGrp.Controls.Add(this.ddSecondsPerLetterUpd);
+			this.ddQuestionsGrp.Location = new System.Drawing.Point(13, 13);
+			this.ddQuestionsGrp.Name = "ddQuestionsGrp";
+			this.ddQuestionsGrp.Size = new System.Drawing.Size(254, 62);
+			this.ddQuestionsGrp.TabIndex = 4;
+			this.ddQuestionsGrp.TabStop = false;
+			this.ddQuestionsGrp.Text = "Devil\'s Dictionary parameters";
+			// 
+			// label1
+			// 
+			this.label1.Location = new System.Drawing.Point(69, 20);
+			this.label1.Name = "label1";
+			this.label1.Size = new System.Drawing.Size(156, 23);
+			this.label1.TabIndex = 1;
+			this.label1.Text = "Number of seconds per letter";
+			// 
+			// ddSecondsPerLetterUpd
+			// 
+			this.ddSecondsPerLetterUpd.Location = new System.Drawing.Point(7, 20);
+			this.ddSecondsPerLetterUpd.Maximum = new decimal(new int[] {
+									180,
+									0,
+									0,
+									0});
+			this.ddSecondsPerLetterUpd.Minimum = new decimal(new int[] {
+									1,
+									0,
+									0,
+									0});
+			this.ddSecondsPerLetterUpd.Name = "ddSecondsPerLetterUpd";
+			this.ddSecondsPerLetterUpd.Size = new System.Drawing.Size(55, 20);
+			this.ddSecondsPerLetterUpd.TabIndex = 0;
+			this.ddSecondsPerLetterUpd.Value = new decimal(new int[] {
+									1,
+									0,
+									0,
+									0});
+			// 
 			// OptionsForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(484, 462);
+			this.Controls.Add(this.ddQuestionsGrp);
 			this.Controls.Add(this.AnswersGrp);
 			this.Controls.Add(this.OkBtn);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
@@ -97,8 +144,13 @@ namespace vzWordyHoster
 			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.OptionsFormFormClosing);
 			this.Load += new System.EventHandler(this.OptionsFormLoad);
 			this.AnswersGrp.ResumeLayout(false);
+			this.ddQuestionsGrp.ResumeLayout(false);
+			((System.ComponentModel.ISupportInitialize)(this.ddSecondsPerLetterUpd)).EndInit();
 			this.ResumeLayout(false);
 		}
+		private System.Windows.Forms.NumericUpDown ddSecondsPerLetterUpd;
+		private System.Windows.Forms.Label label1;
+		private System.Windows.Forms.GroupBox ddQuestionsGrp;
 		private System.Windows.Forms.CheckBox acceptAnswersInEspChb;
 		private System.Windows.Forms.CheckBox acceptAnswersInSpeechChb;
 		private System.Windows.Forms.GroupBox AnswersGrp;
