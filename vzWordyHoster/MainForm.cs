@@ -40,7 +40,7 @@ namespace vzWordyHoster
 		private string devilsDictInfiniteFolder;
 		private string devilsDictFiniteFile;
 		private string scrambleInfiniteFolder;
-		//private string scrambleFiniteFolder;
+		private string scrambleFiniteFile;
 		private string triviaFiniteFile;
 		
 		private Int32 questionsInGame;
@@ -82,7 +82,7 @@ namespace vzWordyHoster
 			devilsDictInfiniteFolder = ConfigurationManager.AppSettings["devilsDictInfiniteFolder"];
 			devilsDictFiniteFile = ConfigurationManager.AppSettings["devilsDictFiniteFile"];
 			scrambleInfiniteFolder = ConfigurationManager.AppSettings["scrambleInfiniteFolder"];
-			//scrambleFiniteFile = ConfigurationManager.AppSettings["scrambleFiniteFile"];
+			scrambleFiniteFile = ConfigurationManager.AppSettings["scrambleFiniteFile"];
 			triviaFiniteFile = ConfigurationManager.AppSettings["triviaFiniteFile"];
 			secondsPerDevilsDictLetter = Convert.ToInt32( ConfigurationManager.AppSettings["devilsDictSecondsPerLetter"] );
 
@@ -124,11 +124,11 @@ namespace vzWordyHoster
 			scrambleTmi.Enabled = true;
 			scrambleTmi.Visible = true;
 			
-			scrambleFiniteTmi.Enabled = false;
-			scrambleFiniteTmi.Visible = false;
+			scrambleFiniteTmi.Enabled = true;
+			scrambleFiniteTmi.Visible = true;
 			
-			scrambleInfiniteTmi.Enabled = false;
-			scrambleInfiniteTmi.Visible = false;
+			scrambleInfiniteTmi.Enabled = true;
+			scrambleInfiniteTmi.Visible = true;
 			
 			
 			// Populate macros:
@@ -322,13 +322,20 @@ namespace vzWordyHoster
 						}
 						break;
 					case "DEVILSDICT":
-						//string lettersHelp = " [" + thisGame.ThisMaskedWord.Length.ToString() + " letters]";
 						string lettersHelp = " [" + thisGame.GetCountOfAlphabeticalsInAnswer().ToString() + " letters]";
 						// Replace * (used by hoster for mask char) with the VZ circle char, which looks ugly in the hoster but good in VZ:
 						string vzFriendlyMask = thisGame.ThisMaskedWord.ToUpper().Replace(thisGame.MASKINGCHAR, thisGame.VZMASKINGCHAR);
 						waSay(vzFriendlyMask + lettersHelp);
 						if (!thisQuestionHasAlreadyBeenRead) {
 							questionPgb.Value = secondsPerDevilsDictLetter;
+						}
+						break;
+					case "SCRAMBLE":
+						waSay("The scramble is: " + thisGame.ThisScramble);
+						if(thisQuestionHasAlreadyBeenRead) {
+							announceSecondsRemaining();
+						} else {
+							waSay("You have " + secondsPerQuestion.ToString() + " seconds to answer.");
 						}
 						break;
 					default:
@@ -390,7 +397,10 @@ namespace vzWordyHoster
         private void readClosedRoundScores() {
         	switch (thisGame.GameType) {
 				case "TRIVIA":
-					waSay("The answer was: " + thisGame.ThisAnswerNumber.ToString() + ". " + thisGame.ThisAnswerText);
+        			waSay("The answer was: " + thisGame.ThisAnswerNumber.ToString() + ". " + thisGame.ThisAnswerText);
+					break;
+        		case "SCRAMBLE":
+					waSay("The answer was: " + thisGame.ThisAnswerText);
 					break;
 				case "DEVILSDICT":
 					waSay("The answer was: " + thisGame.ThisAnswerText);
@@ -430,9 +440,8 @@ namespace vzWordyHoster
         private void inviteAnswers() {
         	switch (thisGame.GameType) {
 				case "TRIVIA":
-					waSay("Please ESP me, " + hostAvatarName + ", the number of your answer.");
-					break;
 				case "DEVILSDICT":
+        		case "SCRAMBLE":
 					if (acceptAnswersInEsp && !acceptAnswersInSpeech) {
 						waSay("Please ESP me, " + hostAvatarName + ", your answer.");
 					} else if (!acceptAnswersInEsp && acceptAnswersInSpeech) {
@@ -618,6 +627,35 @@ namespace vzWordyHoster
 			}
 		}// loadScrambleInfinite
 		
+		public void loadScrambleFinite() {
+			if(hostAvatarName == "") {
+				announceInitialisation();
+			}
+			openFileDialog1.FileName = scrambleFiniteFile;
+			DialogResult fdResult = openFileDialog1.ShowDialog(); // Show the dialog.
+			if (fdResult == DialogResult.OK) {
+				//release thisgame
+				thisGame = new ScrambleGame("FINITE");
+				MainForm.ActiveForm.Text = appName + " :: Word Scramble :: Finite";
+				scrambleFiniteFile = openFileDialog1.FileName;
+				
+				// Remember scrambleFiniteFile value for next time:
+				Configuration config = ConfigurationManager.OpenExeConfiguration(Application.ExecutablePath);
+				config.AppSettings.Settings.Remove("scrambleFiniteFile");
+				config.AppSettings.Settings.Add("scrambleFiniteFile", scrambleFiniteFile );
+				config.Save(ConfigurationSaveMode.Modified);
+				
+				questionsInGame = thisGame.LoadQuestionFile(scrambleFiniteFile);
+				if(DEBUG_ON) {
+					Debug.WriteLine(questionsInGame.ToString() + " questions loaded.");
+				}
+				thisGame.RefreshQuestion();
+				LoadCurrentQuestionIntoForm();
+			} else {
+				MessageBox.Show("There was a problem loading the file.");
+			}
+		}// loadScrambleFinite
+		
 		private void readScores() {
 			UpdatePlayersGrid();
 			// Iterate through playersTableLocalView.
@@ -764,6 +802,7 @@ namespace vzWordyHoster
 		{
 			switch (thisGame.GameType) {
 				case "TRIVIA":
+				case "SCRAMBLE":
 					Int32 secondsRemainingForQuestion;
 					thisQuestionSecondsElapsed += questionTmr.Interval / 1000;
 					secondsRemainingForQuestion = secondsPerQuestion - thisQuestionSecondsElapsed;
@@ -859,11 +898,7 @@ namespace vzWordyHoster
 		}
 		
 		//---------- END FORM CONTROL EVENTS ------------------------------------------------------------------------------
-		
 
-		
-		
-		
 		void DevilsDictInfiniteTmiClick(object sender, EventArgs e)
 		{
 			loadDevilsDictInfinite();
@@ -874,6 +909,10 @@ namespace vzWordyHoster
 			loadScrambleInfinite();
 		}
 		
+		void ScrambleFiniteTmiClick(object sender, EventArgs e)
+		{
+			loadScrambleFinite();
+		}
 		
 		void AutoPilotChbCheckedChanged(object sender, EventArgs e)
 		{
@@ -894,13 +933,27 @@ namespace vzWordyHoster
 			macroLbx.DataSource = null;
 			macroLbx.DataSource = macroList;
 			
-			questionPgb.Maximum = secondsPerDevilsDictLetter;
-			questionPgb.Value = secondsPerDevilsDictLetter;	
-			if (thisGame != null) {  // Only update the warnings if MainFormActivated is called during a game. Not when the form is first activated.
-				thisQuestionTimerWarnings.Clear();
-				thisQuestionTimerWarnings.AddRange(thisGame.getWarningsFromAnswerLength(secondsPerDevilsDictLetter) );			
+			if (thisGame != null) {
+				switch (thisGame.GameType) {
+					case "TRIVIA":
+					case "SCRAMBLE":
+						questionPgb.Maximum = secondsPerQuestion;
+						questionPgb.Value = secondsPerQuestion;	
+						break;
+					case "DEVILSDICT":
+						questionPgb.Maximum = secondsPerDevilsDictLetter;
+						questionPgb.Value = secondsPerDevilsDictLetter;	
+						if (thisGame != null) {  // Only update the warnings if MainFormActivated is called during a game. Not when the form is first activated.
+							thisQuestionTimerWarnings.Clear();
+							thisQuestionTimerWarnings.AddRange(thisGame.getWarningsFromAnswerLength(secondsPerDevilsDictLetter) );			
+						}
+						break;
+				}// switch
+			} else {
+				questionPgb.Maximum = 0;
+				questionPgb.Value = 0;
 			}
-		}
+		}// MainFormActivated
 		
 		
 		void MacroLbxContextAddClick(object sender, EventArgs e)
@@ -966,6 +1019,8 @@ namespace vzWordyHoster
 		{
 			waWrapup();
 		}
+		
+		
 	}// class MainForm
 	
 	

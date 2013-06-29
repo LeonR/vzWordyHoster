@@ -80,7 +80,6 @@ namespace vzWordyHoster
 		}
 		
 
-		
 
 		// ----- Begin public interface -----
 		public string GameType {
@@ -134,6 +133,12 @@ namespace vzWordyHoster
 		public string ThisMaskedWord {
 			get {
 				return thisMaskedWord;
+			}
+		}
+		
+		public string ThisScramble {
+			get {
+				return thisScramble;
 			}
 		}
 		
@@ -278,6 +283,7 @@ namespace vzWordyHoster
 			switch (gameType) {
 				case "TRIVIA":
 				case "DEVILSDICT":
+				case "SCRAMBLE":
 					questionsLoaded = loadFiniteQuestionFile();
 					break;
 				default:
@@ -462,6 +468,7 @@ namespace vzWordyHoster
 							expectedAnswerString = thisAnswerOptionNum.ToString();
 							break;
 						case "DEVILSDICT":
+						case "SCRAMBLE":
 							expectedAnswerString = thisAnswerText;
 							break;
 						default:
@@ -956,6 +963,20 @@ namespace vzWordyHoster
 			bool returnVal = System.Text.RegularExpressions.Regex.IsMatch(inString, @"\d");
 			return returnVal;
 		}
+		
+		protected string maskAlphabeticals(string plainText, char maskingChar) {
+			// Takes a string and replaces all alphabetical chars with maskingChar
+			string maskedWord = "";
+			for (Int32 charCounter = 0; charCounter < plainText.Length; charCounter++) {
+				char thisChar = plainText.ElementAt(charCounter);
+				if (thisChar.ToString().All(Char.IsLetter)) {
+					maskedWord += maskingChar;
+				} else {
+					maskedWord += thisChar;
+				}
+			}//for
+			return maskedWord;
+		}// maskAlphabeticals
 	
 		
 	}// class Game
@@ -1148,19 +1169,7 @@ namespace vzWordyHoster
 		}// loadDevilsDictQuestionDetailsPrivately
 		
 		
-		protected string maskAlphabeticals(string plainText, char maskingChar) {
-			// Takes a string and replaces all alphabetical chars with maskingChar
-			string maskedWord = "";
-			for (Int32 charCounter = 0; charCounter < plainText.Length; charCounter++) {
-				char thisChar = plainText.ElementAt(charCounter);
-				if (thisChar.ToString().All(Char.IsLetter)) {
-					maskedWord += maskingChar;
-				} else {
-					maskedWord += thisChar;
-				}
-			}//for
-			return maskedWord;
-		}// maskAlphabeticals
+		
 		
 		protected void addMaskedWord(Int32 number, string text) {
 			// Adds a masked-word row to thisOptionsTable
@@ -1246,45 +1255,51 @@ public class ScrambleGame : Game {
 			thisOptionsTable.Clear();
 			
 			// Good so far.
-			thisScramble = scrambleAlphabeticals(thisAnswerText);
+			thisMask = maskAlphabeticals(thisAnswerText, MASKINGCHAR); // The mask will allow us to slot randomised alphas in around non-alphas.
 			
+			thisScramble = scrambleAlphabeticals(thisAnswerText, thisMask);
+			thisScramble = thisScramble.ToUpper();
 			
-			/*
-			thisMask = maskAlphabeticals(thisAnswerText, MASKINGCHAR);
-			thisMaskedWord = thisMask;
-			addMaskedWord(charsRevealed, thisMaskedWord);
+			addScrambledWord(0, thisScramble);
 			thisOptionsTable.AcceptChanges();
-			thisLettersAnswersHaveBeenMarked = false;
-			*/
-			
-			// Better to unmask on the fly, as required, rather than generate all forms of the
-			// string on the fly, because random numbers generated in quick succession are not
-			// very random.
-			/*
-			for (Int32 charCounter = 1; charCounter < thisAnswerText.Length; charCounter++) {
-				thisMaskedWord = unmaskOneMoreChar(thisAnswerText, thisMask, '*', thisMaskedWord);
-				addMaskedWord(charCounter, thisMaskedWord);
-			}
-			thisOptionsTable.AcceptChanges();
-			*/
 	
-		}// loadDevilsDictQuestionDetailsPrivately
+		}// loadScrambleQuestionDetailsPrivately
 		
 		
-		protected string scrambleAlphabeticals(string plainText) {
-			// Takes a string and randomises all of its alpha chars
+		protected string scrambleAlphabeticals(string plainText, string mask) {
+			// Takes a string and shuffles all of its alpha chars
 			// TODO: Not converted yet.
-			string maskedWord = "";
-			for (Int32 charCounter = 0; charCounter < plainText.Length; charCounter++) {
-				char thisChar = plainText.ElementAt(charCounter);
-				if (thisChar.ToString().All(Char.IsLetter)) {
-					maskedWord += MASKINGCHAR;
-				} else {
-					maskedWord += thisChar;
+			string scrambledWord = "";
+			string alphas = "";
+			string shuffledAlphas = "";
+			
+			// First, extract only the alphabeticals (marked as MASKINGCHAR in the mask) into a string:
+			for (Int32 charCounter = 0; charCounter < mask.Length; charCounter++) {
+				char thisChar = mask.ElementAt(charCounter);
+				if (thisChar == MASKINGCHAR) {
+					alphas += plainText.ElementAt(charCounter);
 				}
 			}//for
-			return maskedWord;
-		}// maskAlphabeticals
+			
+			// Now shuffle alphas:
+			List<char> alphasAsList = alphas.ToCharArray().ToList();
+			alphasAsList.FisherYatesShuffle();
+			shuffledAlphas = String.Join("", alphasAsList);
+			
+			// Now slot the chars in alphas back into the mask:
+			Int32 shuffledAlphasCounter = 0;
+			for (Int32 charCounter = 0; charCounter < mask.Length; charCounter++) {
+				char thisChar = mask.ElementAt(charCounter);
+				if (thisChar == MASKINGCHAR) {
+					scrambledWord += shuffledAlphas.ElementAt(shuffledAlphasCounter);
+					shuffledAlphasCounter++;
+				} else {
+					scrambledWord += thisChar.ToString();
+				}
+			}//for
+			
+			return scrambledWord;
+		}// scrambleAlphabeticals
 		
 		protected void addScrambledWord(Int32 number, string text) {
 			// Adds a masked-word row to thisOptionsTable
@@ -1295,7 +1310,7 @@ public class ScrambleGame : Game {
 	        thisOptionsTable.Rows.Add(row);
 	        thisOptionsTable.AcceptChanges();
 	        if (DEBUG_ON) {
-	        	Debug.WriteLine("Masked word " + text + " added.");
+	        	Debug.WriteLine("Scrambled word " + text + " added.");
 	        }
 		}
 		

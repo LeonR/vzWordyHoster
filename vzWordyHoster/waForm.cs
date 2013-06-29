@@ -265,7 +265,7 @@ namespace vzWordyHoster
         				if (thisGame != null) {
 							thisGame.MarkAnswers(allText, thisQuestionFirstChunk, closureMessage, hostAvatarName);
 						} else {
-							Debug.Print("You need to start a game before attempting to get players.");
+							Debug.Print("You need to start a game before attempting to mark answers.");
 						}
         				break;
         			case "UPDATEPLAYERS":
