@@ -51,7 +51,8 @@
     <Compile Include="AboutForm.Designer.cs">
       <DependentUpon>AboutForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="MiscUtils.cs" />
+    <Compile Include="FileUtils.cs" />
+    <Compile Include="RandomUtils.cs" />
     <Compile Include="MacroEditorForm.cs" />
     <Compile Include="MacroEditorForm.Designer.cs">
       <DependentUpon>MacroEditorForm.cs</DependentUpon>

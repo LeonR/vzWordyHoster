@@ -35,6 +35,7 @@ namespace vzWordyHoster
 		public static bool acceptAnswersInSpeech;
 		public static List<string> macroList = new List<string>();
 		public static string MACROFILE = "macros.txt";
+		public static string LOGFILE = "logfile.txt";
 		public static Int32 secondsPerDevilsDictLetter; // = 20;
 		
 		private string devilsDictInfiniteFolder;
@@ -300,14 +301,27 @@ namespace vzWordyHoster
         		announceInitialisation();
         	}
         	if (thisGame != null) {
+        		string fullQuestionText = "";
+        		switch (thisGame.GameType) {
+        			case "TRIVIA":
+        			case "DEVILSDICT":
+        				fullQuestionText = thisGame.ThisQuestionText;
+        				break;
+        			case "SCRAMBLE": 
+        				fullQuestionText = "Definition: " + thisGame.ThisQuestionText;
+        				break;
+        			default:
+        				fullQuestionText = thisGame.ThisQuestionText;
+        				break;
+        		}// switch
         		if (thisQuestionHasAlreadyBeenRead) {
         			waSay(thisQuestionNumberDescriptor);
-        			waSayChunked("Repeating: " + thisGame.ThisQuestionText);
+        			waSayChunked("Repeating: " + fullQuestionText);
         		} else {
 	        		waSay(thisQuestionNumberDescriptor);
-					waSayChunked(thisGame.ThisQuestionText);       
-					thisQuestionFirstChunk = chunkStringFixedLength(thisGame.ThisQuestionText, CHUNKSIZE).ToList()[0];
-        		}
+					waSayChunked(fullQuestionText);       
+					thisQuestionFirstChunk = chunkStringFixedLength(fullQuestionText, CHUNKSIZE).ToList()[0];
+        		}// if...else...
 
 				switch (thisGame.GameType) {
 					case "TRIVIA":
@@ -394,7 +408,7 @@ namespace vzWordyHoster
         	}
         }
         
-        private void readClosedRoundScores() {
+        private void readClosedRoundAnswerAndScores() {
         	switch (thisGame.GameType) {
 				case "TRIVIA":
         			waSay("The answer was: " + thisGame.ThisAnswerNumber.ToString() + ". " + thisGame.ThisAnswerText);
@@ -406,14 +420,10 @@ namespace vzWordyHoster
 					waSay("The answer was: " + thisGame.ThisAnswerText);
 					break;
 				default:
-					answerTbx.Text = "Unknown game type '" + thisGame.GameType + "' in readClosedRoundScores()";
+					answerTbx.Text = "Unknown game type '" + thisGame.GameType + "' in readClosedRoundAnswerAndScores()";
 					break;
 			}// switch (thisGame.GameType)
-        	
-        	
-        	
-        	
-        	
+
         	if (thisGame.LatestWinnersList.Count > 0) {
 	        	waSay("The following players scored points:");
 	        	foreach (string winnerText in thisGame.LatestWinnersList) // Loop through List with foreach
@@ -423,6 +433,17 @@ namespace vzWordyHoster
         	} else {
         		waSay("Nobody scored any points!");
         	}
+        	
+        	// Write this round's results to log:
+        	FileUtils.writeLineToLog("End of round " + thisGame.ThisQuestionNumber.ToString() );
+        	
+        	string thisRoundScoresLine = getThisRoundScoresIntoString();
+        	FileUtils.writeLineToLog(thisRoundScoresLine);
+        	
+        	string allScoresLine = getAllScoresIntoString();
+        	FileUtils.writeLineToLog(allScoresLine);
+        	
+        	FileUtils.writeLineToLog("--------------------------------------------------");
         }
         
         private List<string> getCurrentOptionTextsList() {
@@ -669,6 +690,44 @@ namespace vzWordyHoster
 				waSay("There are no players yet!");
 			}
 		}
+		
+		private string getAllScoresIntoString() {
+			string scoresLine = "";
+			UpdatePlayersGrid();
+			// Iterate through playersTableLocalView.
+			if (playersTableLocalView.Count > 0) {
+				List<string> scoresList = new List<string>();
+				foreach (DataRowView rowView in playersTableLocalView) {
+				    DataRow playerRow = rowView.Row;
+				    scoresList.Add( playerRow["Player"].ToString() + ": " + playerRow["Score"].ToString() );
+				}
+				string scoresJoined = string.Join( " || ", scoresList.ToArray() );
+				scoresLine = "The scores are: " + scoresJoined;
+			} else {
+				scoresLine = "No one has scored yet.";
+			}
+			return scoresLine;
+		}// getAllScoresIntoString
+		
+		
+		private string getThisRoundScoresIntoString() {
+			string scoresLine = "";
+			if (thisGame.LatestWinnersList.Count > 0) {
+				List<string> scoresList = new List<string>();
+	        	foreach (string winnerText in thisGame.LatestWinnersList) // Loop through List with foreach
+				{
+	        		scoresList.Add( winnerText );
+				}
+	        	string scoresJoined = string.Join( " || ", scoresList.ToArray() );
+	        	scoresLine = "Points scored in this round: " + scoresJoined;
+        	} else {
+        		scoresLine = ("No one scored in this round.");
+        	}
+			return scoresLine;
+		}// getThisRoundScoresIntoString
+		
+		
+		
 		
 		//---------- BEGIN FORM CONTROL EVENTS ----------------------------------------------------------------------------
 		
@@ -1020,7 +1079,7 @@ namespace vzWordyHoster
 			waWrapup();
 		}
 		
-		
+
 	}// class MainForm
 	
 	

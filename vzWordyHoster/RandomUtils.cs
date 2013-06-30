@@ -18,6 +18,8 @@ namespace vzWordyHoster
 	public static class MiscUtils
 	{
 		public static void FisherYatesShuffle<T>(this IList<T> items) {
+			// Shuffles a list in a very random way.
+			// Use it as an extension method. Example usage: alphasAsList.FisherYatesShuffle();
 		    var randomGenerator = new RNGCryptoServiceProvider();
 		    var itemIndex = items.Count;
 			

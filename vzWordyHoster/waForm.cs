@@ -279,7 +279,7 @@ namespace vzWordyHoster
         			case "CLOSE":
         				commsBufferTable.Rows.RemoveAt(0);
         				if (thisGame != null) {
-        					readClosedRoundScores();
+        					readClosedRoundAnswerAndScores();
         					GetNextQuestion();
 						} else {
 							Debug.Print("You need to start a game before attempting to get players.");

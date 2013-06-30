@@ -752,6 +752,7 @@ namespace vzWordyHoster
 				}
 				numQuestions = questions.Count();
 				thisQuestionNumber = 1;
+				FileUtils.writeLineToLog("Finite " + gameType + " game started. Loaded file " + questionFile + " containing " + numQuestions + " questions.");
 			} catch (XmlException myException) {
 				MessageBox.Show( myException.ToString() );
 				throw;
@@ -797,6 +798,7 @@ namespace vzWordyHoster
 				totalNodes += numNodes;
 			}
 			totalNodes = questions.Count();
+			FileUtils.writeLineToLog("Infinite " + gameType + " game started. Loaded folder " + folderPath + " containing " + totalNodes + " words.");
 			//thisQuestionNumber = GetRandomLong(1, totalNodes, rnd);
 			pickValidRandomQuestionNumber();
 			return totalNodes;
@@ -819,6 +821,7 @@ namespace vzWordyHoster
 				totalNodes += numNodes;
 			}
 			totalNodes = questions.Count();
+			FileUtils.writeLineToLog("Infinite " + gameType + " game started. Loaded folder " + folderPath + " containing " + totalNodes + " words.");
 			//thisQuestionNumber = GetRandomLong(1, totalNodes, rnd);
 			pickValidRandomQuestionNumber();
 			return totalNodes;

@@ -509,14 +509,14 @@ namespace vzWordyHoster
 			// devilsDictFiniteTmi
 			// 
 			this.devilsDictFiniteTmi.Name = "devilsDictFiniteTmi";
-			this.devilsDictFiniteTmi.Size = new System.Drawing.Size(152, 22);
+			this.devilsDictFiniteTmi.Size = new System.Drawing.Size(120, 22);
 			this.devilsDictFiniteTmi.Text = "Finite...";
 			this.devilsDictFiniteTmi.Click += new System.EventHandler(this.DevilsDictFiniteTmiClick);
 			// 
 			// devilsDictInfiniteTmi
 			// 
 			this.devilsDictInfiniteTmi.Name = "devilsDictInfiniteTmi";
-			this.devilsDictInfiniteTmi.Size = new System.Drawing.Size(152, 22);
+			this.devilsDictInfiniteTmi.Size = new System.Drawing.Size(120, 22);
 			this.devilsDictInfiniteTmi.Text = "Infinite...";
 			this.devilsDictInfiniteTmi.Click += new System.EventHandler(this.DevilsDictInfiniteTmiClick);
 			// 
@@ -532,14 +532,14 @@ namespace vzWordyHoster
 			// scrambleFiniteTmi
 			// 
 			this.scrambleFiniteTmi.Name = "scrambleFiniteTmi";
-			this.scrambleFiniteTmi.Size = new System.Drawing.Size(152, 22);
+			this.scrambleFiniteTmi.Size = new System.Drawing.Size(120, 22);
 			this.scrambleFiniteTmi.Text = "Finite...";
 			this.scrambleFiniteTmi.Click += new System.EventHandler(this.ScrambleFiniteTmiClick);
 			// 
 			// scrambleInfiniteTmi
 			// 
 			this.scrambleInfiniteTmi.Name = "scrambleInfiniteTmi";
-			this.scrambleInfiniteTmi.Size = new System.Drawing.Size(152, 22);
+			this.scrambleInfiniteTmi.Size = new System.Drawing.Size(120, 22);
 			this.scrambleInfiniteTmi.Text = "Infinite...";
 			this.scrambleInfiniteTmi.Click += new System.EventHandler(this.ScrambleInfiniteTmiClick);
 			// 
