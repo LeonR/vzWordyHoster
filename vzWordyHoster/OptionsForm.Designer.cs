@@ -43,14 +43,20 @@ namespace vzWordyHoster
 			this.ddQuestionsGrp = new System.Windows.Forms.GroupBox();
 			this.label1 = new System.Windows.Forms.Label();
 			this.ddSecondsPerLetterUpd = new System.Windows.Forms.NumericUpDown();
+			this.scrambleQuestionsGrp = new System.Windows.Forms.GroupBox();
+			this.scrambleModeGrp = new System.Windows.Forms.GroupBox();
+			this.scrambleModeEasyRad = new System.Windows.Forms.RadioButton();
+			this.scrambleModeEvilRad = new System.Windows.Forms.RadioButton();
 			this.AnswersGrp.SuspendLayout();
 			this.ddQuestionsGrp.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.ddSecondsPerLetterUpd)).BeginInit();
+			this.scrambleQuestionsGrp.SuspendLayout();
+			this.scrambleModeGrp.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// OkBtn
 			// 
-			this.OkBtn.Location = new System.Drawing.Point(217, 427);
+			this.OkBtn.Location = new System.Drawing.Point(119, 348);
 			this.OkBtn.Name = "OkBtn";
 			this.OkBtn.Size = new System.Drawing.Size(50, 23);
 			this.OkBtn.TabIndex = 0;
@@ -128,11 +134,53 @@ namespace vzWordyHoster
 									0,
 									0});
 			// 
+			// scrambleQuestionsGrp
+			// 
+			this.scrambleQuestionsGrp.Controls.Add(this.scrambleModeGrp);
+			this.scrambleQuestionsGrp.Location = new System.Drawing.Point(13, 82);
+			this.scrambleQuestionsGrp.Name = "scrambleQuestionsGrp";
+			this.scrambleQuestionsGrp.Size = new System.Drawing.Size(254, 82);
+			this.scrambleQuestionsGrp.TabIndex = 5;
+			this.scrambleQuestionsGrp.TabStop = false;
+			this.scrambleQuestionsGrp.Text = "Word Scramble parameters";
+			// 
+			// scrambleModeGrp
+			// 
+			this.scrambleModeGrp.Controls.Add(this.scrambleModeEvilRad);
+			this.scrambleModeGrp.Controls.Add(this.scrambleModeEasyRad);
+			this.scrambleModeGrp.Location = new System.Drawing.Point(7, 20);
+			this.scrambleModeGrp.Name = "scrambleModeGrp";
+			this.scrambleModeGrp.Size = new System.Drawing.Size(154, 50);
+			this.scrambleModeGrp.TabIndex = 0;
+			this.scrambleModeGrp.TabStop = false;
+			this.scrambleModeGrp.Text = "Scramble mode";
+			// 
+			// scrambleModeEasyRad
+			// 
+			this.scrambleModeEasyRad.Location = new System.Drawing.Point(7, 20);
+			this.scrambleModeEasyRad.Name = "scrambleModeEasyRad";
+			this.scrambleModeEasyRad.Size = new System.Drawing.Size(70, 24);
+			this.scrambleModeEasyRad.TabIndex = 0;
+			this.scrambleModeEasyRad.TabStop = true;
+			this.scrambleModeEasyRad.Text = "Easy";
+			this.scrambleModeEasyRad.UseVisualStyleBackColor = true;
+			// 
+			// scrambleModeEvilRad
+			// 
+			this.scrambleModeEvilRad.Location = new System.Drawing.Point(83, 20);
+			this.scrambleModeEvilRad.Name = "scrambleModeEvilRad";
+			this.scrambleModeEvilRad.Size = new System.Drawing.Size(65, 24);
+			this.scrambleModeEvilRad.TabIndex = 1;
+			this.scrambleModeEvilRad.TabStop = true;
+			this.scrambleModeEvilRad.Text = "Evil";
+			this.scrambleModeEvilRad.UseVisualStyleBackColor = true;
+			// 
 			// OptionsForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(484, 462);
+			this.ClientSize = new System.Drawing.Size(289, 385);
+			this.Controls.Add(this.scrambleQuestionsGrp);
 			this.Controls.Add(this.ddQuestionsGrp);
 			this.Controls.Add(this.AnswersGrp);
 			this.Controls.Add(this.OkBtn);
@@ -146,8 +194,14 @@ namespace vzWordyHoster
 			this.AnswersGrp.ResumeLayout(false);
 			this.ddQuestionsGrp.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.ddSecondsPerLetterUpd)).EndInit();
+			this.scrambleQuestionsGrp.ResumeLayout(false);
+			this.scrambleModeGrp.ResumeLayout(false);
 			this.ResumeLayout(false);
 		}
+		private System.Windows.Forms.RadioButton scrambleModeEvilRad;
+		private System.Windows.Forms.GroupBox scrambleModeGrp;
+		private System.Windows.Forms.RadioButton scrambleModeEasyRad;
+		private System.Windows.Forms.GroupBox scrambleQuestionsGrp;
 		private System.Windows.Forms.NumericUpDown ddSecondsPerLetterUpd;
 		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.GroupBox ddQuestionsGrp;

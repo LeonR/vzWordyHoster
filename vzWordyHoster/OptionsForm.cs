@@ -32,8 +32,13 @@ namespace vzWordyHoster
 		
 		void OptionsFormLoad(object sender, EventArgs e)
 		{
-			acceptAnswersInEspChb.Checked = MainForm.acceptAnswersInEsp;
+			acceptAnswersInEspChb.Checked    = MainForm.acceptAnswersInEsp;
 			acceptAnswersInSpeechChb.Checked = MainForm.acceptAnswersInSpeech;
+			if (MainForm.scrambleModeEvil) {
+				scrambleModeEvilRad.Checked = true;
+			} else {
+				scrambleModeEasyRad.Checked = true;
+			}
 			ddSecondsPerLetterUpd.Value = MainForm.secondsPerDevilsDictLetter;
 		}
 		
@@ -42,6 +47,7 @@ namespace vzWordyHoster
 			// Store checkbox options in global variables:
 			MainForm.acceptAnswersInEsp = acceptAnswersInEspChb.Checked;
 			MainForm.acceptAnswersInSpeech = acceptAnswersInSpeechChb.Checked;
+			MainForm.scrambleModeEvil = scrambleModeEvilRad.Checked;
 			MainForm.secondsPerDevilsDictLetter = Convert.ToInt32( ddSecondsPerLetterUpd.Value );
 			
 			// Now store those options in the app.config file:
@@ -52,6 +58,9 @@ namespace vzWordyHoster
 			
 			config.AppSettings.Settings.Remove("acceptAnswersInSpeech");
 			config.AppSettings.Settings.Add("acceptAnswersInSpeech", MainForm.acceptAnswersInSpeech.ToString() );
+			
+			config.AppSettings.Settings.Remove("scrambleModeEvil");
+			config.AppSettings.Settings.Add("scrambleModeEvil", MainForm.scrambleModeEvil.ToString() );
 			
 			config.AppSettings.Settings.Remove("devilsDictSecondsPerLetter");
 			config.AppSettings.Settings.Add("devilsDictSecondsPerLetter", MainForm.secondsPerDevilsDictLetter.ToString() );

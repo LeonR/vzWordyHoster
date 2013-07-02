@@ -72,7 +72,7 @@ namespace vzWordyHoster
 			this.versionLbl.Name = "versionLbl";
 			this.versionLbl.Size = new System.Drawing.Size(118, 23);
 			this.versionLbl.TabIndex = 2;
-			this.versionLbl.Text = "v0.1_2013-05-27-1830";
+			this.versionLbl.Text = "v.";
 			// 
 			// descriptionLbl
 			// 
@@ -98,7 +98,7 @@ namespace vzWordyHoster
 			this.authorLbl.Name = "authorLbl";
 			this.authorLbl.Size = new System.Drawing.Size(100, 23);
 			this.authorLbl.TabIndex = 5;
-			this.authorLbl.Text = "by Spud / Spuud";
+			this.authorLbl.Text = "by Spud";
 			// 
 			// urlLbl
 			// 
@@ -125,6 +125,7 @@ namespace vzWordyHoster
 			this.MinimizeBox = false;
 			this.Name = "AboutForm";
 			this.Text = "About vzWordyHoster";
+			this.Load += new System.EventHandler(this.AboutFormLoad);
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
 			this.ResumeLayout(false);
 		}

@@ -1260,7 +1260,11 @@ public class ScrambleGame : Game {
 			// Good so far.
 			thisMask = maskAlphabeticals(thisAnswerText, MASKINGCHAR); // The mask will allow us to slot randomised alphas in around non-alphas.
 			
-			thisScramble = scrambleAlphabeticals(thisAnswerText, thisMask);
+			if (MainForm.scrambleModeEvil) {
+				thisScramble = scrambleAlphabeticalsEvil(thisAnswerText, thisMask);
+			} else {
+				thisScramble = scrambleAlphabeticalsEasy(thisAnswerText, thisMask);
+			}
 			thisScramble = thisScramble.ToUpper();
 			
 			addScrambledWord(0, thisScramble);
@@ -1269,9 +1273,8 @@ public class ScrambleGame : Game {
 		}// loadScrambleQuestionDetailsPrivately
 		
 		
-		protected string scrambleAlphabeticals(string plainText, string mask) {
+		protected string scrambleAlphabeticalsEvil(string plainText, string mask) {
 			// Takes a string and shuffles all of its alpha chars
-			// TODO: Not converted yet.
 			string scrambledWord = "";
 			string alphas = "";
 			string shuffledAlphas = "";
@@ -1302,7 +1305,59 @@ public class ScrambleGame : Game {
 			}//for
 			
 			return scrambledWord;
-		}// scrambleAlphabeticals
+		}// scrambleAlphabeticalsEvil
+		
+		
+		protected string scrambleAlphabeticalsEasy(string plainText, string mask) {
+			// Basically, we split the phrase (if it is a phrase) into words,
+			// then do a scrambleAlphabeticalEvil on each word.
+			
+			// First, check if there are any word-boundary characters in plainText.
+			// If not, just do a scrambleAlphabeticalEvil on the whole thing.
+			List<char> wordBoundaryCharacters = new List<char> {' ', '-'};
+			bool plainTextContainsBoundaryCharacters = false;
+			foreach (char boundaryChar in wordBoundaryCharacters) {
+				if( plainText.Contains(boundaryChar) ) {
+					plainTextContainsBoundaryCharacters = true;
+				}
+			}
+			if(!plainTextContainsBoundaryCharacters) {
+				return scrambleAlphabeticalsEvil(plainText, mask);
+			} else {
+				// plainText does contain boundary chars, so split it into words and then do an evil scramble on each one.
+				// We also need to do the same with the mask, because this might contain non-alpha chars that are not
+				// counted as word-boundary chars, such as the apostrophe. In order to pass each plainText and mask to
+				// scrambleAlphabeticalsEvil, the mask needs to contain such non-alpha, non-boundary chars.
+				//string wordBoundaryCharsAsOneString = string.Join("", wordBoundaryCharacters.ToArray());  // Used by .ToCharArray()
+				
+				// First, store all of this phrase's actual word-boundary characters as a list, so that we can slot them back
+				// in, after each call to scrambledAlphabeticalsEvil.
+				List<char> boundaryCharsInThisPhrase = new List<char>();
+				for (Int32 charCounter = 0; charCounter < plainText.Length; charCounter++) {
+					char thisChar = plainText.ElementAt(charCounter);
+					bool thisCharIsBoundaryChar = false;
+					foreach (char boundaryChar in wordBoundaryCharacters) {
+						if (thisChar == boundaryChar) {
+							thisCharIsBoundaryChar = true;
+						}
+					}
+					if (thisCharIsBoundaryChar) {
+						boundaryCharsInThisPhrase.Add(thisChar);
+					}
+				}
+				
+				string[] wordsArray = plainText.Split(wordBoundaryCharacters.ToArray() );
+				string[] masksArray = mask.Split(wordBoundaryCharacters.ToArray() );
+				string scrambledPhrase = "";
+				for (int wordCounter = 0; wordCounter < wordsArray.Count(); wordCounter++) {
+					scrambledPhrase += scrambleAlphabeticalsEvil( wordsArray[wordCounter], masksArray[wordCounter] );
+					if ( wordCounter < (wordsArray.Count() - 1) ) {  // There won't be a boundary char after the last word.
+						scrambledPhrase += boundaryCharsInThisPhrase[wordCounter];
+					}
+				}
+				return scrambledPhrase;
+			}
+		}// scrambleAlphabeticalsEasy
 		
 		protected void addScrambledWord(Int32 number, string text) {
 			// Adds a masked-word row to thisOptionsTable

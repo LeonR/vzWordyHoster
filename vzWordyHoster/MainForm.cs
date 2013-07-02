@@ -31,8 +31,10 @@ namespace vzWordyHoster
 	public partial class MainForm : Form
 	{
 		
+		public static string versionString = "v0.1_2013-07-02-0725";
 		public static bool acceptAnswersInEsp;
 		public static bool acceptAnswersInSpeech;
+		public static bool scrambleModeEvil;
 		public static List<string> macroList = new List<string>();
 		public static string MACROFILE = "macros.txt";
 		public static string LOGFILE = "logfile.txt";
@@ -80,6 +82,7 @@ namespace vzWordyHoster
 			// Load settings from app.config:
 			acceptAnswersInEsp = Convert.ToBoolean( ConfigurationManager.AppSettings["acceptAnswersInEsp"] );
 			acceptAnswersInSpeech = Convert.ToBoolean( ConfigurationManager.AppSettings["acceptAnswersInSpeech"] );
+			scrambleModeEvil = Convert.ToBoolean( ConfigurationManager.AppSettings["scrambleModeEvil"] );
 			devilsDictInfiniteFolder = ConfigurationManager.AppSettings["devilsDictInfiniteFolder"];
 			devilsDictFiniteFile = ConfigurationManager.AppSettings["devilsDictFiniteFile"];
 			scrambleInfiniteFolder = ConfigurationManager.AppSettings["scrambleInfiniteFolder"];
