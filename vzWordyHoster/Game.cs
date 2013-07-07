@@ -1258,15 +1258,20 @@ public class ScrambleGame : Game {
 			
 			thisOptionsTable.Clear();
 			
-			// Good so far.
 			thisMask = maskAlphabeticals(thisAnswerText, MASKINGCHAR); // The mask will allow us to slot randomised alphas in around non-alphas.
 			
-			if (MainForm.scrambleModeEvil) {
-				thisScramble = scrambleAlphabeticalsEvil(thisAnswerText, thisMask);
-			} else {
-				thisScramble = scrambleAlphabeticalsEasy(thisAnswerText, thisMask);
-			}
-			thisScramble = thisScramble.ToUpper();
+			bool foundAGoodScramble = false;
+			do {
+				if (MainForm.scrambleModeEvil) {
+					thisScramble = scrambleAlphabeticalsEvil(thisAnswerText, thisMask);
+				} else {
+					thisScramble = scrambleAlphabeticalsEasy(thisAnswerText, thisMask);
+				}
+				thisScramble = thisScramble.ToUpper();
+				if (thisScramble != thisAnswerText.ToUpper() ) {
+					foundAGoodScramble = true;
+				}
+			} while (foundAGoodScramble == false);
 			
 			addScrambledWord(0, thisScramble);
 			thisOptionsTable.AcceptChanges();
