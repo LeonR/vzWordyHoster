@@ -350,7 +350,7 @@ namespace vzWordyHoster
 				for (Int32 playerCounter = 0; playerCounter < playersTable.Rows.Count; playerCounter++) {
 					playerRow = playersTable.Rows[playerCounter];
 					playerRow["LastAnswer"] = "";
-					playerRow["Marking"] = 0;
+					playerRow["Marks"] = 0;
 				}
 				playersTable.AcceptChanges();
 			}
@@ -482,11 +482,11 @@ namespace vzWordyHoster
 					if ( espRow["LastAnswer"].ToString().ToLower() == expectedAnswerString.ToLower() ) {
 						// Current answer is correct:
 						marksToAward = getNextMark();
-						espRow["Marking"] = marksToAward;
+						espRow["Marks"] = marksToAward;
 						mostRecentESPsThisRoundTable.AcceptChanges();
 					} else {
 						// Current answer is incorrect:
-						espRow["Marking"] = 0;
+						espRow["Marks"] = 0;
 					}
 					
 					// Update playersTable, but don't update their marks unless the round is closed:
@@ -494,7 +494,7 @@ namespace vzWordyHoster
 					if ( playersTable.Rows.Contains(player) ) {
 						playerRow = playersTable.Rows.Find(player);
 						playerRow["LastAnswer"] = espRow["LastAnswer"];
-						playerRow["Marking"]    = espRow["Marking"];
+						playerRow["Marks"]    = espRow["Marks"];
 						if (currentQuestionClosed) {
 							Int32 existingScoreInt;
 							Int32 newPointsInt;
@@ -508,7 +508,7 @@ namespace vzWordyHoster
 								existingScoreInt = Convert.ToInt32(existingScoreStr);
 							}
 							
-							newPointsStr = espRow["Marking"].ToString();
+							newPointsStr = espRow["Marks"].ToString();
 							if (newPointsStr == "") {
 								newPointsInt = 0;
 							} else {
@@ -525,11 +525,11 @@ namespace vzWordyHoster
 						playerRow = playersTable.NewRow();
 						playerRow["Player"]     = player;
 						playerRow["LastAnswer"] = espRow["LastAnswer"];
-						playerRow["Marking"]    = espRow["Marking"];
+						playerRow["Marks"]    = espRow["Marks"];
 						if (currentQuestionClosed) {
-							playerRow["Score"] = espRow["Marking"];
+							playerRow["Score"] = espRow["Marks"];
 							if(DEBUG_ON) {
-								Debug.WriteLine("Added " + espRow["Marking"].ToString() + " points to new player " + player + "'s score.");
+								Debug.WriteLine("Added " + espRow["Marks"].ToString() + " points to new player " + player + "'s score.");
 							}
 						}
 						playersTable.Rows.Add(playerRow);
@@ -538,8 +538,8 @@ namespace vzWordyHoster
 					
 					// If the current question has just been closed, and the player scored any points,
 					// add a string to latestWinnersList, for the purpose of points announcement:
-					if (currentQuestionClosed && espRow["Marking"].ToString() != "0") {
-						latestWinnersList.Add( player + ": " + espRow["Marking"].ToString() );
+					if (currentQuestionClosed && espRow["Marks"].ToString() != "0") {
+						latestWinnersList.Add( player + ": " + espRow["Marks"].ToString() );
 					}
 		
 				}// for...
@@ -665,7 +665,7 @@ namespace vzWordyHoster
 			row = mostRecentESPsThisRoundTable.NewRow();
 			row["Player"] = player;
 			row["LastAnswer"] = lastAnswer;
-			row["Marking"] = 0;
+			row["Marks"] = 0;
 			mostRecentESPsThisRoundTable.Rows.Add(row);
 	        mostRecentESPsThisRoundTable.AcceptChanges();
 	        if(DEBUG_ON) {
@@ -870,10 +870,10 @@ namespace vzWordyHoster
 		    column.ColumnName = "LastAnswer";
 		    playersTable.Columns.Add(column);
 		    
-		    // Create "Marking" column
+		    // Create "Marks" column
 		    column = new DataColumn();
 		    column.DataType = Type.GetType("System.Int32");
-		    column.ColumnName = "Marking";
+		    column.ColumnName = "Marks";
 		    playersTable.Columns.Add(column);
 	     
 		}// buildPlayersTable()
@@ -897,10 +897,10 @@ namespace vzWordyHoster
 		    column.ColumnName = "LastAnswer";
 		    mostRecentESPsThisRoundTable.Columns.Add(column);
 		    
-		    // Create "Marking" column
+		    // Create "Marks" column
 		    column = new DataColumn();
 		    column.DataType = Type.GetType("System.Int32");
-		    column.ColumnName = "Marking";
+		    column.ColumnName = "Marks";
 		    mostRecentESPsThisRoundTable.Columns.Add(column);
 		    
 	     
@@ -1030,7 +1030,8 @@ namespace vzWordyHoster
 			thisQuestionElem = questions.ToArray()[thisQuestionNumber - 1];
 			// Load thisQuestionText:
 			thisQuestionText = thisQuestionElem.Element("clue").Value;
-			thisQuestionType = thisQuestionElem.Attribute("type").Value;
+			//thisQuestionType = thisQuestionElem.Attribute("type").Value;
+			thisQuestionType = "Trivia";
 			
 			// Load thisAnswerText:
 			var correctAns = from answeropt in thisQuestionElem.Elements("answer-option")

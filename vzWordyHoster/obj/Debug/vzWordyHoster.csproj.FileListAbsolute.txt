@@ -10,3 +10,4 @@ C:\Users\Leon\Documents\SharpDevelop Projects\CSharp\vzWordyHoster\vzWordyHoster
 C:\Users\Leon\Documents\SharpDevelop Projects\CSharp\vzWordyHoster\vzWordyHoster\obj\Debug\vzWordyHoster.pdb
 C:\Users\Leon\Documents\SharpDevelop Projects\CSharp\vzWordyHoster\vzWordyHoster\obj\Debug\vzWordyHoster.OptionsForm.resources
 C:\Users\Leon\Documents\SharpDevelop Projects\CSharp\vzWordyHoster\vzWordyHoster\obj\Debug\vzWordyHoster.MacroEditorForm.resources
+C:\Users\Leon\Documents\SharpDevelop Projects\CSharp\vzWordyHoster\vzWordyHoster\obj\Debug\vzWordyHoster.QuestionEditorWordsForm.resources

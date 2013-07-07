@@ -32,14 +32,21 @@ namespace vzWordyHoster
 		
 		void OptionsFormLoad(object sender, EventArgs e)
 		{
-			acceptAnswersInEspChb.Checked    = MainForm.acceptAnswersInEsp;
-			acceptAnswersInSpeechChb.Checked = MainForm.acceptAnswersInSpeech;
+			acceptAnswersInEspChb.Checked      = MainForm.acceptAnswersInEsp;
+			acceptAnswersInSpeechChb.Checked   = MainForm.acceptAnswersInSpeech;
+			scrambleReadDefinitionsChb.Checked = MainForm.scrambleReadDefinitions;
+			
 			if (MainForm.scrambleModeEvil) {
 				scrambleModeEvilRad.Checked = true;
 			} else {
 				scrambleModeEasyRad.Checked = true;
 			}
-			ddSecondsPerLetterUpd.Value = MainForm.secondsPerDevilsDictLetter;
+
+			if (MainForm.secondsPerDevilsDictLetterChanged != 0) {
+				ddSecondsPerLetterUpd.Value = MainForm.secondsPerDevilsDictLetterChanged;
+			} else {
+				ddSecondsPerLetterUpd.Value = MainForm.secondsPerDevilsDictLetter;
+			}
 		}
 		
 		void OptionsFormFormClosing(object sender, FormClosingEventArgs e)
@@ -48,7 +55,8 @@ namespace vzWordyHoster
 			MainForm.acceptAnswersInEsp = acceptAnswersInEspChb.Checked;
 			MainForm.acceptAnswersInSpeech = acceptAnswersInSpeechChb.Checked;
 			MainForm.scrambleModeEvil = scrambleModeEvilRad.Checked;
-			MainForm.secondsPerDevilsDictLetter = Convert.ToInt32( ddSecondsPerLetterUpd.Value );
+			MainForm.scrambleReadDefinitions = scrambleReadDefinitionsChb.Checked;
+			MainForm.secondsPerDevilsDictLetterChanged = Convert.ToInt32( ddSecondsPerLetterUpd.Value );
 			
 			// Now store those options in the app.config file:
 			Configuration config = ConfigurationManager.OpenExeConfiguration(Application.ExecutablePath);
@@ -61,6 +69,9 @@ namespace vzWordyHoster
 			
 			config.AppSettings.Settings.Remove("scrambleModeEvil");
 			config.AppSettings.Settings.Add("scrambleModeEvil", MainForm.scrambleModeEvil.ToString() );
+			
+			config.AppSettings.Settings.Remove("scrambleReadDefinitions");
+			config.AppSettings.Settings.Add("scrambleReadDefinitions", MainForm.scrambleReadDefinitions.ToString() );
 			
 			config.AppSettings.Settings.Remove("devilsDictSecondsPerLetter");
 			config.AppSettings.Settings.Add("devilsDictSecondsPerLetter", MainForm.secondsPerDevilsDictLetter.ToString() );

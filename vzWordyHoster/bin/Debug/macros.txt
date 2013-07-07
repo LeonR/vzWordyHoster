@@ -1,6 +1,8 @@
 WTG ´
 Jolly well done! ´
 ¶ I say, good show! ¶
-In Devil's Dictionary, the answers are checked at the end of each letter's time-out period (unless the host chooses to check them manually before the time-out). If, at that point, anyone has correctly guessed the word, the round is closed.
-Points will be awarded as follows://1st correct answer: 4 points//2nd correct answer: 3 points//3rd correct answer: 2 points//Any subsequent answers: 1 point
 Devil's Dictionary is a word game. It requires some of the same skills as Word Scramble, but it plays differently. The host selects a word secretly from the dictionary, then announces the word's dictionary definition, along with the number of letters in  that word. After a short interval, one letter of the word is revealed, followed by two, then three, and so on, until the word is guessed.
+In Devil's Dictionary, the answers are checked at the end of each letter's time-out period. If, at that point, anyone has correctly guessed the word, the round is closed. Only your last answer counts!
+Points will be awarded as follows://1st correct answer: 4 points//2nd correct answer: 3 points//3rd correct answer: 2 points//Any subsequent answers: 1 point
+Remember, only your last answer counts!
+Mind your spelling!

@@ -52,6 +52,10 @@
       <DependentUpon>AboutForm.cs</DependentUpon>
     </Compile>
     <Compile Include="FileUtils.cs" />
+    <Compile Include="QuestionEditorWordsForm.cs" />
+    <Compile Include="QuestionEditorWordsForm.Designer.cs">
+      <DependentUpon>QuestionEditorWordsForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="RandomUtils.cs" />
     <Compile Include="MacroEditorForm.cs" />
     <Compile Include="MacroEditorForm.Designer.cs">
@@ -87,6 +91,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="OptionsForm.resx">
       <DependentUpon>OptionsForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="QuestionEditorWordsForm.resx">
+      <DependentUpon>QuestionEditorWordsForm.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -83,6 +83,17 @@ namespace vzWordyHoster
 			this.scrambleTmi = new System.Windows.Forms.ToolStripMenuItem();
 			this.scrambleFiniteTmi = new System.Windows.Forms.ToolStripMenuItem();
 			this.scrambleInfiniteTmi = new System.Windows.Forms.ToolStripMenuItem();
+			this.fileTss1 = new System.Windows.Forms.ToolStripSeparator();
+			this.questionEditorTmi = new System.Windows.Forms.ToolStripMenuItem();
+			this.QeCreateTmi = new System.Windows.Forms.ToolStripMenuItem();
+			this.QeCreateTriviaTmi = new System.Windows.Forms.ToolStripMenuItem();
+			this.QeCreateWordsTmi = new System.Windows.Forms.ToolStripMenuItem();
+			this.QeLoadTmi = new System.Windows.Forms.ToolStripMenuItem();
+			this.QeLoadTriviaTmi = new System.Windows.Forms.ToolStripMenuItem();
+			this.QeLoadWordsTmi = new System.Windows.Forms.ToolStripMenuItem();
+			this.QeEditCurrentTmi = new System.Windows.Forms.ToolStripMenuItem();
+			this.fileTss2 = new System.Windows.Forms.ToolStripSeparator();
+			this.exitTmi = new System.Windows.Forms.ToolStripMenuItem();
 			this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.optionsTmi = new System.Windows.Forms.ToolStripMenuItem();
 			this.helpTmi = new System.Windows.Forms.ToolStripMenuItem();
@@ -470,7 +481,11 @@ namespace vzWordyHoster
 			this.fileTmi.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
 									this.triviaTmi,
 									this.devilsDictTmi,
-									this.scrambleTmi});
+									this.scrambleTmi,
+									this.fileTss1,
+									this.questionEditorTmi,
+									this.fileTss2,
+									this.exitTmi});
 			this.fileTmi.Name = "fileTmi";
 			this.fileTmi.Size = new System.Drawing.Size(37, 20);
 			this.fileTmi.Text = "File";
@@ -481,20 +496,20 @@ namespace vzWordyHoster
 									this.triviaFiniteTmi,
 									this.triviaInfiniteTmi});
 			this.triviaTmi.Name = "triviaTmi";
-			this.triviaTmi.Size = new System.Drawing.Size(174, 22);
-			this.triviaTmi.Text = "Trivia...";
+			this.triviaTmi.Size = new System.Drawing.Size(201, 22);
+			this.triviaTmi.Text = "Start Trivia...";
 			// 
 			// triviaFiniteTmi
 			// 
 			this.triviaFiniteTmi.Name = "triviaFiniteTmi";
-			this.triviaFiniteTmi.Size = new System.Drawing.Size(120, 22);
+			this.triviaFiniteTmi.Size = new System.Drawing.Size(152, 22);
 			this.triviaFiniteTmi.Text = "Finite...";
 			this.triviaFiniteTmi.Click += new System.EventHandler(this.TriviaFiniteTmiClick);
 			// 
 			// triviaInfiniteTmi
 			// 
 			this.triviaInfiniteTmi.Name = "triviaInfiniteTmi";
-			this.triviaInfiniteTmi.Size = new System.Drawing.Size(120, 22);
+			this.triviaInfiniteTmi.Size = new System.Drawing.Size(152, 22);
 			this.triviaInfiniteTmi.Text = "Infinite...";
 			// 
 			// devilsDictTmi
@@ -503,20 +518,20 @@ namespace vzWordyHoster
 									this.devilsDictFiniteTmi,
 									this.devilsDictInfiniteTmi});
 			this.devilsDictTmi.Name = "devilsDictTmi";
-			this.devilsDictTmi.Size = new System.Drawing.Size(174, 22);
-			this.devilsDictTmi.Text = "Devil\'s Dictionary...";
+			this.devilsDictTmi.Size = new System.Drawing.Size(201, 22);
+			this.devilsDictTmi.Text = "Start Devil\'s Dictionary...";
 			// 
 			// devilsDictFiniteTmi
 			// 
 			this.devilsDictFiniteTmi.Name = "devilsDictFiniteTmi";
-			this.devilsDictFiniteTmi.Size = new System.Drawing.Size(120, 22);
+			this.devilsDictFiniteTmi.Size = new System.Drawing.Size(152, 22);
 			this.devilsDictFiniteTmi.Text = "Finite...";
 			this.devilsDictFiniteTmi.Click += new System.EventHandler(this.DevilsDictFiniteTmiClick);
 			// 
 			// devilsDictInfiniteTmi
 			// 
 			this.devilsDictInfiniteTmi.Name = "devilsDictInfiniteTmi";
-			this.devilsDictInfiniteTmi.Size = new System.Drawing.Size(120, 22);
+			this.devilsDictInfiniteTmi.Size = new System.Drawing.Size(152, 22);
 			this.devilsDictInfiniteTmi.Text = "Infinite...";
 			this.devilsDictInfiniteTmi.Click += new System.EventHandler(this.DevilsDictInfiniteTmiClick);
 			// 
@@ -526,22 +541,98 @@ namespace vzWordyHoster
 									this.scrambleFiniteTmi,
 									this.scrambleInfiniteTmi});
 			this.scrambleTmi.Name = "scrambleTmi";
-			this.scrambleTmi.Size = new System.Drawing.Size(174, 22);
-			this.scrambleTmi.Text = "Word Scramble...";
+			this.scrambleTmi.Size = new System.Drawing.Size(201, 22);
+			this.scrambleTmi.Text = "Start Word Scramble...";
 			// 
 			// scrambleFiniteTmi
 			// 
 			this.scrambleFiniteTmi.Name = "scrambleFiniteTmi";
-			this.scrambleFiniteTmi.Size = new System.Drawing.Size(120, 22);
+			this.scrambleFiniteTmi.Size = new System.Drawing.Size(152, 22);
 			this.scrambleFiniteTmi.Text = "Finite...";
 			this.scrambleFiniteTmi.Click += new System.EventHandler(this.ScrambleFiniteTmiClick);
 			// 
 			// scrambleInfiniteTmi
 			// 
 			this.scrambleInfiniteTmi.Name = "scrambleInfiniteTmi";
-			this.scrambleInfiniteTmi.Size = new System.Drawing.Size(120, 22);
+			this.scrambleInfiniteTmi.Size = new System.Drawing.Size(152, 22);
 			this.scrambleInfiniteTmi.Text = "Infinite...";
 			this.scrambleInfiniteTmi.Click += new System.EventHandler(this.ScrambleInfiniteTmiClick);
+			// 
+			// fileTss1
+			// 
+			this.fileTss1.Name = "fileTss1";
+			this.fileTss1.Size = new System.Drawing.Size(198, 6);
+			// 
+			// questionEditorTmi
+			// 
+			this.questionEditorTmi.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+									this.QeCreateTmi,
+									this.QeLoadTmi,
+									this.QeEditCurrentTmi});
+			this.questionEditorTmi.Name = "questionEditorTmi";
+			this.questionEditorTmi.Size = new System.Drawing.Size(201, 22);
+			this.questionEditorTmi.Text = "Question Editor...";
+			// 
+			// QeCreateTmi
+			// 
+			this.QeCreateTmi.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+									this.QeCreateTriviaTmi,
+									this.QeCreateWordsTmi});
+			this.QeCreateTmi.Name = "QeCreateTmi";
+			this.QeCreateTmi.Size = new System.Drawing.Size(203, 22);
+			this.QeCreateTmi.Text = "Create new...";
+			// 
+			// QeCreateTriviaTmi
+			// 
+			this.QeCreateTriviaTmi.Name = "QeCreateTriviaTmi";
+			this.QeCreateTriviaTmi.Size = new System.Drawing.Size(163, 22);
+			this.QeCreateTriviaTmi.Text = "Trivia file";
+			// 
+			// QeCreateWordsTmi
+			// 
+			this.QeCreateWordsTmi.Name = "QeCreateWordsTmi";
+			this.QeCreateWordsTmi.Size = new System.Drawing.Size(163, 22);
+			this.QeCreateWordsTmi.Text = "DD/Scramble file";
+			this.QeCreateWordsTmi.Click += new System.EventHandler(this.QeCreateWordsTmiClick);
+			// 
+			// QeLoadTmi
+			// 
+			this.QeLoadTmi.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+									this.QeLoadTriviaTmi,
+									this.QeLoadWordsTmi});
+			this.QeLoadTmi.Name = "QeLoadTmi";
+			this.QeLoadTmi.Size = new System.Drawing.Size(203, 22);
+			this.QeLoadTmi.Text = "Load existing...";
+			// 
+			// QeLoadTriviaTmi
+			// 
+			this.QeLoadTriviaTmi.Name = "QeLoadTriviaTmi";
+			this.QeLoadTriviaTmi.Size = new System.Drawing.Size(163, 22);
+			this.QeLoadTriviaTmi.Text = "Trivia file";
+			// 
+			// QeLoadWordsTmi
+			// 
+			this.QeLoadWordsTmi.Name = "QeLoadWordsTmi";
+			this.QeLoadWordsTmi.Size = new System.Drawing.Size(163, 22);
+			this.QeLoadWordsTmi.Text = "DD/Scramble file";
+			// 
+			// QeEditCurrentTmi
+			// 
+			this.QeEditCurrentTmi.Name = "QeEditCurrentTmi";
+			this.QeEditCurrentTmi.Size = new System.Drawing.Size(203, 22);
+			this.QeEditCurrentTmi.Text = "Edit current question file";
+			// 
+			// fileTss2
+			// 
+			this.fileTss2.Name = "fileTss2";
+			this.fileTss2.Size = new System.Drawing.Size(198, 6);
+			// 
+			// exitTmi
+			// 
+			this.exitTmi.Name = "exitTmi";
+			this.exitTmi.Size = new System.Drawing.Size(201, 22);
+			this.exitTmi.Text = "Exit";
+			this.exitTmi.Click += new System.EventHandler(this.ExitTmiClick);
 			// 
 			// editToolStripMenuItem
 			// 
@@ -554,7 +645,7 @@ namespace vzWordyHoster
 			// optionsTmi
 			// 
 			this.optionsTmi.Name = "optionsTmi";
-			this.optionsTmi.Size = new System.Drawing.Size(125, 22);
+			this.optionsTmi.Size = new System.Drawing.Size(152, 22);
 			this.optionsTmi.Text = "Options...";
 			this.optionsTmi.Click += new System.EventHandler(this.OptionsTmiClick);
 			// 
@@ -619,6 +710,17 @@ namespace vzWordyHoster
 			this.ResumeLayout(false);
 			this.PerformLayout();
 		}
+		private System.Windows.Forms.ToolStripMenuItem exitTmi;
+		private System.Windows.Forms.ToolStripSeparator fileTss2;
+		private System.Windows.Forms.ToolStripMenuItem QeLoadWordsTmi;
+		private System.Windows.Forms.ToolStripMenuItem QeLoadTriviaTmi;
+		private System.Windows.Forms.ToolStripMenuItem QeCreateWordsTmi;
+		private System.Windows.Forms.ToolStripMenuItem QeCreateTriviaTmi;
+		private System.Windows.Forms.ToolStripMenuItem QeEditCurrentTmi;
+		private System.Windows.Forms.ToolStripMenuItem QeCreateTmi;
+		private System.Windows.Forms.ToolStripMenuItem QeLoadTmi;
+		private System.Windows.Forms.ToolStripMenuItem questionEditorTmi;
+		private System.Windows.Forms.ToolStripSeparator fileTss1;
 		private System.Windows.Forms.Button getAnswersBtn;
 		private System.Windows.Forms.ToolStripMenuItem macroLbxContextEdit;
 		private System.Windows.Forms.ToolStripMenuItem macroLbxContextDelete;

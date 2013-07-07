@@ -31,20 +31,24 @@ namespace vzWordyHoster
 	public partial class MainForm : Form
 	{
 		
-		public static string versionString = "v0.1_2013-07-02-0725";
+		public static string versionString = "v0.1_2013-07-07-0140";
 		public static bool acceptAnswersInEsp;
 		public static bool acceptAnswersInSpeech;
 		public static bool scrambleModeEvil;
+		public static bool scrambleReadDefinitions;
 		public static List<string> macroList = new List<string>();
 		public static string MACROFILE = "macros.txt";
 		public static string LOGFILE = "logfile.txt";
-		public static Int32 secondsPerDevilsDictLetter; // = 20;
+		public static Int32 secondsPerDevilsDictLetter;
+		public static Int32 secondsPerDevilsDictLetterChanged = 0;
 		
 		private string devilsDictInfiniteFolder;
 		private string devilsDictFiniteFile;
 		private string scrambleInfiniteFolder;
 		private string scrambleFiniteFile;
 		private string triviaFiniteFile;
+		//private string fullQuestionText;
+		private string SCRAMBLEINTRODUCTION = "The scramble is: ";
 		
 		private Int32 questionsInGame;
 		private long questionsInInfiniteFolder;
@@ -83,6 +87,7 @@ namespace vzWordyHoster
 			acceptAnswersInEsp = Convert.ToBoolean( ConfigurationManager.AppSettings["acceptAnswersInEsp"] );
 			acceptAnswersInSpeech = Convert.ToBoolean( ConfigurationManager.AppSettings["acceptAnswersInSpeech"] );
 			scrambleModeEvil = Convert.ToBoolean( ConfigurationManager.AppSettings["scrambleModeEvil"] );
+			scrambleReadDefinitions = Convert.ToBoolean( ConfigurationManager.AppSettings["scrambleReadDefinitions"] );
 			devilsDictInfiniteFolder = ConfigurationManager.AppSettings["devilsDictInfiniteFolder"];
 			devilsDictFiniteFile = ConfigurationManager.AppSettings["devilsDictFiniteFile"];
 			scrambleInfiniteFolder = ConfigurationManager.AppSettings["scrambleInfiniteFolder"];
@@ -134,6 +139,10 @@ namespace vzWordyHoster
 			scrambleInfiniteTmi.Enabled = true;
 			scrambleInfiniteTmi.Visible = true;
 			
+			questionEditorTmi.Enabled = false;
+			questionEditorTmi.Visible = false;
+		 	fileTss2.Enabled = false;
+			fileTss2.Visible = false;
 			
 			// Populate macros:
 			loadMacrosFromTextFile();
@@ -208,6 +217,10 @@ namespace vzWordyHoster
 					qHeaderTypeLbl.Text = "Type: D's Dict";
 					UpdateOptionsGrid();
 					thisQuestionTimerWarnings.Clear();
+					if (secondsPerDevilsDictLetterChanged != 0) {
+						secondsPerDevilsDictLetter = secondsPerDevilsDictLetterChanged;
+						secondsPerDevilsDictLetterChanged = 0;
+					}
 					thisQuestionTimerWarnings.AddRange(thisGame.getWarningsFromAnswerLength(secondsPerDevilsDictLetter) );
 					questionPgb.Maximum = secondsPerDevilsDictLetter;
 					questionPgb.Value = secondsPerDevilsDictLetter;
@@ -304,30 +317,22 @@ namespace vzWordyHoster
         		announceInitialisation();
         	}
         	if (thisGame != null) {
-        		string fullQuestionText = "";
-        		switch (thisGame.GameType) {
-        			case "TRIVIA":
-        			case "DEVILSDICT":
-        				fullQuestionText = thisGame.ThisQuestionText;
-        				break;
-        			case "SCRAMBLE": 
-        				fullQuestionText = "Definition: " + thisGame.ThisQuestionText;
-        				break;
-        			default:
-        				fullQuestionText = thisGame.ThisQuestionText;
-        				break;
-        		}// switch
+
         		if (thisQuestionHasAlreadyBeenRead) {
+        			waSay("Repeating " + thisQuestionNumberDescriptor);
+        			
+        		} else {  // We're reading this question for the first time:
         			waSay(thisQuestionNumberDescriptor);
-        			waSayChunked("Repeating: " + fullQuestionText);
-        		} else {
-	        		waSay(thisQuestionNumberDescriptor);
-					waSayChunked(fullQuestionText);       
-					thisQuestionFirstChunk = chunkStringFixedLength(fullQuestionText, CHUNKSIZE).ToList()[0];
+        			thisQuestionFirstChunk = thisQuestionNumberDescriptor;
+					// Be careful about tinkering with thisQuestionFirstChunk, as it is passed to MarkAnswers,
+					// which uses it to set the point in the chat log from which answers are marked.								
         		}// if...else...
+        		
+        		//waSayChunked(fullQuestionText);
 
 				switch (thisGame.GameType) {
 					case "TRIVIA":
+        				waSayChunked(thisGame.ThisQuestionText);
 						List<string> optionTexts = getCurrentOptionTextsList();
 						foreach (string optionText in optionTexts) {
 							waSay(optionText);
@@ -339,6 +344,7 @@ namespace vzWordyHoster
 						}
 						break;
 					case "DEVILSDICT":
+						waSayChunked("DEFINITION: " + thisGame.ThisQuestionText);
 						string lettersHelp = " [" + thisGame.GetCountOfAlphabeticalsInAnswer().ToString() + " letters]";
 						// Replace * (used by hoster for mask char) with the VZ circle char, which looks ugly in the hoster but good in VZ:
 						string vzFriendlyMask = thisGame.ThisMaskedWord.ToUpper().Replace(thisGame.MASKINGCHAR, thisGame.VZMASKINGCHAR);
@@ -348,7 +354,10 @@ namespace vzWordyHoster
 						}
 						break;
 					case "SCRAMBLE":
-						waSay("The scramble is: " + thisGame.ThisScramble);
+						if (scrambleReadDefinitions) {
+							waSayChunked("DEFINITION: " + thisGame.ThisQuestionText);
+        				}
+						waSay(SCRAMBLEINTRODUCTION + thisGame.ThisScramble);
 						if(thisQuestionHasAlreadyBeenRead) {
 							announceSecondsRemaining();
 						} else {
@@ -363,9 +372,15 @@ namespace vzWordyHoster
 				
 				inviteAnswers();
 				if (!thisQuestionHasAlreadyBeenRead) {
-					if (thisGame.GameType == "TRIVIA") {
-						autoGetTmr.Enabled = true;  // Start getting chat/ESP text automatically
+					switch (thisGame.GameType) {
+						case "TRIVIA":
+						case "SCRAMBLE":
+							autoGetTmr.Enabled = true;  // Start getting chat/ESP text automatically
+							break;
+						default:
+							break;
 					}
+
 					questionTmr.Enabled = true; // Start the question duration timer
 					thisQuestionSecondsElapsed = 0;
 					thisLetterSecondsElapsed = 0;
@@ -1079,10 +1094,31 @@ namespace vzWordyHoster
 		
 		void MainFormFormClosing(object sender, FormClosingEventArgs e)
 		{
-			waWrapup();
+			if (MessageBox.Show("Are you sure you want to exit?", "Exit", MessageBoxButtons.YesNo) == DialogResult.Yes) {
+				waWrapup();
+				for (double myOpacity = 1.00; myOpacity >= 0.04; myOpacity = myOpacity - 0.02) {
+					this.Opacity = myOpacity;
+					this.Refresh();
+					System.Threading.Thread.Sleep(20);
+				}
+			} else {
+				e.Cancel = true;	
+			}
+
+		}
+
+		
+		void QeCreateWordsTmiClick(object sender, EventArgs e)
+		{
+			QuestionEditorWordsForm myQuestionEditorWordsForm = new QuestionEditorWordsForm();
+            myQuestionEditorWordsForm.ShowDialog();
 		}
 		
-
+		void ExitTmiClick(object sender, EventArgs e)
+		{
+			this.Close();
+		}
+		
 	}// class MainForm
 	
 	

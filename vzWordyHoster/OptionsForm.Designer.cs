@@ -45,8 +45,9 @@ namespace vzWordyHoster
 			this.ddSecondsPerLetterUpd = new System.Windows.Forms.NumericUpDown();
 			this.scrambleQuestionsGrp = new System.Windows.Forms.GroupBox();
 			this.scrambleModeGrp = new System.Windows.Forms.GroupBox();
-			this.scrambleModeEasyRad = new System.Windows.Forms.RadioButton();
 			this.scrambleModeEvilRad = new System.Windows.Forms.RadioButton();
+			this.scrambleModeEasyRad = new System.Windows.Forms.RadioButton();
+			this.scrambleReadDefinitionsChb = new System.Windows.Forms.CheckBox();
 			this.AnswersGrp.SuspendLayout();
 			this.ddQuestionsGrp.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.ddSecondsPerLetterUpd)).BeginInit();
@@ -136,10 +137,11 @@ namespace vzWordyHoster
 			// 
 			// scrambleQuestionsGrp
 			// 
+			this.scrambleQuestionsGrp.Controls.Add(this.scrambleReadDefinitionsChb);
 			this.scrambleQuestionsGrp.Controls.Add(this.scrambleModeGrp);
 			this.scrambleQuestionsGrp.Location = new System.Drawing.Point(13, 82);
 			this.scrambleQuestionsGrp.Name = "scrambleQuestionsGrp";
-			this.scrambleQuestionsGrp.Size = new System.Drawing.Size(254, 82);
+			this.scrambleQuestionsGrp.Size = new System.Drawing.Size(254, 107);
 			this.scrambleQuestionsGrp.TabIndex = 5;
 			this.scrambleQuestionsGrp.TabStop = false;
 			this.scrambleQuestionsGrp.Text = "Word Scramble parameters";
@@ -155,6 +157,16 @@ namespace vzWordyHoster
 			this.scrambleModeGrp.TabStop = false;
 			this.scrambleModeGrp.Text = "Scramble mode";
 			// 
+			// scrambleModeEvilRad
+			// 
+			this.scrambleModeEvilRad.Location = new System.Drawing.Point(83, 20);
+			this.scrambleModeEvilRad.Name = "scrambleModeEvilRad";
+			this.scrambleModeEvilRad.Size = new System.Drawing.Size(65, 24);
+			this.scrambleModeEvilRad.TabIndex = 1;
+			this.scrambleModeEvilRad.TabStop = true;
+			this.scrambleModeEvilRad.Text = "Evil";
+			this.scrambleModeEvilRad.UseVisualStyleBackColor = true;
+			// 
 			// scrambleModeEasyRad
 			// 
 			this.scrambleModeEasyRad.Location = new System.Drawing.Point(7, 20);
@@ -165,15 +177,14 @@ namespace vzWordyHoster
 			this.scrambleModeEasyRad.Text = "Easy";
 			this.scrambleModeEasyRad.UseVisualStyleBackColor = true;
 			// 
-			// scrambleModeEvilRad
+			// scrambleReadDefinitionsChb
 			// 
-			this.scrambleModeEvilRad.Location = new System.Drawing.Point(83, 20);
-			this.scrambleModeEvilRad.Name = "scrambleModeEvilRad";
-			this.scrambleModeEvilRad.Size = new System.Drawing.Size(65, 24);
-			this.scrambleModeEvilRad.TabIndex = 1;
-			this.scrambleModeEvilRad.TabStop = true;
-			this.scrambleModeEvilRad.Text = "Evil";
-			this.scrambleModeEvilRad.UseVisualStyleBackColor = true;
+			this.scrambleReadDefinitionsChb.Location = new System.Drawing.Point(7, 77);
+			this.scrambleReadDefinitionsChb.Name = "scrambleReadDefinitionsChb";
+			this.scrambleReadDefinitionsChb.Size = new System.Drawing.Size(104, 24);
+			this.scrambleReadDefinitionsChb.TabIndex = 1;
+			this.scrambleReadDefinitionsChb.Text = "Read definitions";
+			this.scrambleReadDefinitionsChb.UseVisualStyleBackColor = true;
 			// 
 			// OptionsForm
 			// 
@@ -198,6 +209,7 @@ namespace vzWordyHoster
 			this.scrambleModeGrp.ResumeLayout(false);
 			this.ResumeLayout(false);
 		}
+		private System.Windows.Forms.CheckBox scrambleReadDefinitionsChb;
 		private System.Windows.Forms.RadioButton scrambleModeEvilRad;
 		private System.Windows.Forms.GroupBox scrambleModeGrp;
 		private System.Windows.Forms.RadioButton scrambleModeEasyRad;
