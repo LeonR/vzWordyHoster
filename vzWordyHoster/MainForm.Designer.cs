@@ -102,6 +102,7 @@ namespace vzWordyHoster
 			this.questionTmr = new System.Windows.Forms.Timer(this.components);
 			this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
 			this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
+			this.helpManualTmi = new System.Windows.Forms.ToolStripMenuItem();
 			this.playersPnl.SuspendLayout();
 			this.macroLbxCms.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.playersDgv)).BeginInit();
@@ -502,14 +503,14 @@ namespace vzWordyHoster
 			// triviaFiniteTmi
 			// 
 			this.triviaFiniteTmi.Name = "triviaFiniteTmi";
-			this.triviaFiniteTmi.Size = new System.Drawing.Size(152, 22);
+			this.triviaFiniteTmi.Size = new System.Drawing.Size(120, 22);
 			this.triviaFiniteTmi.Text = "Finite...";
 			this.triviaFiniteTmi.Click += new System.EventHandler(this.TriviaFiniteTmiClick);
 			// 
 			// triviaInfiniteTmi
 			// 
 			this.triviaInfiniteTmi.Name = "triviaInfiniteTmi";
-			this.triviaInfiniteTmi.Size = new System.Drawing.Size(152, 22);
+			this.triviaInfiniteTmi.Size = new System.Drawing.Size(120, 22);
 			this.triviaInfiniteTmi.Text = "Infinite...";
 			// 
 			// devilsDictTmi
@@ -524,14 +525,14 @@ namespace vzWordyHoster
 			// devilsDictFiniteTmi
 			// 
 			this.devilsDictFiniteTmi.Name = "devilsDictFiniteTmi";
-			this.devilsDictFiniteTmi.Size = new System.Drawing.Size(152, 22);
+			this.devilsDictFiniteTmi.Size = new System.Drawing.Size(120, 22);
 			this.devilsDictFiniteTmi.Text = "Finite...";
 			this.devilsDictFiniteTmi.Click += new System.EventHandler(this.DevilsDictFiniteTmiClick);
 			// 
 			// devilsDictInfiniteTmi
 			// 
 			this.devilsDictInfiniteTmi.Name = "devilsDictInfiniteTmi";
-			this.devilsDictInfiniteTmi.Size = new System.Drawing.Size(152, 22);
+			this.devilsDictInfiniteTmi.Size = new System.Drawing.Size(120, 22);
 			this.devilsDictInfiniteTmi.Text = "Infinite...";
 			this.devilsDictInfiniteTmi.Click += new System.EventHandler(this.DevilsDictInfiniteTmiClick);
 			// 
@@ -547,14 +548,14 @@ namespace vzWordyHoster
 			// scrambleFiniteTmi
 			// 
 			this.scrambleFiniteTmi.Name = "scrambleFiniteTmi";
-			this.scrambleFiniteTmi.Size = new System.Drawing.Size(152, 22);
+			this.scrambleFiniteTmi.Size = new System.Drawing.Size(120, 22);
 			this.scrambleFiniteTmi.Text = "Finite...";
 			this.scrambleFiniteTmi.Click += new System.EventHandler(this.ScrambleFiniteTmiClick);
 			// 
 			// scrambleInfiniteTmi
 			// 
 			this.scrambleInfiniteTmi.Name = "scrambleInfiniteTmi";
-			this.scrambleInfiniteTmi.Size = new System.Drawing.Size(152, 22);
+			this.scrambleInfiniteTmi.Size = new System.Drawing.Size(120, 22);
 			this.scrambleInfiniteTmi.Text = "Infinite...";
 			this.scrambleInfiniteTmi.Click += new System.EventHandler(this.ScrambleInfiniteTmiClick);
 			// 
@@ -645,13 +646,14 @@ namespace vzWordyHoster
 			// optionsTmi
 			// 
 			this.optionsTmi.Name = "optionsTmi";
-			this.optionsTmi.Size = new System.Drawing.Size(152, 22);
+			this.optionsTmi.Size = new System.Drawing.Size(125, 22);
 			this.optionsTmi.Text = "Options...";
 			this.optionsTmi.Click += new System.EventHandler(this.OptionsTmiClick);
 			// 
 			// helpTmi
 			// 
 			this.helpTmi.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+									this.helpManualTmi,
 									this.aboutTmi});
 			this.helpTmi.Name = "helpTmi";
 			this.helpTmi.Size = new System.Drawing.Size(44, 20);
@@ -660,7 +662,7 @@ namespace vzWordyHoster
 			// aboutTmi
 			// 
 			this.aboutTmi.Name = "aboutTmi";
-			this.aboutTmi.Size = new System.Drawing.Size(116, 22);
+			this.aboutTmi.Size = new System.Drawing.Size(152, 22);
 			this.aboutTmi.Text = "About...";
 			this.aboutTmi.Click += new System.EventHandler(this.AboutTmiClick);
 			// 
@@ -677,6 +679,13 @@ namespace vzWordyHoster
 			// openFileDialog1
 			// 
 			this.openFileDialog1.FileName = "openFileDialog1";
+			// 
+			// helpManualTmi
+			// 
+			this.helpManualTmi.Name = "helpManualTmi";
+			this.helpManualTmi.Size = new System.Drawing.Size(152, 22);
+			this.helpManualTmi.Text = "Manual (wiki)";
+			this.helpManualTmi.Click += new System.EventHandler(this.HelpManualTmiClick);
 			// 
 			// MainForm
 			// 
@@ -710,6 +719,7 @@ namespace vzWordyHoster
 			this.ResumeLayout(false);
 			this.PerformLayout();
 		}
+		private System.Windows.Forms.ToolStripMenuItem helpManualTmi;
 		private System.Windows.Forms.ToolStripMenuItem exitTmi;
 		private System.Windows.Forms.ToolStripSeparator fileTss2;
 		private System.Windows.Forms.ToolStripMenuItem QeLoadWordsTmi;

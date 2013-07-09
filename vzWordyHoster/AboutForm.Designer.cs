@@ -36,15 +36,17 @@ namespace vzWordyHoster
 		/// </summary>
 		private void InitializeComponent()
 		{
-			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AboutForm));
 			this.titleLbl = new System.Windows.Forms.Label();
-			this.pictureBox1 = new System.Windows.Forms.PictureBox();
+			this.monkBodyPic = new System.Windows.Forms.PictureBox();
 			this.versionLbl = new System.Windows.Forms.Label();
 			this.descriptionLbl = new System.Windows.Forms.Label();
 			this.okBtn = new System.Windows.Forms.Button();
 			this.authorLbl = new System.Windows.Forms.Label();
 			this.urlLbl = new System.Windows.Forms.Label();
-			((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+			this.potatoHeadPic = new System.Windows.Forms.PictureBox();
+			this.hosterSourceLnk = new System.Windows.Forms.LinkLabel();
+			((System.ComponentModel.ISupportInitialize)(this.monkBodyPic)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.potatoHeadPic)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// titleLbl
@@ -56,15 +58,15 @@ namespace vzWordyHoster
 			this.titleLbl.TabIndex = 0;
 			this.titleLbl.Text = "vzWordyHoster";
 			// 
-			// pictureBox1
+			// monkBodyPic
 			// 
-			this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
-			this.pictureBox1.InitialImage = null;
-			this.pictureBox1.Location = new System.Drawing.Point(216, 9);
-			this.pictureBox1.Name = "pictureBox1";
-			this.pictureBox1.Size = new System.Drawing.Size(120, 215);
-			this.pictureBox1.TabIndex = 1;
-			this.pictureBox1.TabStop = false;
+			this.monkBodyPic.Image = global::vzWordyHoster.Bitmaps.vz_monk_body_alpha;
+			this.monkBodyPic.InitialImage = null;
+			this.monkBodyPic.Location = new System.Drawing.Point(245, 60);
+			this.monkBodyPic.Name = "monkBodyPic";
+			this.monkBodyPic.Size = new System.Drawing.Size(77, 155);
+			this.monkBodyPic.TabIndex = 1;
+			this.monkBodyPic.TabStop = false;
 			// 
 			// versionLbl
 			// 
@@ -106,15 +108,38 @@ namespace vzWordyHoster
 			this.urlLbl.Name = "urlLbl";
 			this.urlLbl.Size = new System.Drawing.Size(224, 41);
 			this.urlLbl.TabIndex = 6;
-			this.urlLbl.Text = "Find the source and binaries at:\r\nhttps://github.com/LeonR/vzWordyHoster\r\n";
+			this.urlLbl.Text = "Find the source and binaries at:";
+			// 
+			// potatoHeadPic
+			// 
+			this.potatoHeadPic.Image = global::vzWordyHoster.Bitmaps.vz_potatohead_flat_alpha;
+			this.potatoHeadPic.Location = new System.Drawing.Point(267, 25);
+			this.potatoHeadPic.Name = "potatoHeadPic";
+			this.potatoHeadPic.Size = new System.Drawing.Size(33, 43);
+			this.potatoHeadPic.TabIndex = 7;
+			this.potatoHeadPic.TabStop = false;
+			this.potatoHeadPic.MouseEnter += new System.EventHandler(this.PotatoHeadPicMouseEnter);
+			this.potatoHeadPic.MouseLeave += new System.EventHandler(this.PotatoHeadPicMouseLeave);
+			// 
+			// hosterSourceLnk
+			// 
+			this.hosterSourceLnk.Location = new System.Drawing.Point(17, 152);
+			this.hosterSourceLnk.Name = "hosterSourceLnk";
+			this.hosterSourceLnk.Size = new System.Drawing.Size(224, 23);
+			this.hosterSourceLnk.TabIndex = 8;
+			this.hosterSourceLnk.TabStop = true;
+			this.hosterSourceLnk.Text = "https://github.com/LeonR/vzWordyHoster";
+			this.hosterSourceLnk.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.HosterSourceLnkLinkClicked);
 			// 
 			// AboutForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(344, 232);
+			this.Controls.Add(this.hosterSourceLnk);
+			this.Controls.Add(this.potatoHeadPic);
 			this.Controls.Add(this.urlLbl);
-			this.Controls.Add(this.pictureBox1);
+			this.Controls.Add(this.monkBodyPic);
 			this.Controls.Add(this.authorLbl);
 			this.Controls.Add(this.okBtn);
 			this.Controls.Add(this.titleLbl);
@@ -126,15 +151,18 @@ namespace vzWordyHoster
 			this.Name = "AboutForm";
 			this.Text = "About vzWordyHoster";
 			this.Load += new System.EventHandler(this.AboutFormLoad);
-			((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.monkBodyPic)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.potatoHeadPic)).EndInit();
 			this.ResumeLayout(false);
 		}
+		private System.Windows.Forms.LinkLabel hosterSourceLnk;
+		private System.Windows.Forms.PictureBox potatoHeadPic;
 		private System.Windows.Forms.Label urlLbl;
 		private System.Windows.Forms.Label authorLbl;
 		private System.Windows.Forms.Button okBtn;
 		private System.Windows.Forms.Label descriptionLbl;
 		private System.Windows.Forms.Label versionLbl;
-		private System.Windows.Forms.PictureBox pictureBox1;
+		private System.Windows.Forms.PictureBox monkBodyPic;
 		private System.Windows.Forms.Label titleLbl;
 		
 		

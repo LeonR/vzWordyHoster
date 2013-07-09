@@ -479,7 +479,7 @@ namespace vzWordyHoster
 							break;
 					}// switch (gameType)
 					
-					if ( espRow["LastAnswer"].ToString().ToLower() == expectedAnswerString.ToLower() ) {
+					if ( espRow["LastAnswer"].ToString().ToLower().Trim() == expectedAnswerString.ToLower().Trim() ) {
 						// Current answer is correct:
 						marksToAward = getNextMark();
 						espRow["Marks"] = marksToAward;

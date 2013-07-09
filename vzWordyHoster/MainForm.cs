@@ -31,7 +31,7 @@ namespace vzWordyHoster
 	public partial class MainForm : Form
 	{
 		
-		public static string versionString = "v0.1_2013-07-07-0140";
+		public static string versionString = "v0.1_2013-07-09-0640";
 		public static bool acceptAnswersInEsp;
 		public static bool acceptAnswersInSpeech;
 		public static bool scrambleModeEvil;
@@ -1096,7 +1096,7 @@ namespace vzWordyHoster
 		{
 			if (MessageBox.Show("Are you sure you want to exit?", "Exit", MessageBoxButtons.YesNo) == DialogResult.Yes) {
 				waWrapup();
-				for (double myOpacity = 1.00; myOpacity >= 0.04; myOpacity = myOpacity - 0.02) {
+				for (double myOpacity = 1.00; myOpacity >= 0.08; myOpacity = myOpacity - 0.04) {
 					this.Opacity = myOpacity;
 					this.Refresh();
 					System.Threading.Thread.Sleep(20);
@@ -1119,6 +1119,11 @@ namespace vzWordyHoster
 			this.Close();
 		}
 		
+		
+		void HelpManualTmiClick(object sender, EventArgs e)
+		{
+			Process.Start("http://www.saytheword.org/spud/vzWordyHoster/redirect_to_manual.php");
+		}
 	}// class MainForm
 	
 	
