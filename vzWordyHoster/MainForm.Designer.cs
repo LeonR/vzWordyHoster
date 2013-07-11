@@ -44,6 +44,8 @@ namespace vzWordyHoster
 			this.macroLbxContextEdit = new System.Windows.Forms.ToolStripMenuItem();
 			this.macroLbxContextDelete = new System.Windows.Forms.ToolStripMenuItem();
 			this.playersDgv = new System.Windows.Forms.DataGridView();
+			this.playersDgvCms = new System.Windows.Forms.ContextMenuStrip(this.components);
+			this.playersDgvContextEditScore = new System.Windows.Forms.ToolStripMenuItem();
 			this.autoPilotChb = new System.Windows.Forms.CheckBox();
 			this.readScoresBtn = new System.Windows.Forms.Button();
 			this.debugPnl = new System.Windows.Forms.Panel();
@@ -97,15 +99,16 @@ namespace vzWordyHoster
 			this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.optionsTmi = new System.Windows.Forms.ToolStripMenuItem();
 			this.helpTmi = new System.Windows.Forms.ToolStripMenuItem();
+			this.helpManualTmi = new System.Windows.Forms.ToolStripMenuItem();
 			this.aboutTmi = new System.Windows.Forms.ToolStripMenuItem();
 			this.autoGetTmr = new System.Windows.Forms.Timer(this.components);
 			this.questionTmr = new System.Windows.Forms.Timer(this.components);
 			this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
 			this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
-			this.helpManualTmi = new System.Windows.Forms.ToolStripMenuItem();
 			this.playersPnl.SuspendLayout();
 			this.macroLbxCms.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.playersDgv)).BeginInit();
+			this.playersDgvCms.SuspendLayout();
 			this.debugPnl.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.commsBufferDgv)).BeginInit();
 			this.leftPnl.SuspendLayout();
@@ -171,11 +174,30 @@ namespace vzWordyHoster
 			this.playersDgv.AllowUserToDeleteRows = false;
 			this.playersDgv.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
 			this.playersDgv.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+			this.playersDgv.ContextMenuStrip = this.playersDgvCms;
 			this.playersDgv.Location = new System.Drawing.Point(6, 0);
+			this.playersDgv.MultiSelect = false;
 			this.playersDgv.Name = "playersDgv";
 			this.playersDgv.ReadOnly = true;
+			this.playersDgv.RowHeadersVisible = false;
+			this.playersDgv.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
 			this.playersDgv.Size = new System.Drawing.Size(350, 326);
 			this.playersDgv.TabIndex = 0;
+			// 
+			// playersDgvCms
+			// 
+			this.playersDgvCms.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+									this.playersDgvContextEditScore});
+			this.playersDgvCms.Name = "playersDgvCms";
+			this.playersDgvCms.Size = new System.Drawing.Size(153, 48);
+			this.playersDgvCms.Opening += new System.ComponentModel.CancelEventHandler(this.PlayersDgvCmsOpening);
+			// 
+			// playersDgvContextEditScore
+			// 
+			this.playersDgvContextEditScore.Name = "playersDgvContextEditScore";
+			this.playersDgvContextEditScore.Size = new System.Drawing.Size(152, 22);
+			this.playersDgvContextEditScore.Text = "Edit score...";
+			this.playersDgvContextEditScore.Click += new System.EventHandler(this.PlayersDgvContextEditScoreClick);
 			// 
 			// autoPilotChb
 			// 
@@ -659,10 +681,17 @@ namespace vzWordyHoster
 			this.helpTmi.Size = new System.Drawing.Size(44, 20);
 			this.helpTmi.Text = "Help";
 			// 
+			// helpManualTmi
+			// 
+			this.helpManualTmi.Name = "helpManualTmi";
+			this.helpManualTmi.Size = new System.Drawing.Size(146, 22);
+			this.helpManualTmi.Text = "Manual (wiki)";
+			this.helpManualTmi.Click += new System.EventHandler(this.HelpManualTmiClick);
+			// 
 			// aboutTmi
 			// 
 			this.aboutTmi.Name = "aboutTmi";
-			this.aboutTmi.Size = new System.Drawing.Size(152, 22);
+			this.aboutTmi.Size = new System.Drawing.Size(146, 22);
 			this.aboutTmi.Text = "About...";
 			this.aboutTmi.Click += new System.EventHandler(this.AboutTmiClick);
 			// 
@@ -679,13 +708,6 @@ namespace vzWordyHoster
 			// openFileDialog1
 			// 
 			this.openFileDialog1.FileName = "openFileDialog1";
-			// 
-			// helpManualTmi
-			// 
-			this.helpManualTmi.Name = "helpManualTmi";
-			this.helpManualTmi.Size = new System.Drawing.Size(152, 22);
-			this.helpManualTmi.Text = "Manual (wiki)";
-			this.helpManualTmi.Click += new System.EventHandler(this.HelpManualTmiClick);
 			// 
 			// MainForm
 			// 
@@ -706,6 +728,7 @@ namespace vzWordyHoster
 			this.playersPnl.ResumeLayout(false);
 			this.macroLbxCms.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.playersDgv)).EndInit();
+			this.playersDgvCms.ResumeLayout(false);
 			this.debugPnl.ResumeLayout(false);
 			this.debugPnl.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.commsBufferDgv)).EndInit();
@@ -719,6 +742,8 @@ namespace vzWordyHoster
 			this.ResumeLayout(false);
 			this.PerformLayout();
 		}
+		private System.Windows.Forms.ToolStripMenuItem playersDgvContextEditScore;
+		private System.Windows.Forms.ContextMenuStrip playersDgvCms;
 		private System.Windows.Forms.ToolStripMenuItem helpManualTmi;
 		private System.Windows.Forms.ToolStripMenuItem exitTmi;
 		private System.Windows.Forms.ToolStripSeparator fileTss2;

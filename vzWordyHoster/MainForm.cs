@@ -40,7 +40,7 @@ namespace vzWordyHoster
 		public static string MACROFILE = "macros.txt";
 		public static string LOGFILE = "logfile.txt";
 		public static Int32 secondsPerDevilsDictLetter;
-		public static Int32 secondsPerDevilsDictLetterChanged = 0;
+		public static Int32 secondsPerDevilsDictLetterChanged = 0; // The new value if changed in the Options window. Only used when we move to the next question.
 		
 		private string devilsDictInfiniteFolder;
 		private string devilsDictFiniteFile;
@@ -971,7 +971,7 @@ namespace vzWordyHoster
 		
 		void TestBtnClick(object sender, EventArgs e)
 		{
-			//MessageBox.Show(thisGame.stringContainsNumbers("abc123DEF").ToString() );
+			//MessageBox.Show("This button does nothing!");
 		}
 		
 		//---------- END FORM CONTROL EVENTS ------------------------------------------------------------------------------
@@ -1123,6 +1123,49 @@ namespace vzWordyHoster
 		void HelpManualTmiClick(object sender, EventArgs e)
 		{
 			Process.Start("http://www.saytheword.org/spud/vzWordyHoster/redirect_to_manual.php");
+		}
+		
+
+		
+		void PlayersDgvContextEditScoreClick(object sender, EventArgs e) {
+			if (thisGame != null && playersTableLocalView.Count > 0) {
+				
+				DataGridViewRow selectedPlayerRow = playersDgv.SelectedRows[0];  // There will only be one because we have disabled multiselect in the DGV.
+				string selectedPlayerName = selectedPlayerRow.Cells["Player"].Value.ToString();
+				string selectedPlayerScoreStr = selectedPlayerRow.Cells["Score"].Value.ToString();
+				string dialogPrompt = "Change score for " + selectedPlayerName;
+				
+				string inputText = selectedPlayerScoreStr;
+				
+				if (GenericDialogs.InputBox("Edit score", dialogPrompt, ref inputText) == DialogResult.OK) {
+					Int32 newScoreInt;
+					if ( Int32.TryParse(inputText, out newScoreInt) && thisGame.amendScore(selectedPlayerName, newScoreInt ) ) {
+						UpdatePlayersGrid();
+						waSay(hostAvatarName + " has amended " + selectedPlayerName + "'s score to " + newScoreInt.ToString() + "." );
+					}  else {
+						MessageBox.Show("There was a problem updating that player's score.");
+					}
+				}
+				
+				// TODO: Now add code in Game.cs to change the score in playersTable, then refresh the view.
+				
+				
+			
+			} else { // Something is wrong
+				if (thisGame == null) {
+					MessageBox.Show("You can't edit any players because no game has been started yet.");	
+				} else {
+					MessageBox.Show("There are no players to edit.");
+				}	
+			}
+		}// PlayersDgvContextEditScoreClick
+		
+		void PlayersDgvCmsOpening(object sender, System.ComponentModel.CancelEventArgs e)
+		{
+			// If no rows are selected, and there are rows, select the first. TODO: Select the one right-clicked.
+			if (playersDgv.SelectedRows.Count == 0 && playersDgv.Rows.Count > 0) {
+				playersDgv.Rows[0].Selected = true;
+			}
 		}
 	}// class MainForm
 	

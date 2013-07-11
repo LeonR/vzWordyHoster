@@ -55,6 +55,7 @@
       <DependentUpon>Bitmaps.resx</DependentUpon>
       <AutoGen>True</AutoGen>
     </Compile>
+    <Compile Include="GenericDialogs.cs" />
     <Compile Include="FileUtils.cs" />
     <Compile Include="QuestionEditorWordsForm.cs" />
     <Compile Include="QuestionEditorWordsForm.Designer.cs">

@@ -189,6 +189,17 @@ namespace vzWordyHoster
 			}
 		}
 		
+		public bool amendScore(string player, Int32 newScore) {
+			if ( playersTable.Rows.Contains(player) ) {
+				DataRow playerRow;
+				playerRow = playersTable.Rows.Find(player);
+				playerRow["Score"] = newScore;
+				return true;
+			} else {
+				return false;
+			}
+		}
+		
 		public Int32 GetCountOfAlphabeticalsInAnswer() { 
 			Int32 alphaCount = 0;
 			for (Int32 charCounter = 0; charCounter < thisAnswerText.Length; charCounter++) {

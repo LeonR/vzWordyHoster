@@ -1,0 +1,61 @@
+2013-07-09_22:19:43 : Infinite SCRAMBLE game started. Loaded folder C:\Users\Leon\Documents\gcideXml containing 119661 words.
+2013-07-09_22:22:01 : End of round 21079
+2013-07-09_22:22:01 : No one scored in this round.
+2013-07-09_22:22:01 : The scores are: Spud: 0 || Kizza: 0
+2013-07-09_22:22:01 : --------------------------------------------------
+2013-07-09_22:22:42 : Finite TRIVIA game started. Loaded file C:\Users\Leon\Documents\SharpDevelop Projects\CSharp\vzWordyHoster\vzWordyHoster\bin\Debug\Trivia_sample.xml containing 3 questions.
+2013-07-10_20:02:33 : Finite DEVILSDICT game started. Loaded file C:\Users\Leon\Documents\SharpDevelop Projects\CSharp\vzWordyHoster\vzWordyHoster\bin\Debug\Devils_Dictionary_and_Word_Scramble_sample.xml containing 20 questions.
+2013-07-10_20:02:50 : End of round 1
+2013-07-10_20:02:50 : No one scored in this round.
+2013-07-10_20:02:50 : The scores are: Spud: 0
+2013-07-10_20:02:50 : --------------------------------------------------
+2013-07-10_20:03:18 : End of round 2
+2013-07-10_20:03:18 : Points scored in this round: Spud: 4
+2013-07-10_20:03:18 : The scores are: Spud: 4
+2013-07-10_20:03:18 : --------------------------------------------------
+2013-07-11_06:51:35 : Finite DEVILSDICT game started. Loaded file C:\Users\Leon\Documents\SharpDevelop Projects\CSharp\vzWordyHoster\vzWordyHoster\bin\Debug\Devils_Dictionary_and_Word_Scramble_sample.xml containing 20 questions.
+2013-07-11_07:06:58 : Finite SCRAMBLE game started. Loaded file C:\Users\Leon\Documents\SharpDevelop Projects\CSharp\vzWordyHoster\vzWordyHoster\bin\Debug\Devils_Dictionary_and_Word_Scramble_sample.xml containing 20 questions.
+2013-07-11_07:07:31 : End of round 1
+2013-07-11_07:07:31 : Points scored in this round: Spud: 4
+2013-07-11_07:07:31 : The scores are: Spud: 4
+2013-07-11_07:07:31 : --------------------------------------------------
+2013-07-11_07:13:44 : Finite SCRAMBLE game started. Loaded file C:\Users\Leon\Documents\SharpDevelop Projects\CSharp\vzWordyHoster\vzWordyHoster\bin\Debug\Devils_Dictionary_and_Word_Scramble_sample.xml containing 20 questions.
+2013-07-11_07:13:57 : End of round 1
+2013-07-11_07:13:57 : Points scored in this round: Spud: 4
+2013-07-11_07:13:57 : The scores are: Spud: 4
+2013-07-11_07:13:57 : --------------------------------------------------
+2013-07-11_07:17:58 : Finite SCRAMBLE game started. Loaded file C:\Users\Leon\Documents\SharpDevelop Projects\CSharp\vzWordyHoster\vzWordyHoster\bin\Debug\Devils_Dictionary_and_Word_Scramble_sample.xml containing 20 questions.
+2013-07-11_07:18:08 : End of round 1
+2013-07-11_07:18:08 : Points scored in this round: Spud: 4
+2013-07-11_07:18:08 : The scores are: Spud: 4
+2013-07-11_07:18:08 : --------------------------------------------------
+2013-07-11_07:20:20 : Finite SCRAMBLE game started. Loaded file C:\Users\Leon\Documents\SharpDevelop Projects\CSharp\vzWordyHoster\vzWordyHoster\bin\Debug\Devils_Dictionary_and_Word_Scramble_sample.xml containing 20 questions.
+2013-07-11_07:20:34 : End of round 1
+2013-07-11_07:20:34 : Points scored in this round: Spud: 4
+2013-07-11_07:20:34 : The scores are: Spud: 8
+2013-07-11_07:20:34 : --------------------------------------------------
+2013-07-11_07:22:14 : Finite SCRAMBLE game started. Loaded file C:\Users\Leon\Documents\SharpDevelop Projects\CSharp\vzWordyHoster\vzWordyHoster\bin\Debug\Devils_Dictionary_and_Word_Scramble_sample.xml containing 20 questions.
+2013-07-11_07:22:26 : End of round 1
+2013-07-11_07:22:26 : Points scored in this round: Spud: 4
+2013-07-11_07:22:26 : The scores are: Spud: 4
+2013-07-11_07:22:26 : --------------------------------------------------
+2013-07-11_07:37:52 : Finite SCRAMBLE game started. Loaded file C:\Users\Leon\Documents\SharpDevelop Projects\CSharp\vzWordyHoster\vzWordyHoster\bin\Debug\Devils_Dictionary_and_Word_Scramble_sample.xml containing 20 questions.
+2013-07-11_07:38:07 : End of round 1
+2013-07-11_07:38:07 : Points scored in this round: Spud: 4
+2013-07-11_07:38:07 : The scores are: Spud: 4
+2013-07-11_07:38:07 : --------------------------------------------------
+2013-07-11_07:50:15 : Finite SCRAMBLE game started. Loaded file C:\Users\Leon\Documents\SharpDevelop Projects\CSharp\vzWordyHoster\vzWordyHoster\bin\Debug\Devils_Dictionary_and_Word_Scramble_sample.xml containing 20 questions.
+2013-07-11_07:50:37 : End of round 1
+2013-07-11_07:50:37 : Points scored in this round: Spud: 4
+2013-07-11_07:50:37 : The scores are: Spud: 4
+2013-07-11_07:50:37 : --------------------------------------------------
+2013-07-11_21:32:27 : Finite DEVILSDICT game started. Loaded file C:\Users\Leon\Documents\SharpDevelop Projects\CSharp\vzWordyHoster\vzWordyHoster\bin\Debug\Devils_Dictionary_and_Word_Scramble_sample.xml containing 20 questions.
+2013-07-11_21:32:50 : End of round 1
+2013-07-11_21:32:50 : Points scored in this round: Spud: 4
+2013-07-11_21:32:50 : The scores are: Spud: 4
+2013-07-11_21:32:50 : --------------------------------------------------
+2013-07-11_21:39:25 : Finite SCRAMBLE game started. Loaded file C:\Users\Leon\Documents\SharpDevelop Projects\CSharp\vzWordyHoster\vzWordyHoster\bin\Debug\Devils_Dictionary_and_Word_Scramble_sample.xml containing 20 questions.
+2013-07-11_21:39:42 : End of round 1
+2013-07-11_21:39:42 : Points scored in this round: Spud: 4
+2013-07-11_21:39:42 : The scores are: Spud: 4
+2013-07-11_21:39:42 : --------------------------------------------------
