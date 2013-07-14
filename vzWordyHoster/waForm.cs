@@ -20,6 +20,7 @@ namespace vzWordyHoster
     public partial class MainForm : Form
     {
     	private static readonly string APP_NAME = "vzWordyHoster";
+    	public static string versionString = "v0.1_2013-07-14-1015";
     	public static readonly bool DEBUG_ON = false;    
     	public readonly Int32 CHUNKSIZE = 255;
     	

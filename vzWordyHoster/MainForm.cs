@@ -31,7 +31,6 @@ namespace vzWordyHoster
 	public partial class MainForm : Form
 	{
 		
-		public static string versionString = "v0.1_2013-07-09-0640";
 		public static bool acceptAnswersInEsp;
 		public static bool acceptAnswersInSpeech;
 		public static bool scrambleModeEvil;
