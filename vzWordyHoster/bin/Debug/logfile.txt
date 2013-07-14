@@ -59,3 +59,239 @@
 2013-07-11_21:39:42 : Points scored in this round: Spud: 4
 2013-07-11_21:39:42 : The scores are: Spud: 4
 2013-07-11_21:39:42 : --------------------------------------------------
+2013-07-13_15:57:54 : Finite DEVILSDICT game started. Loaded file C:\Users\Leon\Documents\VZ - Current DD and scramble game files\2013-07-13_DD_Egyptian_Encryption.xml containing 15 questions.
+2013-07-13_15:58:38 : End of round 1
+2013-07-13_15:58:38 : No one scored in this round.
+2013-07-13_15:58:38 : No one has scored yet.
+2013-07-13_15:58:38 : --------------------------------------------------
+2013-07-13_15:58:51 : End of round 2
+2013-07-13_15:58:51 : No one scored in this round.
+2013-07-13_15:58:51 : No one has scored yet.
+2013-07-13_15:58:51 : --------------------------------------------------
+2013-07-13_15:58:58 : End of round 3
+2013-07-13_15:58:58 : No one scored in this round.
+2013-07-13_15:58:58 : No one has scored yet.
+2013-07-13_15:58:58 : --------------------------------------------------
+2013-07-13_15:59:20 : End of round 4
+2013-07-13_15:59:20 : Points scored in this round: Spud: 4
+2013-07-13_15:59:20 : The scores are: Spud: 4
+2013-07-13_15:59:20 : --------------------------------------------------
+2013-07-13_15:59:35 : End of round 5
+2013-07-13_15:59:35 : No one scored in this round.
+2013-07-13_15:59:35 : The scores are: Spud: 4
+2013-07-13_15:59:35 : --------------------------------------------------
+2013-07-13_15:59:44 : End of round 6
+2013-07-13_15:59:44 : No one scored in this round.
+2013-07-13_15:59:44 : The scores are: Spud: 4
+2013-07-13_15:59:44 : --------------------------------------------------
+2013-07-13_15:59:55 : End of round 7
+2013-07-13_15:59:55 : No one scored in this round.
+2013-07-13_15:59:55 : The scores are: Spud: 4
+2013-07-13_15:59:55 : --------------------------------------------------
+2013-07-13_16:00:15 : End of round 8
+2013-07-13_16:00:15 : No one scored in this round.
+2013-07-13_16:00:15 : The scores are: Spud: 4
+2013-07-13_16:00:15 : --------------------------------------------------
+2013-07-13_16:00:32 : End of round 9
+2013-07-13_16:00:32 : No one scored in this round.
+2013-07-13_16:00:32 : The scores are: Spud: 4
+2013-07-13_16:00:32 : --------------------------------------------------
+2013-07-13_16:01:16 : End of round 10
+2013-07-13_16:01:16 : Points scored in this round: Spud: 4
+2013-07-13_16:01:16 : The scores are: Spud: 8
+2013-07-13_16:01:16 : --------------------------------------------------
+2013-07-13_16:01:35 : End of round 11
+2013-07-13_16:01:35 : No one scored in this round.
+2013-07-13_16:01:35 : The scores are: Spud: 8
+2013-07-13_16:01:35 : --------------------------------------------------
+2013-07-13_16:02:34 : End of round 12
+2013-07-13_16:02:34 : Points scored in this round: Spud: 4
+2013-07-13_16:02:34 : The scores are: Spud: 12
+2013-07-13_16:02:34 : --------------------------------------------------
+2013-07-13_16:02:48 : End of round 13
+2013-07-13_16:02:48 : No one scored in this round.
+2013-07-13_16:02:48 : The scores are: Spud: 12
+2013-07-13_16:02:48 : --------------------------------------------------
+2013-07-13_16:04:02 : End of round 14
+2013-07-13_16:04:02 : Points scored in this round: Spud: 4
+2013-07-13_16:04:02 : The scores are: Spud: 16
+2013-07-13_16:04:02 : --------------------------------------------------
+2013-07-13_16:05:13 : End of round 15
+2013-07-13_16:05:13 : Points scored in this round: Spud: 4
+2013-07-13_16:05:13 : The scores are: Spud: 20
+2013-07-13_16:05:13 : --------------------------------------------------
+2013-07-13_16:05:49 : End of round 15
+2013-07-13_16:05:49 : No one scored in this round.
+2013-07-13_16:05:49 : The scores are: Spud: 24
+2013-07-13_16:05:49 : --------------------------------------------------
+2013-07-13_16:06:22 : End of round 15
+2013-07-13_16:06:22 : Points scored in this round: Spud: 4
+2013-07-13_16:06:22 : The scores are: Spud: 32
+2013-07-13_16:06:22 : --------------------------------------------------
+2013-07-13_16:28:49 : Finite DEVILSDICT game started. Loaded file C:\Users\Leon\Documents\VZ - Current DD and scramble game files\2013-07-13_DD_Egyptian_Encryption.xml containing 15 questions.
+2013-07-13_16:29:05 : End of round 1
+2013-07-13_16:29:05 : No one scored in this round.
+2013-07-13_16:29:05 : No one has scored yet.
+2013-07-13_16:29:05 : --------------------------------------------------
+2013-07-13_16:31:22 : Finite DEVILSDICT game started. Loaded file C:\Users\Leon\Documents\VZ - Current DD and scramble game files\2013-07-13_DD_Egyptian_Encryption.xml containing 15 questions.
+2013-07-13_16:31:47 : End of round 1
+2013-07-13_16:31:47 : No one scored in this round.
+2013-07-13_16:31:47 : No one has scored yet.
+2013-07-13_16:31:47 : --------------------------------------------------
+2013-07-13_16:32:17 : End of round 2
+2013-07-13_16:32:17 : Points scored in this round: Spud: 4
+2013-07-13_16:32:17 : The scores are: Spud: 4
+2013-07-13_16:32:17 : --------------------------------------------------
+2013-07-13_16:53:59 : Finite DEVILSDICT game started. Loaded file C:\Users\Leon\Documents\VZ - Current DD and scramble game files\2013-07-13_DD_Egyptian_Encryption.xml containing 15 questions.
+2013-07-13_16:55:07 : Finite DEVILSDICT game started. Loaded file C:\Users\Leon\Documents\VZ - Current DD and scramble game files\2013-07-13_DD_Egyptian_Encryption.xml containing 15 questions.
+2013-07-13_17:07:48 : Finite DEVILSDICT game started. Loaded file C:\Users\Leon\Documents\VZ - Current DD and scramble game files\2013-07-13_DD_Egyptian_Encryption.xml containing 15 questions.
+2013-07-13_17:17:04 : End of round 1
+2013-07-13_17:17:04 : Points scored in this round: Raenbo: 4 || Serena: 3 || Sparkz: 2 || Geb: 1 || Danny Boy: 1 || Penny: 1
+2013-07-13_17:17:04 : The scores are: Raenbo: 4 || Serena: 3 || Sparkz: 2 || Geb: 1 || Danny Boy: 1 || Penny: 1 || Brat: 0
+2013-07-13_17:17:04 : --------------------------------------------------
+2013-07-13_17:19:46 : End of round 2
+2013-07-13_17:19:46 : Points scored in this round: Geb: 4 || Penny: 3 || Danny Boy: 2 || Raenbo: 1 || Sparkz: 1
+2013-07-13_17:19:46 : The scores are: Raenbo: 5 || Geb: 5 || Penny: 4 || Serena: 3 || Sparkz: 3 || Danny Boy: 3 || Brat: 0 || Wobsi: 0
+2013-07-13_17:19:46 : --------------------------------------------------
+2013-07-13_17:21:06 : End of round 3
+2013-07-13_17:21:06 : Points scored in this round: Penny: 4 || Geb: 3 || Raenbo: 2
+2013-07-13_17:21:06 : The scores are: Geb: 8 || Penny: 8 || Raenbo: 7 || Serena: 3 || Sparkz: 3 || Danny Boy: 3 || Brat: 0 || Wobsi: 0
+2013-07-13_17:21:06 : --------------------------------------------------
+2013-07-13_17:22:55 : End of round 4
+2013-07-13_17:22:55 : Points scored in this round: Geb: 4 || Serena: 3 || Penny: 2 || Wobsi: 1 || Raenbo: 1
+2013-07-13_17:22:55 : The scores are: Geb: 12 || Penny: 10 || Raenbo: 8 || Serena: 6 || Sparkz: 3 || Danny Boy: 3 || Wobsi: 1 || Brat: 0
+2013-07-13_17:22:55 : --------------------------------------------------
+2013-07-13_17:24:47 : End of round 5
+2013-07-13_17:24:47 : Points scored in this round: Raenbo: 4 || Penny: 3 || Geb: 2
+2013-07-13_17:24:47 : The scores are: Geb: 14 || Penny: 13 || Raenbo: 12 || Serena: 6 || Sparkz: 3 || Danny Boy: 3 || Wobsi: 1 || Brat: 0
+2013-07-13_17:24:47 : --------------------------------------------------
+2013-07-13_17:25:58 : End of round 6
+2013-07-13_17:25:58 : Points scored in this round: Geb: 4 || Wobsi: 3 || Raenbo: 2 || Serena: 1 || Penny: 1
+2013-07-13_17:25:58 : The scores are: Geb: 18 || Raenbo: 14 || Penny: 14 || Serena: 7 || Wobsi: 4 || Sparkz: 3 || Danny Boy: 3 || Brat: 0
+2013-07-13_17:25:58 : --------------------------------------------------
+2013-07-13_17:26:55 : End of round 7
+2013-07-13_17:26:55 : Points scored in this round: Penny: 4 || Danny Boy: 3 || Sparkz: 2 || Serena: 1 || Raenbo: 1 || Wobsi: 1 || Geb: 1
+2013-07-13_17:26:55 : The scores are: Geb: 19 || Penny: 18 || Raenbo: 15 || Serena: 8 || Danny Boy: 6 || Sparkz: 5 || Wobsi: 5 || Brat: 0
+2013-07-13_17:26:55 : --------------------------------------------------
+2013-07-13_17:28:14 : End of round 8
+2013-07-13_17:28:14 : Points scored in this round: Wobsi: 4 || Penny: 3 || Geb: 2 || Raenbo: 1 || Serena: 1
+2013-07-13_17:28:14 : The scores are: Geb: 21 || Penny: 21 || Raenbo: 16 || Serena: 9 || Wobsi: 9 || Danny Boy: 6 || Sparkz: 5 || Brat: 0
+2013-07-13_17:28:14 : --------------------------------------------------
+2013-07-13_17:39:37 : End of round 9
+2013-07-13_17:39:37 : Points scored in this round: Geb: 4
+2013-07-13_17:39:37 : The scores are: Geb: 25 || Penny: 21 || Raenbo: 16 || Serena: 9 || Wobsi: 9 || Danny Boy: 6 || Sparkz: 5 || Brat: 0
+2013-07-13_17:39:37 : --------------------------------------------------
+2013-07-13_17:42:22 : End of round 10
+2013-07-13_17:42:22 : Points scored in this round: Raenbo: 4
+2013-07-13_17:42:22 : The scores are: Geb: 25 || Penny: 21 || Raenbo: 20 || Serena: 9 || Wobsi: 9 || Danny Boy: 6 || Sparkz: 5 || Brat: 0
+2013-07-13_17:42:22 : --------------------------------------------------
+2013-07-13_17:43:44 : End of round 11
+2013-07-13_17:43:44 : Points scored in this round: Raenbo: 4
+2013-07-13_17:43:44 : The scores are: Geb: 25 || Raenbo: 24 || Penny: 21 || Serena: 9 || Wobsi: 9 || Danny Boy: 6 || Sparkz: 5 || Brat: 0
+2013-07-13_17:43:44 : --------------------------------------------------
+2013-07-13_17:47:04 : End of round 12
+2013-07-13_17:47:04 : Points scored in this round: Raenbo: 4 || Serena: 3
+2013-07-13_17:47:04 : The scores are: Raenbo: 28 || Geb: 25 || Penny: 21 || Serena: 12 || Wobsi: 9 || Danny Boy: 6 || Sparkz: 5 || Brat: 0
+2013-07-13_17:47:04 : --------------------------------------------------
+2013-07-13_17:48:52 : End of round 13
+2013-07-13_17:48:52 : Points scored in this round: Serena: 4 || Penny: 3 || Geb: 2
+2013-07-13_17:48:52 : The scores are: Raenbo: 28 || Geb: 27 || Penny: 24 || Serena: 16 || Wobsi: 9 || Danny Boy: 6 || Sparkz: 5 || Brat: 0
+2013-07-13_17:48:52 : --------------------------------------------------
+2013-07-13_17:50:52 : End of round 14
+2013-07-13_17:50:52 : Points scored in this round: Raenbo: 4 || Geb: 3 || Serena: 2
+2013-07-13_17:50:52 : The scores are: Raenbo: 32 || Geb: 30 || Penny: 24 || Serena: 18 || Wobsi: 9 || Danny Boy: 6 || Sparkz: 5 || Brat: 0
+2013-07-13_17:50:52 : --------------------------------------------------
+2013-07-13_17:56:46 : End of round 15
+2013-07-13_17:56:46 : Points scored in this round: Wobsi: 4 || Serena: 3
+2013-07-13_17:56:46 : The scores are: Raenbo: 32 || Geb: 30 || Penny: 24 || Serena: 21 || Wobsi: 13 || Danny Boy: 6 || Sparkz: 5 || Brat: 0
+2013-07-13_17:56:46 : --------------------------------------------------
+2013-07-14_07:11:13 : Finite SCRAMBLE game started. Loaded file C:\Users\Leon\Documents\VZ - Current DD and scramble game files\2013-07-13_DD_Egyptian_Encryption.xml containing 15 questions.
+2013-07-14_07:11:39 : Finite SCRAMBLE game started. Loaded file C:\Users\Leon\Documents\VZ - Current DD and scramble game files\2013-07-14_WS_Egyptian_Encryption.xml containing 15 questions.
+2013-07-14_07:12:12 : Finite DEVILSDICT game started. Loaded file C:\Users\Leon\Documents\VZ - Current DD and scramble game files\2013-07-13_DD_Egyptian_Encryption.xml containing 15 questions.
+2013-07-14_07:13:43 : End of round 1
+2013-07-14_07:13:43 : No one scored in this round.
+2013-07-14_07:13:43 : No one has scored yet.
+2013-07-14_07:13:43 : --------------------------------------------------
+2013-07-14_07:58:17 : Finite DEVILSDICT game started. Loaded file C:\Users\Leon\Documents\VZ - Current DD and scramble game files\2013-07-13_DD_Egyptian_Encryption.xml containing 15 questions.
+2013-07-14_07:59:03 : End of round 1
+2013-07-14_07:59:03 : Points scored in this round: Spud: 4
+2013-07-14_07:59:03 : The scores are: Spud: 4
+2013-07-14_07:59:03 : --------------------------------------------------
+2013-07-14_07:59:45 : End of round 2
+2013-07-14_07:59:45 : Points scored in this round: Spud: 4
+2013-07-14_07:59:45 : The scores are: Spud: 8
+2013-07-14_07:59:45 : --------------------------------------------------
+2013-07-14_08:00:51 : End of round 3
+2013-07-14_08:00:51 : Points scored in this round: Spud: 4
+2013-07-14_08:00:51 : The scores are: Spud: 12
+2013-07-14_08:00:51 : --------------------------------------------------
+2013-07-14_08:01:36 : End of round 4
+2013-07-14_08:01:36 : Points scored in this round: Spud: 4
+2013-07-14_08:01:36 : The scores are: Spud: 16
+2013-07-14_08:01:36 : --------------------------------------------------
+2013-07-14_08:02:04 : Finite SCRAMBLE game started. Loaded file C:\Users\Leon\Documents\VZ - Current DD and scramble game files\2013-07-14_WS_Egyptian_Encryption.xml containing 15 questions.
+2013-07-14_08:03:45 : End of round 15
+2013-07-14_08:03:45 : Points scored in this round: Spud: 4
+2013-07-14_08:03:45 : The scores are: Spud: 4
+2013-07-14_08:03:45 : --------------------------------------------------
+2013-07-14_08:18:33 : Finite SCRAMBLE game started. Loaded file C:\Users\Leon\Documents\VZ - Current DD and scramble game files\2013-07-14_WS_Egyptian_Encryption.xml containing 15 questions.
+2013-07-14_08:18:40 : End of round 1
+2013-07-14_08:18:40 : No one scored in this round.
+2013-07-14_08:18:40 : No one has scored yet.
+2013-07-14_08:18:40 : --------------------------------------------------
+2013-07-14_08:18:48 : End of round 2
+2013-07-14_08:18:48 : No one scored in this round.
+2013-07-14_08:18:48 : No one has scored yet.
+2013-07-14_08:18:48 : --------------------------------------------------
+2013-07-14_08:18:54 : End of round 3
+2013-07-14_08:18:54 : No one scored in this round.
+2013-07-14_08:18:54 : No one has scored yet.
+2013-07-14_08:18:54 : --------------------------------------------------
+2013-07-14_08:18:59 : End of round 4
+2013-07-14_08:18:59 : No one scored in this round.
+2013-07-14_08:18:59 : No one has scored yet.
+2013-07-14_08:18:59 : --------------------------------------------------
+2013-07-14_08:19:03 : End of round 5
+2013-07-14_08:19:03 : No one scored in this round.
+2013-07-14_08:19:03 : No one has scored yet.
+2013-07-14_08:19:03 : --------------------------------------------------
+2013-07-14_08:19:09 : End of round 6
+2013-07-14_08:19:09 : No one scored in this round.
+2013-07-14_08:19:09 : No one has scored yet.
+2013-07-14_08:19:09 : --------------------------------------------------
+2013-07-14_08:19:18 : End of round 7
+2013-07-14_08:19:18 : No one scored in this round.
+2013-07-14_08:19:18 : No one has scored yet.
+2013-07-14_08:19:18 : --------------------------------------------------
+2013-07-14_08:19:24 : End of round 8
+2013-07-14_08:19:24 : No one scored in this round.
+2013-07-14_08:19:24 : No one has scored yet.
+2013-07-14_08:19:24 : --------------------------------------------------
+2013-07-14_08:19:29 : End of round 9
+2013-07-14_08:19:29 : No one scored in this round.
+2013-07-14_08:19:29 : No one has scored yet.
+2013-07-14_08:19:29 : --------------------------------------------------
+2013-07-14_08:19:34 : End of round 10
+2013-07-14_08:19:34 : No one scored in this round.
+2013-07-14_08:19:34 : No one has scored yet.
+2013-07-14_08:19:34 : --------------------------------------------------
+2013-07-14_08:19:43 : End of round 11
+2013-07-14_08:19:43 : No one scored in this round.
+2013-07-14_08:19:43 : No one has scored yet.
+2013-07-14_08:19:43 : --------------------------------------------------
+2013-07-14_08:19:49 : End of round 12
+2013-07-14_08:19:49 : No one scored in this round.
+2013-07-14_08:19:49 : No one has scored yet.
+2013-07-14_08:19:49 : --------------------------------------------------
+2013-07-14_08:19:55 : End of round 13
+2013-07-14_08:19:55 : No one scored in this round.
+2013-07-14_08:19:55 : No one has scored yet.
+2013-07-14_08:19:55 : --------------------------------------------------
+2013-07-14_08:20:01 : End of round 14
+2013-07-14_08:20:01 : No one scored in this round.
+2013-07-14_08:20:01 : No one has scored yet.
+2013-07-14_08:20:01 : --------------------------------------------------
+2013-07-14_08:20:13 : End of round 15
+2013-07-14_08:20:13 : No one scored in this round.
+2013-07-14_08:20:13 : No one has scored yet.
+2013-07-14_08:20:13 : --------------------------------------------------

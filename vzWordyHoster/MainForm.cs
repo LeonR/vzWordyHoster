@@ -47,6 +47,7 @@ namespace vzWordyHoster
 		private string scrambleInfiniteFolder;
 		private string scrambleFiniteFile;
 		private string triviaFiniteFile;
+		
 		//private string fullQuestionText;
 		private string SCRAMBLEINTRODUCTION = "The scramble is: ";
 		
@@ -139,10 +140,11 @@ namespace vzWordyHoster
 			scrambleInfiniteTmi.Enabled = true;
 			scrambleInfiniteTmi.Visible = true;
 			
-			questionEditorTmi.Enabled = false;
-			questionEditorTmi.Visible = false;
-		 	fileTss2.Enabled = false;
-			fileTss2.Visible = false;
+			bool questionEditorOn = true;
+			questionEditorTmi.Enabled = questionEditorOn;
+			questionEditorTmi.Visible = questionEditorOn;
+		 	fileTss2.Enabled = questionEditorOn;
+			fileTss2.Visible = questionEditorOn;
 			
 			// Populate macros:
 			loadMacrosFromTextFile();
@@ -224,7 +226,7 @@ namespace vzWordyHoster
 					thisQuestionTimerWarnings.AddRange(thisGame.getWarningsFromAnswerLength(secondsPerDevilsDictLetter) );
 					questionPgb.Maximum = secondsPerDevilsDictLetter;
 					questionPgb.Value = secondsPerDevilsDictLetter;
-					autoGetTmr.Enabled = false;  // Because we're just going to get answers once per letter.
+					
 					break;
 				case "SCRAMBLE":
 					answerTbx.Text = thisGame.ThisAnswerText;
@@ -234,7 +236,7 @@ namespace vzWordyHoster
 					thisQuestionTimerWarnings.AddRange(questionTimerWarningsAt);
 					questionPgb.Maximum = secondsPerQuestion;
 					questionPgb.Value = secondsPerQuestion;
-					autoGetTmr.Enabled = false;  // Because we're just going to get answers once per letter.
+					
 					break;
 				default:
 					answerTbx.Text = "Unknown game type '" + thisGame.GameType + "' in LoadCurrentQuestionIntoForm()";
@@ -270,9 +272,10 @@ namespace vzWordyHoster
 		private void GetNextQuestion() {
         	//Debug.WriteLine("GetNextQuestion called");
 			if (thisGame != null) {
-        		waSay("---------- Next question! ----------");
-				thisGame.NextQuestion();
+        		
 				if (thisGame.GameSubtype == "INFINITE") {
+        			waSay("---------- Next question! ----------");
+					thisGame.NextQuestion();
 					infiniteQuestionCounter++;
 					switch (thisGame.GameType) {
 						case "DEVILSDICT":
@@ -282,7 +285,17 @@ namespace vzWordyHoster
 						default:
 							break;
 					}
-				}
+        		} else { // This is a FINITE game...
+        			thisQuestionXofY = "Question " + thisGame.ThisQuestionNumber.ToString() + " of " + questionsInGame.ToString();
+        			if ( thisGame.ThisQuestionNumber < questionsInGame ) {
+        				waSay("---------- Next question! ----------");
+						thisGame.NextQuestion();	
+        			} else {
+        			    waSay("That was the last question!");
+        			}
+        		}
+				
+				
 				LoadCurrentQuestionIntoForm();
 				if (autoPilotOn) {
 					ReadCurrentQuestion();
@@ -377,6 +390,9 @@ namespace vzWordyHoster
 						case "SCRAMBLE":
 							autoGetTmr.Enabled = true;  // Start getting chat/ESP text automatically
 							break;
+						case "DEVILSDICT":
+							autoGetTmr.Enabled = false; // Because we get answers just once per letter
+							break;
 						default:
 							break;
 					}
@@ -417,10 +433,11 @@ namespace vzWordyHoster
 				questionTrk.Enabled = true;
 				questionPgb.Value = 0;
 				questionPgb.Style = ProgressBarStyle.Continuous;
-        		thisGame.CloseQuestion();  // The position of this is crucial: it must be called before getESPsAndMarkThem(), or points will be doubled.
         		waSay(closureMessage);
-        		getESPsAndMarkThem();
-        		addCommsBufferItem("CLOSE", "", "");
+        		thisGame.CloseQuestion();  // This just sets the status of the question in Game to closed.
+        		                           //The position of this is crucial: it must be called before getESPsAndMarkThem(), or points will be doubled.
+        		getESPsAndMarkThem(); // Does a waGet, then a MARK, then an UPDATEPLAYERS
+        		addCommsBufferItem("CLOSE", "", ""); // This just reads the answer and scores, then gets next q
         	} else {
         		MessageBox.Show("You need to start a game first.", "vzWordyHoster");
         	}
@@ -695,6 +712,30 @@ namespace vzWordyHoster
 			}
 		}// loadScrambleFinite
 		
+		public void createDictionaryFile() {
+			if(hostAvatarName == "") {
+				announceInitialisation();
+			}
+			QuestionEditorWordsForm.editingDictionaryFile = selectNewFileName("New_dictionary_file.xml");
+			if (QuestionEditorWordsForm.editingDictionaryFile != "") {
+				QuestionEditorWordsForm.brandNewFile = true;
+				QuestionEditorWordsForm myQuestionEditorWordsForm = new QuestionEditorWordsForm();
+           		myQuestionEditorWordsForm.ShowDialog();
+			}
+
+		}// createDictionaryFile
+		
+		public string selectNewFileName(string defaultFileName) {
+			saveFileDialog1.FileName = defaultFileName;
+			DialogResult fdResult = saveFileDialog1.ShowDialog(); // Show the dialog.
+			if (fdResult == DialogResult.OK) {
+				return saveFileDialog1.FileName;
+			} else {
+				MessageBox.Show("There was a problem creating the file.");
+				return "";
+			}
+		}
+		
 		private void readScores() {
 			UpdatePlayersGrid();
 			// Iterate through playersTableLocalView.
@@ -910,8 +951,6 @@ namespace vzWordyHoster
 					
 					if ( (thisQuestionTimerWarnings.Count > 0) && (thisQuestionSecondsElapsed >= thisQuestionTimerWarnings.ElementAt(0) )) {
 						if (thisGame.ThisLettersAnswersHaveBeenMarked) {
-							// Only unmask another letter if we have not already awarded 1st, 2nd and 3rd position points:
-							//if (!thisGame.Awarded3rd) {
 							// Only unmask another letter if we have not already awarded 1st (i.e. at least one person has found the word):
 							if (!thisGame.Awarded1st) {
 								thisGame.UnmaskAnother();
@@ -1110,8 +1149,7 @@ namespace vzWordyHoster
 		
 		void QeCreateWordsTmiClick(object sender, EventArgs e)
 		{
-			QuestionEditorWordsForm myQuestionEditorWordsForm = new QuestionEditorWordsForm();
-            myQuestionEditorWordsForm.ShowDialog();
+			createDictionaryFile();
 		}
 		
 		void ExitTmiClick(object sender, EventArgs e)
@@ -1139,7 +1177,7 @@ namespace vzWordyHoster
 				
 				if (GenericDialogs.InputBox("Edit score", dialogPrompt, ref inputText) == DialogResult.OK) {
 					Int32 newScoreInt;
-					if ( Int32.TryParse(inputText, out newScoreInt) && thisGame.amendScore(selectedPlayerName, newScoreInt ) ) {
+					if ( Int32.TryParse(inputText, out newScoreInt) && newScoreInt <= 32000 && thisGame.amendScore(selectedPlayerName, newScoreInt ) ) {
 						UpdatePlayersGrid();
 						waSay(hostAvatarName + " has amended " + selectedPlayerName + "'s score to " + newScoreInt.ToString() + "." );
 					}  else {

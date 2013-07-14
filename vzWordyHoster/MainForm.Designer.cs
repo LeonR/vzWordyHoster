@@ -105,6 +105,7 @@ namespace vzWordyHoster
 			this.questionTmr = new System.Windows.Forms.Timer(this.components);
 			this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
 			this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
+			this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
 			this.playersPnl.SuspendLayout();
 			this.macroLbxCms.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.playersDgv)).BeginInit();
@@ -608,14 +609,14 @@ namespace vzWordyHoster
 			// QeCreateTriviaTmi
 			// 
 			this.QeCreateTriviaTmi.Name = "QeCreateTriviaTmi";
-			this.QeCreateTriviaTmi.Size = new System.Drawing.Size(163, 22);
-			this.QeCreateTriviaTmi.Text = "Trivia file";
+			this.QeCreateTriviaTmi.Size = new System.Drawing.Size(156, 22);
+			this.QeCreateTriviaTmi.Text = "Trivia file...";
 			// 
 			// QeCreateWordsTmi
 			// 
 			this.QeCreateWordsTmi.Name = "QeCreateWordsTmi";
-			this.QeCreateWordsTmi.Size = new System.Drawing.Size(163, 22);
-			this.QeCreateWordsTmi.Text = "DD/Scramble file";
+			this.QeCreateWordsTmi.Size = new System.Drawing.Size(156, 22);
+			this.QeCreateWordsTmi.Text = "Dictionary file...";
 			this.QeCreateWordsTmi.Click += new System.EventHandler(this.QeCreateWordsTmiClick);
 			// 
 			// QeLoadTmi
@@ -630,14 +631,14 @@ namespace vzWordyHoster
 			// QeLoadTriviaTmi
 			// 
 			this.QeLoadTriviaTmi.Name = "QeLoadTriviaTmi";
-			this.QeLoadTriviaTmi.Size = new System.Drawing.Size(163, 22);
-			this.QeLoadTriviaTmi.Text = "Trivia file";
+			this.QeLoadTriviaTmi.Size = new System.Drawing.Size(156, 22);
+			this.QeLoadTriviaTmi.Text = "Trivia file...";
 			// 
 			// QeLoadWordsTmi
 			// 
 			this.QeLoadWordsTmi.Name = "QeLoadWordsTmi";
-			this.QeLoadWordsTmi.Size = new System.Drawing.Size(163, 22);
-			this.QeLoadWordsTmi.Text = "DD/Scramble file";
+			this.QeLoadWordsTmi.Size = new System.Drawing.Size(156, 22);
+			this.QeLoadWordsTmi.Text = "Dictionary file...";
 			// 
 			// QeEditCurrentTmi
 			// 
@@ -742,6 +743,7 @@ namespace vzWordyHoster
 			this.ResumeLayout(false);
 			this.PerformLayout();
 		}
+		private System.Windows.Forms.SaveFileDialog saveFileDialog1;
 		private System.Windows.Forms.ToolStripMenuItem playersDgvContextEditScore;
 		private System.Windows.Forms.ContextMenuStrip playersDgvCms;
 		private System.Windows.Forms.ToolStripMenuItem helpManualTmi;

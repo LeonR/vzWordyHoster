@@ -449,7 +449,10 @@ namespace vzWordyHoster
 					}
 					
 				}// iteration through relevantMessagesArray
-			}// if ( (foundQuestionLine) && (foundClosureLine) && (questionUtterancePosition > -1) )
+				if (gameType == "DEVILSDICT") {
+					thisLettersAnswersHaveBeenMarked = true;
+				}
+			}// if ( (foundQuestionLine) && (questionUtterancePosition > -1) )
 			else {
 				if (DEBUG_ON) {
 					Debug.WriteLine("Could not find question in messagesArray");
@@ -566,9 +569,12 @@ namespace vzWordyHoster
 				}
 			}
 			
+			// Moving this from its original position:
+			/*
 			if (gameType == "DEVILSDICT") {
 				thisLettersAnswersHaveBeenMarked = true;
 			}
+			*/
 			
 			if(DEBUG_ON) {
 				Debug.WriteLine("Marking session is complete.");
