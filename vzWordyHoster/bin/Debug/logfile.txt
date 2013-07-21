@@ -295,3 +295,235 @@
 2013-07-14_08:20:13 : No one scored in this round.
 2013-07-14_08:20:13 : No one has scored yet.
 2013-07-14_08:20:13 : --------------------------------------------------
+2013-07-14_16:37:54 : Finite SCRAMBLE game started. Loaded file C:\Users\Leon\Documents\VZ - Current DD and scramble game files\2013-07-14_WS_Egyptian_Encryption.xml containing 15 questions.
+2013-07-14_16:41:23 : Finite SCRAMBLE game started. Loaded file C:\Users\Leon\Documents\VZ - Current DD and scramble game files\2013-07-14_WS_Egyptian_Encryption.xml containing 15 questions.
+2013-07-14_17:18:28 : Finite SCRAMBLE game started. Loaded file C:\Users\Leon\Documents\VZ - Current DD and scramble game files\2013-07-14_WS_Egyptian_Encryption.xml containing 15 questions.
+2013-07-14_17:21:43 : End of round 1
+2013-07-14_17:21:43 : Points scored in this round: Cutey Pie: 4 || Geb: 3 || Stue: 2
+2013-07-14_17:21:43 : The scores are: Cutey Pie: 4 || Geb: 3 || Stue: 2 || Penny: 0 || Raenbo: 0
+2013-07-14_17:21:43 : --------------------------------------------------
+2013-07-14_17:25:40 : End of round 2
+2013-07-14_17:25:40 : Points scored in this round: Cutey Pie: 4 || Geb: 3 || Penny: 2 || Lil Cole: 1 || Stue: 1
+2013-07-14_17:25:40 : The scores are: Cutey Pie: 8 || Geb: 6 || Stue: 3 || Penny: 2 || Lil Cole: 1 || Raenbo: 0
+2013-07-14_17:25:40 : --------------------------------------------------
+2013-07-14_17:28:53 : End of round 3
+2013-07-14_17:28:53 : Points scored in this round: Stue: 4 || Penny: 3 || Geb: 2 || Cutey Pie: 1 || Raenbo: 1 || Lil Cole: 1
+2013-07-14_17:28:53 : The scores are: Cutey Pie: 9 || Geb: 8 || Stue: 7 || Penny: 5 || Lil Cole: 2 || Raenbo: 1
+2013-07-14_17:28:53 : --------------------------------------------------
+2013-07-14_17:33:06 : End of round 4
+2013-07-14_17:33:06 : Points scored in this round: Stue: 4 || Raenbo: 3 || Cutey Pie: 2 || Lil Cole: 1 || Penny: 1 || Geb: 1
+2013-07-14_17:33:06 : The scores are: Stue: 11 || Cutey Pie: 11 || Geb: 9 || Penny: 6 || Raenbo: 4 || Lil Cole: 3
+2013-07-14_17:33:06 : --------------------------------------------------
+2013-07-14_17:35:43 : End of round 5
+2013-07-14_17:35:43 : Points scored in this round: Stue: 4
+2013-07-14_17:35:43 : The scores are: Stue: 15 || Cutey Pie: 11 || Geb: 9 || Penny: 6 || Raenbo: 4 || Lil Cole: 3
+2013-07-14_17:35:43 : --------------------------------------------------
+2013-07-14_17:37:34 : End of round 6
+2013-07-14_17:37:34 : Points scored in this round: Stue: 4 || Geb: 3 || Cutey Pie: 2 || Raenbo: 1 || Penny: 1
+2013-07-14_17:37:34 : The scores are: Stue: 19 || Cutey Pie: 13 || Geb: 12 || Penny: 7 || Raenbo: 5 || Lil Cole: 3
+2013-07-14_17:37:34 : --------------------------------------------------
+2013-07-14_17:39:11 : End of round 7
+2013-07-14_17:39:11 : Points scored in this round: Penny: 4 || Raenbo: 3 || Stue: 2 || Cutey Pie: 1 || Geb: 1
+2013-07-14_17:39:11 : The scores are: Stue: 21 || Cutey Pie: 14 || Geb: 13 || Penny: 11 || Raenbo: 8 || Lil Cole: 3
+2013-07-14_17:39:11 : --------------------------------------------------
+2013-07-14_17:40:39 : End of round 8
+2013-07-14_17:40:39 : Points scored in this round: Stue: 4 || Penny: 3 || Geb: 2 || Raenbo: 1 || Cutey Pie: 1
+2013-07-14_17:40:39 : The scores are: Stue: 25 || Geb: 15 || Cutey Pie: 15 || Penny: 14 || Raenbo: 9 || Lil Cole: 3
+2013-07-14_17:40:39 : --------------------------------------------------
+2013-07-14_17:49:32 : End of round 9
+2013-07-14_17:49:32 : Points scored in this round: Penny: 4 || Stue: 3 || Geb: 2
+2013-07-14_17:49:32 : The scores are: Stue: 28 || Penny: 18 || Geb: 17 || Cutey Pie: 15 || Raenbo: 9 || Lil Cole: 3
+2013-07-14_17:49:32 : --------------------------------------------------
+2013-07-14_17:55:25 : End of round 10
+2013-07-14_17:55:25 : Points scored in this round: Penny: 4 || Stue: 3 || Cutey Pie: 2 || Geb: 1
+2013-07-14_17:55:25 : The scores are: Stue: 31 || Penny: 22 || Geb: 18 || Cutey Pie: 17 || Raenbo: 9 || Lil Cole: 3
+2013-07-14_17:55:25 : --------------------------------------------------
+2013-07-14_17:57:57 : End of round 11
+2013-07-14_17:57:57 : Points scored in this round: Penny: 4 || Geb: 3 || Cutey Pie: 2 || Stue: 1 || Raenbo: 1
+2013-07-14_17:57:57 : The scores are: Stue: 32 || Penny: 26 || Geb: 21 || Cutey Pie: 19 || Raenbo: 10 || Lil Cole: 3
+2013-07-14_17:57:57 : --------------------------------------------------
+2013-07-14_17:59:25 : End of round 12
+2013-07-14_17:59:25 : Points scored in this round: Penny: 4 || Geb: 3 || Stue: 2 || Lil Cole: 1 || Raenbo: 1
+2013-07-14_17:59:25 : The scores are: Stue: 34 || Penny: 30 || Geb: 24 || Cutey Pie: 19 || Raenbo: 11 || Lil Cole: 4
+2013-07-14_17:59:25 : --------------------------------------------------
+2013-07-14_18:00:40 : End of round 13
+2013-07-14_18:00:40 : Points scored in this round: Penny: 4 || Geb: 3
+2013-07-14_18:00:40 : The scores are: Stue: 34 || Penny: 34 || Geb: 27 || Cutey Pie: 19 || Raenbo: 11 || Lil Cole: 4
+2013-07-14_18:00:40 : --------------------------------------------------
+2013-07-14_18:02:41 : End of round 14
+2013-07-14_18:02:41 : Points scored in this round: Stue: 4 || Geb: 3 || Raenbo: 2
+2013-07-14_18:02:41 : The scores are: Stue: 38 || Penny: 34 || Geb: 30 || Cutey Pie: 19 || Raenbo: 13 || Lil Cole: 4
+2013-07-14_18:02:41 : --------------------------------------------------
+2013-07-14_18:04:22 : End of round 15
+2013-07-14_18:04:22 : Points scored in this round: Geb: 4 || Stue: 3 || Penny: 2
+2013-07-14_18:04:22 : The scores are: Stue: 41 || Penny: 36 || Geb: 34 || Cutey Pie: 19 || Raenbo: 13 || Lil Cole: 4
+2013-07-14_18:04:22 : --------------------------------------------------
+2013-07-20_14:32:17 : Finite DEVILSDICT game started. Loaded file C:\Users\Leon\Documents\VZ - Current DD and scramble game files\2013-07-20_DD_Pride_and_Prejudice.xml containing 15 questions.
+2013-07-20_14:37:38 : Finite DEVILSDICT game started. Loaded file C:\Users\Leon\Documents\VZ - Current DD and scramble game files\2013-07-20_DD_Pride_and_Prejudice.xml containing 15 questions.
+2013-07-20_14:39:34 : Finite DEVILSDICT game started. Loaded file C:\Users\Leon\Documents\VZ - Current DD and scramble game files\2013-07-20_DD_Pride_and_Prejudice.xml containing 15 questions.
+2013-07-20_14:45:37 : End of round 15
+2013-07-20_14:45:37 : Points scored in this round: Spud: 4
+2013-07-20_14:45:37 : The scores are: Spud: 4
+2013-07-20_14:45:37 : --------------------------------------------------
+2013-07-20_14:47:52 : End of round 1
+2013-07-20_14:47:52 : Points scored in this round: Spud: 4
+2013-07-20_14:47:52 : The scores are: Spud: 12
+2013-07-20_14:47:52 : --------------------------------------------------
+2013-07-20_14:49:06 : End of round 2
+2013-07-20_14:49:06 : Points scored in this round: Spud: 4
+2013-07-20_14:49:06 : The scores are: Spud: 16
+2013-07-20_14:49:06 : --------------------------------------------------
+2013-07-20_14:49:49 : End of round 3
+2013-07-20_14:49:49 : Points scored in this round: Spud: 4
+2013-07-20_14:49:49 : The scores are: Spud: 20
+2013-07-20_14:49:49 : --------------------------------------------------
+2013-07-20_15:11:33 : Finite DEVILSDICT game started. Loaded file C:\Users\Leon\Documents\VZ - Current DD and scramble game files\2013-07-20_DD_Pride_and_Prejudice.xml containing 15 questions.
+2013-07-20_15:12:07 : End of round 1
+2013-07-20_15:12:07 : Points scored in this round: Spud: 4
+2013-07-20_15:12:07 : The scores are: Spud: 4
+2013-07-20_15:12:07 : --------------------------------------------------
+2013-07-20_15:12:50 : End of round 2
+2013-07-20_15:12:50 : Points scored in this round: Spud: 4
+2013-07-20_15:12:50 : The scores are: Spud: 8
+2013-07-20_15:12:50 : --------------------------------------------------
+2013-07-20_15:13:50 : End of round 15
+2013-07-20_15:13:50 : Points scored in this round: Spud: 4
+2013-07-20_15:13:50 : The scores are: Spud: 12
+2013-07-20_15:13:50 : --------------------------------------------------
+2013-07-20_15:28:33 : Finite DEVILSDICT game started. Loaded file C:\Users\Leon\Documents\VZ - Current DD and scramble game files\2013-07-20_DD_Pride_and_Prejudice.xml containing 15 questions.
+2013-07-20_15:29:09 : End of round 15
+2013-07-20_15:29:09 : Points scored in this round: Spud: 4
+2013-07-20_15:29:09 : The scores are: Spud: 4
+2013-07-20_15:29:09 : --------------------------------------------------
+2013-07-20_17:18:26 : Finite DEVILSDICT game started. Loaded file C:\Users\Leon\Documents\VZ - Current DD and scramble game files\2013-07-20_DD_Pride_and_Prejudice.xml containing 15 questions.
+2013-07-20_17:21:31 : End of round 1
+2013-07-20_17:21:31 : Points scored in this round: Penny: 4
+2013-07-20_17:21:31 : The scores are: Penny: 4
+2013-07-20_17:21:31 : --------------------------------------------------
+2013-07-20_17:22:58 : End of round 2
+2013-07-20_17:22:58 : Points scored in this round: Penny: 4 || Geb: 3
+2013-07-20_17:22:58 : The scores are: Penny: 8 || Geb: 3
+2013-07-20_17:22:58 : --------------------------------------------------
+2013-07-20_17:24:03 : End of round 3
+2013-07-20_17:24:03 : Points scored in this round: Penny: 4
+2013-07-20_17:24:03 : The scores are: Penny: 12 || Geb: 3
+2013-07-20_17:24:03 : --------------------------------------------------
+2013-07-20_17:24:52 : End of round 4
+2013-07-20_17:24:52 : Points scored in this round: Penny: 4 || Sere: 3
+2013-07-20_17:24:52 : The scores are: Penny: 16 || Geb: 3 || Sere: 3
+2013-07-20_17:24:52 : --------------------------------------------------
+2013-07-20_17:26:20 : End of round 5
+2013-07-20_17:26:20 : Points scored in this round: Penny: 4 || Geb: 3
+2013-07-20_17:26:20 : The scores are: Penny: 20 || Geb: 6 || Sere: 3
+2013-07-20_17:26:20 : --------------------------------------------------
+2013-07-20_17:27:19 : End of round 6
+2013-07-20_17:27:19 : Points scored in this round: Penny: 4
+2013-07-20_17:27:19 : The scores are: Penny: 24 || Geb: 6 || Sere: 3
+2013-07-20_17:27:19 : --------------------------------------------------
+2013-07-20_17:29:40 : End of round 7
+2013-07-20_17:29:40 : Points scored in this round: Geb: 4 || Penny: 3
+2013-07-20_17:29:40 : The scores are: Penny: 27 || Geb: 10 || Sere: 3
+2013-07-20_17:29:40 : --------------------------------------------------
+2013-07-20_17:31:25 : End of round 8
+2013-07-20_17:31:25 : Points scored in this round: Penny: 4 || Geb: 3
+2013-07-20_17:31:26 : The scores are: Penny: 31 || Geb: 13 || Sere: 3
+2013-07-20_17:31:26 : --------------------------------------------------
+2013-07-20_17:44:38 : End of round 9
+2013-07-20_17:44:38 : Points scored in this round: Geb: 4
+2013-07-20_17:44:38 : The scores are: Penny: 31 || Geb: 17 || Sere: 3
+2013-07-20_17:44:38 : --------------------------------------------------
+2013-07-20_17:45:25 : End of round 10
+2013-07-20_17:45:25 : Points scored in this round: Sere: 4
+2013-07-20_17:45:25 : The scores are: Penny: 31 || Geb: 17 || Sere: 7
+2013-07-20_17:45:25 : --------------------------------------------------
+2013-07-20_17:46:12 : End of round 11
+2013-07-20_17:46:12 : Points scored in this round: Geb: 4
+2013-07-20_17:46:12 : The scores are: Penny: 31 || Geb: 21 || Sere: 7
+2013-07-20_17:46:12 : --------------------------------------------------
+2013-07-20_17:47:25 : End of round 12
+2013-07-20_17:47:25 : Points scored in this round: Penny: 4 || Geb: 3
+2013-07-20_17:47:25 : The scores are: Penny: 35 || Geb: 24 || Sere: 7
+2013-07-20_17:47:25 : --------------------------------------------------
+2013-07-20_17:48:59 : End of round 13
+2013-07-20_17:48:59 : Points scored in this round: Penny: 4
+2013-07-20_17:48:59 : The scores are: Penny: 39 || Geb: 24 || Sere: 7
+2013-07-20_17:48:59 : --------------------------------------------------
+2013-07-20_17:52:08 : End of round 14
+2013-07-20_17:52:08 : Points scored in this round: Creator PuReAnGeL: 4 || Penny: 3
+2013-07-20_17:52:08 : The scores are: Penny: 42 || Geb: 24 || Sere: 7 || Creator PuReAnGeL: 4
+2013-07-20_17:52:08 : --------------------------------------------------
+2013-07-20_17:55:27 : End of round 15
+2013-07-20_17:55:27 : Points scored in this round: Geb: 4
+2013-07-20_17:55:27 : The scores are: Penny: 42 || Geb: 28 || Sere: 7 || Creator PuReAnGeL: 4
+2013-07-20_17:55:27 : --------------------------------------------------
+2013-07-21_14:15:12 : Finite SCRAMBLE game started. Loaded file C:\Users\Leon\Documents\VZ - Current DD and scramble game files\2013-07-21_WS_Pride and Prejudice.xml containing 14 questions.
+2013-07-21_14:19:07 : Finite SCRAMBLE game started. Loaded file C:\Users\Leon\Documents\VZ - Current DD and scramble game files\2013-07-21_WS_Pride and Prejudice.xml containing 14 questions.
+2013-07-21_14:19:56 : End of round 1
+2013-07-21_14:19:56 : No one scored in this round.
+2013-07-21_14:19:56 : No one has scored yet.
+2013-07-21_14:19:56 : --------------------------------------------------
+2013-07-21_14:20:32 : End of round 2
+2013-07-21_14:20:32 : No one scored in this round.
+2013-07-21_14:20:32 : No one has scored yet.
+2013-07-21_14:20:32 : --------------------------------------------------
+2013-07-21_14:22:10 : End of round 14
+2013-07-21_14:22:10 : Points scored in this round: Barry: 4
+2013-07-21_14:22:10 : The scores are: Barry: 4
+2013-07-21_14:22:10 : --------------------------------------------------
+2013-07-21_18:20:19 : Finite SCRAMBLE game started. Loaded file C:\Users\Leon\Documents\VZ - Current DD and scramble game files\2013-07-21_WS_Pride and Prejudice.xml containing 14 questions.
+2013-07-21_18:24:57 : End of round 1
+2013-07-21_18:24:57 : Points scored in this round: Mojo Pin: 4 || Penny: 3 || Geb: 2 || Chimelle: 1
+2013-07-21_18:24:57 : The scores are: Mojo Pin: 4 || Penny: 3 || Geb: 2 || Chimelle: 1
+2013-07-21_18:24:57 : --------------------------------------------------
+2013-07-21_18:26:28 : End of round 2
+2013-07-21_18:26:28 : Points scored in this round: Geb: 4 || Mojo Pin: 3 || Penny: 2 || Chimelle: 1
+2013-07-21_18:26:28 : The scores are: Mojo Pin: 7 || Geb: 6 || Penny: 5 || Chimelle: 2
+2013-07-21_18:26:28 : --------------------------------------------------
+2013-07-21_18:28:08 : End of round 3
+2013-07-21_18:28:08 : Points scored in this round: Mojo Pin: 4 || Chimelle: 3
+2013-07-21_18:28:08 : The scores are: Mojo Pin: 11 || Geb: 6 || Penny: 5 || Chimelle: 5
+2013-07-21_18:28:08 : --------------------------------------------------
+2013-07-21_18:30:34 : End of round 4
+2013-07-21_18:30:34 : Points scored in this round: Penny: 4 || Geb: 3 || Chimelle: 2
+2013-07-21_18:30:34 : The scores are: Mojo Pin: 11 || Penny: 9 || Geb: 9 || Chimelle: 7
+2013-07-21_18:30:34 : --------------------------------------------------
+2013-07-21_18:34:26 : End of round 5
+2013-07-21_18:34:26 : Points scored in this round: Mojo Pin: 4 || Geb: 3 || Penny: 2
+2013-07-21_18:34:26 : The scores are: Mojo Pin: 15 || Geb: 12 || Penny: 11 || Chimelle: 7
+2013-07-21_18:34:26 : --------------------------------------------------
+2013-07-21_18:37:08 : End of round 6
+2013-07-21_18:37:08 : Points scored in this round: Mojo Pin: 4
+2013-07-21_18:37:08 : The scores are: Mojo Pin: 19 || Geb: 12 || Penny: 11 || Chimelle: 7
+2013-07-21_18:37:08 : --------------------------------------------------
+2013-07-21_18:39:00 : End of round 7
+2013-07-21_18:39:00 : Points scored in this round: Chimelle: 4
+2013-07-21_18:39:00 : The scores are: Mojo Pin: 19 || Geb: 12 || Penny: 11 || Chimelle: 11
+2013-07-21_18:39:00 : --------------------------------------------------
+2013-07-21_18:48:46 : End of round 8
+2013-07-21_18:48:46 : Points scored in this round: Chimelle: 4
+2013-07-21_18:48:46 : The scores are: Mojo Pin: 19 || Chimelle: 15 || Geb: 12 || Penny: 11
+2013-07-21_18:48:46 : --------------------------------------------------
+2013-07-21_18:49:56 : End of round 9
+2013-07-21_18:49:56 : Points scored in this round: Penny: 4 || Mojo Pin: 3 || Geb: 2 || Chimelle: 1
+2013-07-21_18:49:56 : The scores are: Mojo Pin: 22 || Chimelle: 16 || Penny: 15 || Geb: 14
+2013-07-21_18:49:56 : --------------------------------------------------
+2013-07-21_18:51:25 : End of round 10
+2013-07-21_18:51:25 : No one scored in this round.
+2013-07-21_18:51:25 : The scores are: Mojo Pin: 22 || Chimelle: 16 || Penny: 15 || Geb: 14
+2013-07-21_18:51:25 : --------------------------------------------------
+2013-07-21_18:52:57 : End of round 11
+2013-07-21_18:52:57 : Points scored in this round: Mojo Pin: 4
+2013-07-21_18:52:57 : The scores are: Mojo Pin: 26 || Chimelle: 16 || Penny: 15 || Geb: 14 || Copper: 0
+2013-07-21_18:52:57 : --------------------------------------------------
+2013-07-21_18:54:28 : End of round 12
+2013-07-21_18:54:28 : Points scored in this round: Chimelle: 4
+2013-07-21_18:54:28 : The scores are: Mojo Pin: 26 || Chimelle: 20 || Penny: 15 || Geb: 14 || Copper: 0
+2013-07-21_18:54:28 : --------------------------------------------------
+2013-07-21_18:57:02 : End of round 13
+2013-07-21_18:57:02 : Points scored in this round: Geb: 4 || Mojo Pin: 3 || Penny: 2 || Copper: 1
+2013-07-21_18:57:02 : The scores are: Mojo Pin: 29 || Chimelle: 20 || Geb: 18 || Penny: 17 || Copper: 1
+2013-07-21_18:57:02 : --------------------------------------------------
+2013-07-21_18:59:15 : End of round 14
+2013-07-21_18:59:15 : Points scored in this round: Penny: 4 || Geb: 3 || Chimelle: 2 || Mojo Pin: 1 || Copper: 1
+2013-07-21_18:59:15 : The scores are: Mojo Pin: 30 || Chimelle: 22 || Penny: 21 || Geb: 21 || Copper: 2
+2013-07-21_18:59:15 : --------------------------------------------------

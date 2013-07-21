@@ -373,6 +373,7 @@ namespace vzWordyHoster
 			}
 			
 			// Now iterate through all of the messages received since the host uttered the question.
+			
 			// If the message is an ESP, add/update the player's row in mostRecentESPsThisRoundTable.
 			string[] messagesArray = allText.Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
 			
@@ -449,9 +450,14 @@ namespace vzWordyHoster
 					}
 					
 				}// iteration through relevantMessagesArray
+				
+				// LR 20/07/2013: The following three lines were moved here in the last changes,
+				// and I think doing so might have introduced a bug. Moving back...
+				/*
 				if (gameType == "DEVILSDICT") {
 					thisLettersAnswersHaveBeenMarked = true;
 				}
+				*/
 			}// if ( (foundQuestionLine) && (questionUtterancePosition > -1) )
 			else {
 				if (DEBUG_ON) {
@@ -570,11 +576,12 @@ namespace vzWordyHoster
 			}
 			
 			// Moving this from its original position:
-			/*
+			// No, moving back:
+			
 			if (gameType == "DEVILSDICT") {
 				thisLettersAnswersHaveBeenMarked = true;
 			}
-			*/
+			
 			
 			if(DEBUG_ON) {
 				Debug.WriteLine("Marking session is complete.");

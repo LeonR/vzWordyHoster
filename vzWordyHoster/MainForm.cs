@@ -139,7 +139,7 @@ namespace vzWordyHoster
 			scrambleInfiniteTmi.Enabled = true;
 			scrambleInfiniteTmi.Visible = true;
 			
-			bool questionEditorOn = true;
+			bool questionEditorOn = false;
 			questionEditorTmi.Enabled = questionEditorOn;
 			questionEditorTmi.Visible = questionEditorOn;
 		 	fileTss2.Enabled = questionEditorOn;
@@ -715,8 +715,8 @@ namespace vzWordyHoster
 			if(hostAvatarName == "") {
 				announceInitialisation();
 			}
-			QuestionEditorWordsForm.editingDictionaryFile = selectNewFileName("New_dictionary_file.xml");
-			if (QuestionEditorWordsForm.editingDictionaryFile != "") {
+			QuestionEditorWordsForm.dictionaryFileBeingEdited = selectNewFileName("New_dictionary_file.xml");
+			if (QuestionEditorWordsForm.dictionaryFileBeingEdited != "") {
 				QuestionEditorWordsForm.brandNewFile = true;
 				QuestionEditorWordsForm myQuestionEditorWordsForm = new QuestionEditorWordsForm();
            		myQuestionEditorWordsForm.ShowDialog();

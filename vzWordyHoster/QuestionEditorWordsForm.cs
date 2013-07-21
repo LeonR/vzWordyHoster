@@ -12,7 +12,9 @@ using System.Windows.Forms;
 using System.IO;
 using System.Xml;
 using System.Xml.Serialization;
+using System.Xml.Linq;
 using System.Data;
+using System.Collections.Generic;
 
 namespace vzWordyHoster
 {
@@ -22,10 +24,13 @@ namespace vzWordyHoster
 	public partial class QuestionEditorWordsForm : Form
 	{
 		private static string formMainTitle = "vzWordyHoster :: Dictionary Editor :: ";
-		public static string editingDictionaryFile;
+		public static string dictionaryFileBeingEdited;
 		public static bool brandNewFile;
 		private XmlDocument xmlDoc = new XmlDocument();
 		private DataTable defTable = new DataTable();
+		protected IEnumerable<XElement> questions;
+		protected long thisQuestionNumber;
+		protected long numQuestions;
 		
 
 		public QuestionEditorWordsForm()
@@ -42,14 +47,14 @@ namespace vzWordyHoster
 		
 		void QuestionEditorWordsFormLoad(object sender, EventArgs e)
 		{
-			if (editingDictionaryFile != "") {
-				string fileNameOnly = @Path.GetFileName(editingDictionaryFile);
+			if (dictionaryFileBeingEdited != "") {
+				string fileNameOnly = @Path.GetFileName(dictionaryFileBeingEdited);
 				this.Text = formMainTitle + fileNameOnly;
 			}
 			buildDefTable();
 			definitionsDgv.DataSource = defTable;
 			if (brandNewFile) {
-				createSkeletonDictionaryFile(editingDictionaryFile);
+				createSkeletonDictionaryFile(dictionaryFileBeingEdited);
 			}
 	
 		}// QuestionEditorWordsFormLoad
@@ -92,7 +97,7 @@ namespace vzWordyHoster
             string defText = "An animal that goes woof.";
             defNode.InnerText = defText;
             wordNode.AppendChild(defNode);
-            addDef(defText);
+            addDefToTable(defText);
 
             xmlDoc.Save(fullPathOfFile);
 			
@@ -124,7 +129,7 @@ namespace vzWordyHoster
 	     
 		}// buildDefTable()
 		
-		private void addDef(string defText) {
+		private void addDefToTable(string defText) {
 			DataRow row;
 			row = defTable.NewRow();
 			//row["Num"] = 1; //TODO: Add incrementer
@@ -133,6 +138,56 @@ namespace vzWordyHoster
 	        defTable.AcceptChanges();
 		}
 		
+		/*
+		protected Int32 loadWordsFile() {
+			try {
+				XDocument xdocument = XDocument.Load(questionFile);
+				questions = xdocument.Root.Elements();  // Root is the single top-level element, i.e. <questions>
+				if(DEBUG_ON) {
+					foreach (var question in questions)	{
+				    	Debug.WriteLine(question);
+					}
+				}
+				numQuestions = questions.Count();
+				thisQuestionNumber = 1;
+				//FileUtils.writeLineToLog("Question Editor loaded file " + questionFile + " containing " + numQuestions + " questions.");
+			} catch (XmlException myException) {
+				MessageBox.Show( myException.ToString() );
+				throw;
+			}
+			
+			
+			return numQuestions;
+		}//
+		*/
+		
+		/*
+		protected void loadWord(long questionNumber) {
+			
+			thisQuestionType = "";
+			
+			// Using .ToArray()[] because .ElementAt only takes an integer, not long
+			thisQuestionElem = questions.ToArray()[thisQuestionNumber - 1];
+			
+			// Load thisQuestionText:
+			thisQuestionText = TryGetElementValue(thisQuestionElem, "def", "");  // If no def node exists, return ""
+			thisQuestionText = StringUtils.FirstLetterToUpper(thisQuestionText);
+			if (DEBUG_ON) {
+				Debug.WriteLine("lddqdp:thisQuestionText: " + thisQuestionText);
+			}
+			
+			// Load thisAnswerText:
+			//thisAnswerText = thisQuestionElem.Element("hw").Value;
+			thisAnswerText = TryGetElementValue(thisQuestionElem, "hw", "");     // If no hw node exists, return ""
+			if (DEBUG_ON) {
+				Debug.WriteLine("lddqdp:thisAnswerText: " + thisAnswerText);
+			}
+			
+			defTable.Clear();
+
+	
+		}//
+		*/
 		
 		
 	}
